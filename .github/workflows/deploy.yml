@@ -21,9 +21,11 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm run build
+        env:
+          NEXT_PUBLIC_BASE_PATH: /Matt-Portfolio-Site
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: dist
+          path: out
   deploy:
     needs: build
     if: github.ref == 'refs/heads/main'

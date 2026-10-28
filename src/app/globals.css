@@ -6,9 +6,9 @@
   --sky: #8fb3c9;
   --green: #7fbf7a;
   --sage: #a9c0bf;
-  --serif: 'Cormorant Garamond', 'Playfair Display', Georgia, serif;
-  --body: 'Newsreader', Georgia, serif;
-  --mono: 'IBM Plex Mono', ui-monospace, Menlo, monospace;
+  --serif: var(--font-display), 'Cormorant Garamond', Georgia, serif;
+  --body: var(--font-body), 'Newsreader', Georgia, serif;
+  --mono: var(--font-mono), 'IBM Plex Mono', ui-monospace, Menlo, monospace;
   --footer-h: 56px;
 }
 * { box-sizing: border-box; }
@@ -128,3 +128,8 @@ body {
 @media (prefers-reduced-motion: reduce) { .stamp img { filter: drop-shadow(0 6px 8px rgba(0,0,0,.25)); } }
 [hidden] { display: none !important; }
 .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+.replay { font: inherit; letter-spacing: inherit; text-transform: inherit; background: none; border: 0; color: inherit; cursor: pointer; text-decoration: underline; text-underline-offset: 3px; padding: 0; }
+.links { list-style: none; padding: 0; margin: 8px 0 0; display: flex; flex-wrap: wrap; gap: 8px 24px; }
+.links a { color: inherit; text-underline-offset: 3px; }
+@media (max-width: 640px) { .replay { display: none; } }

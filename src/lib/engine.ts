@@ -1,10 +1,11 @@
-import './style.css';
 import { gsap } from 'gsap';
 import { Flip } from 'gsap/Flip';
-import { SECTIONS, SITE, type Section, type SectionId } from './content';
+import { SITE, buildSections, type Section, type SectionId, type SiteContent } from './content';
 
 gsap.registerPlugin(Flip);
 
+export function initPortfolio(content: SiteContent): () => void {
+const SECTIONS = buildSections(content);
 const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 const T = (s: number) => (reduce ? Math.min(0.2, s) : s);
 const $ = <E extends HTMLElement>(id: string) => document.getElementById(id) as E;
@@ -25,6 +26,9 @@ let state: State = 'opener';
 let active: SectionId | null = null;
 let order: SectionId[] = []; // ids in mini-nav slots, left to right
 let busy = false;
+let clockTimer = 0;
+let openerTimer = 0;
+let openerDone = false;
 /** End a transition, then re-sync with the URL/viewport if they changed meanwhile. */
 function done() {
   busy = false;
@@ -37,7 +41,7 @@ function done() {
 
 const byId = (id: SectionId) => SECTIONS.find((s) => s.id === id) as Section;
 const isMobile = () => window.innerWidth < 640;
-const img = (id: SectionId) => `${import.meta.env.BASE_URL}stamps/${id}.webp`;
+const img = (id: SectionId) => `${process.env.NEXT_PUBLIC_BASE_PATH || ''}/stamps/${id}.webp`;
 
 /* ---------- opener (placeholder stamp: logo, name, date) ---------- */
 function perforatedPath(w: number, h: number, r: number, pitch: number): string {
@@ -298,8 +302,6 @@ function openerExit(): Promise<void> {
   });
 }
 
-let openerTimer = 0;
-let openerDone = false;
 async function runOpener() {
   if (openerDone) return;
   openerDone = true;
@@ -381,37 +383,79 @@ function buildFooter() {
   const fmt = new Intl.DateTimeFormat('en-US', { hour: 'numeric', minute: '2-digit', timeZone: SITE.timeZone, timeZoneName: 'short' });
   const tick = () => { const d = new Date(); clock.textContent = fmt.format(d); clock.dateTime = d.toISOString(); };
   tick();
-  setInterval(tick, 15000);
+  clockTimer = window.setInterval(tick, 15000);
+}
+
+/* ---------- replay ---------- */
+function replayIntro() {
+  if (busy || state === 'opener') return;
+  enterInstant(null);
+  history.replaceState(null, '', '#/');
+  openerDone = false;
+  state = 'opener';
+  stage.dataset.state = 'opener';
+  openerEl.hidden = false;
+  gsap.set(openerStamp, { clearProps: 'all' });
+  openerStamp.style.filter = '';
+  gsap.set(skipBtn, { opacity: 1 });
+  stampEls.forEach((el) => gsap.set(el, { opacity: 0 }));
+  stampsEl.inert = true;
+  startOpenerClock();
 }
 
 /* ---------- boot ---------- */
-function boot() {
-  buildOpener();
-  buildStamps();
-  buildFooter();
-  homeBtn.textContent = '⌂';
-  homeBtn.addEventListener('click', () => goHome());
-  skipBtn.addEventListener('click', () => runOpener());
+buildOpener();
+buildStamps();
+buildFooter();
+homeBtn.textContent = '\u2302';
+const replayBtn = document.getElementById('replay');
+const onHome = () => goHome();
+const onSkip = () => runOpener();
+const onHash = () => {
+  if (busy || state === 'opener') return; // done() re-syncs when a transition ends
+  const id = parseHash();
+  if (location.hash && !id) history.replaceState(null, '', '#/');
+  if (id === active) return;
+  enterInstant(id);
+};
+let resizeRaf = 0;
+// Re-lay out every frame while the window changes size so the stamps track it live.
+const onResize = () => {
+  if (resizeRaf) return;
+  resizeRaf = requestAnimationFrame(() => {
+    resizeRaf = 0;
+    if (busy) return; // done() re-syncs when the transition ends
+    if (state === 'nav') layoutNav();
+    else if (state === 'page') layoutMini();
+  });
+};
+const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape' && state === 'page') goHome(); };
+homeBtn.addEventListener('click', onHome);
+skipBtn.addEventListener('click', onSkip);
+replayBtn?.addEventListener('click', replayIntro);
+window.addEventListener('hashchange', onHash);
+window.addEventListener('resize', onResize);
+document.addEventListener('keydown', onKey);
 
+{
   const hashId = parseHash();
   let seen = false;
   try { seen = sessionStorage.getItem('opener-seen') === '1'; } catch { /* ignore */ }
   if (hashId) enterInstant(hashId);
   else if (seen) { enterInstant(null); fanIn(); }
   else { layoutNav(); stampEls.forEach((el) => gsap.set(el, { opacity: 0 })); stampsEl.inert = true; startOpenerClock(); }
-
-  window.addEventListener('hashchange', () => {
-    if (busy || state === 'opener') return; // done() re-syncs when a transition ends
-    const id = parseHash();
-    if (location.hash && !id) history.replaceState(null, '', '#/');
-    if (id === active) return;
-    enterInstant(id);
-  });
-  let resizeT = 0;
-  window.addEventListener('resize', () => {
-    clearTimeout(resizeT);
-    resizeT = window.setTimeout(() => { if (!busy && state === 'nav') layoutNav(); else if (!busy && state === 'page') layoutMini(); }, 120);
-  });
-  document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && state === 'page') goHome(); });
 }
-boot();
+
+return () => {
+  clearTimeout(openerTimer);
+  cancelAnimationFrame(resizeRaf);
+  clearInterval(clockTimer);
+  homeBtn.removeEventListener('click', onHome);
+  skipBtn.removeEventListener('click', onSkip);
+  replayBtn?.removeEventListener('click', replayIntro);
+  window.removeEventListener('hashchange', onHash);
+  window.removeEventListener('resize', onResize);
+  document.removeEventListener('keydown', onKey);
+  gsap.killTweensOf('*');
+};
+}

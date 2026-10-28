@@ -1,2 +1,8 @@
 node_modules
 dist
+out
+.next
+next-env.d.ts
+.env*.local
+studio/node_modules
+studio/dist
