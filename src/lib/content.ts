@@ -32,6 +32,7 @@ export const SITE = {
 export interface Project {
   title: string; slug: string; summary?: string; featured?: boolean; year?: number;
   disciplines?: string[]; role?: string; heroImage?: string; accent?: string;
+  videoUrl?: string; href?: string;
 }
 export interface Craft {
   title: string; slug: string; summary?: string; year?: number; image?: string; notes?: string;
@@ -43,12 +44,18 @@ export interface SiteContent {
   projects: Project[]; crafts: Craft[]; experience: Experience[]; placeholder: boolean;
 }
 
+const base = process.env.NEXT_PUBLIC_BASE_PATH || '';
 const accents = ['#c4b268', '#c9a0a0', '#8fb3c9', '#7fbf7a', '#a9c0bf'];
 
 /** Clearly identified placeholders, used until Sanity has content. */
 export const PLACEHOLDER: SiteContent = {
   placeholder: true,
-  projects: [1, 2, 3, 4].map((n) => ({ title: `Placeholder project ${n}`, slug: `placeholder-${n}`, summary: 'Project selection is deferred.', disciplines: ['Discipline'], accent: accents[n - 1] })),
+  projects: [
+    // Real asset from Matt's Drive; selection and details are pending his decision.
+    { title: 'Gearbook: Just Go Outside', slug: 'gearbook-just-go-outside', summary: 'Video for Gearbook (named from the file). Details and credits to be confirmed.', accent: '#8fb3c9',
+      heroImage: `${base}/projects/gearbook-just-go-outside.jpg`, videoUrl: `${base}/projects/gearbook-just-go-outside.mp4`, href: 'https://www.gearbook.shop/catalog/matt-bloomfield' },
+    ...[2, 3, 4].map((n) => ({ title: `Placeholder project ${n}`, slug: `placeholder-${n}`, summary: 'Project selection is deferred.', disciplines: ['Discipline'], accent: accents[n - 1] })),
+  ],
   crafts: [1, 2, 3, 4, 5, 6].map((n) => ({ title: `Placeholder piece ${n}`, slug: `placeholder-craft-${n}` })),
   experience: [1, 2, 3].map((n) => ({ organization: `Organization ${n}`, role: 'Role title', startDate: 'Year', endDate: 'Year', description: 'Placeholder. Experience content has not been supplied.' })),
 };
@@ -64,8 +71,9 @@ function projectsHtml(c: SiteContent) {
       <h3>${esc(p.title)}</h3>
       <p class="meta">${esc([p.role, p.year, ...(p.disciplines || [])].filter(Boolean).join(' · '))}</p>
       ${p.summary ? `<p>${esc(p.summary)}</p>` : ''}
+      ${p.videoUrl || p.href ? `<p class="meta">${p.videoUrl ? `<a href="${esc(p.videoUrl)}" target="_blank" rel="noopener">Watch</a>` : ''}${p.videoUrl && p.href ? ' · ' : ''}${p.href ? `<a href="${esc(p.href)}" target="_blank" rel="noopener">Gearbook</a>` : ''}</p>` : ''}
     </article>`).join('');
-  return `<div class="cards">${cards}</div>${c.placeholder ? todo('Placeholders. Project selection and priorities are deferred.') : ''}`;
+  return `<div class="cards">${cards}</div>${c.placeholder ? todo('Gearbook is a draft from your Drive; the rest are placeholders. Project selection and priorities are deferred.') : ''}`;
 }
 function experienceHtml(c: SiteContent) {
   const items = c.experience.map((e) => `

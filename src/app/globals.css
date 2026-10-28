@@ -133,3 +133,4 @@ body {
 .links { list-style: none; padding: 0; margin: 8px 0 0; display: flex; flex-wrap: wrap; gap: 8px 24px; }
 .links a { color: inherit; text-underline-offset: 3px; }
 @media (max-width: 640px) { .replay { display: none; } }
+.card .meta a { color: inherit; text-underline-offset: 3px; }

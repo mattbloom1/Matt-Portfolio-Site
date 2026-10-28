@@ -26,3 +26,6 @@ Edit `src/app/fonts.ts`. Own fonts: add files and use `next/font/local` with the
 
 ## Docs
 Branding, positioning and wireframes are in `docs/`.
+
+## Seed content
+`studio/seed/projects.ndjson` has the one real draft entry (Gearbook). Import with `cd studio && npx sanity dataset import seed/projects.ndjson production`. Upload its hero image (`public/projects/gearbook-just-go-outside.jpg`) in the Studio afterwards.
