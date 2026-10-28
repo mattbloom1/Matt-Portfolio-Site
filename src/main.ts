@@ -25,6 +25,15 @@ let state: State = 'opener';
 let active: SectionId | null = null;
 let order: SectionId[] = []; // ids in mini-nav slots, left to right
 let busy = false;
+/** End a transition, then re-sync with the URL/viewport if they changed meanwhile. */
+function done() {
+  busy = false;
+  if (state === 'opener') return;
+  const id = parseHash();
+  if (id !== active) enterInstant(id);
+  else if (state === 'nav') layoutNav();
+  else if (state === 'page') layoutMini();
+}
 
 const byId = (id: SectionId) => SECTIONS.find((s) => s.id === id) as Section;
 const isMobile = () => window.innerWidth < 640;
@@ -128,7 +137,12 @@ function layoutNav() { SECTIONS.forEach((s) => placeNav(s.id)); stampsEl.dataset
 function layoutMini() {
   stampsEl.dataset.mode = 'mini';
   order.forEach((id, i) => placeMini(id, i));
-  if (active) gsap.set(stampEls.get(active)!, { opacity: 0, pointerEvents: 'none' });
+  stampEls.forEach((el) => el.removeAttribute('tabindex'));
+  if (active) {
+    const a = stampEls.get(active)!;
+    gsap.set(a, { opacity: 0, pointerEvents: 'none' });
+    a.tabIndex = -1;
+  }
 }
 
 /* ---------- ink bleed ---------- */
@@ -149,7 +163,8 @@ function bleedGrow(id: SectionId, from: DOMRect): Promise<void> {
     bgEl.style.backgroundImage = `url(${img(id)})`;
     const dur = T(1.1);
     const tl = gsap.timeline({ onComplete: () => { el.remove(); dispEl.setAttribute('scale', '0'); resolve(); } });
-    tl.to(el, { left: -W * 0.05, top: -H * 0.05, width: W * 1.1, height: H * 1.1, duration: dur, ease: 'power3.in' }, 0)
+    if (reduce) gsap.set(el, { left: 0, top: 0, width: W, height: H });
+    tl.to(el, reduce ? { duration: dur } : { left: -W * 0.05, top: -H * 0.05, width: W * 1.1, height: H * 1.1, duration: dur, ease: 'power3.in' }, 0)
       .to(p, { disp: reduce ? 0 : 60, blur: reduce ? 0 : 20, duration: dur, ease: 'power2.in', onUpdate: apply }, 0)
       .to(bgEl, { opacity: 0.95, duration: dur * 0.7, ease: 'power1.inOut' }, dur * 0.3)
       .to(el, { opacity: 0, duration: dur * 0.5, ease: 'power1.out' }, dur * 0.9);
@@ -163,13 +178,13 @@ function swapBackground(id: SectionId) {
 function renderContent(id: SectionId) {
   const s = byId(id);
   contentEl.hidden = false;
-  contentEl.innerHTML = `<div class="panel"><div class="no">${s.no} · ${s.stampName}</div><h1>${s.label}</h1>${s.html}</div>`;
+  contentEl.innerHTML = `<div class="panel"><div class="no">${s.no} · ${s.stampName}</div><h1 tabindex="-1">${s.label}</h1>${s.html}</div>`;
   contentEl.scrollTop = 0;
   document.title = `${s.label} · ${SITE.name}`;
 }
 function showContent(focus: boolean) {
   gsap.fromTo(contentEl, { opacity: 0, y: 18 }, { opacity: 1, y: 0, duration: T(0.6), ease: 'power2.out' });
-  if (focus) contentEl.focus({ preventScroll: true });
+  if (focus) (contentEl.querySelector('h1') as HTMLElement | null)?.focus({ preventScroll: true });
 }
 
 /* ---------- state transitions ---------- */
@@ -178,10 +193,10 @@ function setHash(h: string) {
 }
 
 async function select(id: SectionId) {
-  if (busy || id === active) return;
-  if (state === 'nav') await navToPage(id);
-  else if (state === 'page') await pageSwap(id);
+  if (busy || id === active || state === 'opener') return;
   setHash(`#/${id}`);
+  if (state === 'nav') await navToPage(id);
+  else await pageSwap(id);
 }
 
 async function navToPage(id: SectionId) {
@@ -204,7 +219,7 @@ async function navToPage(id: SectionId) {
   await bleedGrow(id, from);
   renderContent(id);
   showContent(true);
-  busy = false;
+  done();
 }
 
 async function pageSwap(id: SectionId) {
@@ -218,18 +233,15 @@ async function pageSwap(id: SectionId) {
   gsap.to(contentEl, { opacity: 0, duration: T(0.25) });
   const prevEl = stampEls.get(prev)!;
   gsap.set(prevEl, { opacity: 1, pointerEvents: 'auto' });
-  const flipState = Flip.getState(prevEl);
-  placeMini(prev, slot);
-  gsap.set(slotEl, { opacity: 0, pointerEvents: 'none' });
-  // previous stamp starts large (where the page was) and settles into the freed slot
-  gsap.set(prevEl, { opacity: 1 });
-  Flip.from(flipState, { duration: T(0.8), ease: 'power3.inOut', scale: false });
-  gsap.fromTo(prevEl, { scale: 0.6, opacity: 0 }, { scale: 1, opacity: 1, duration: T(0.6), ease: 'back.out(1.4)' });
+  const flipState = Flip.getState([...stampEls.values()]);
+  layoutMini(); // re-pack every slot: stamp widths differ
+  Flip.from(flipState, { duration: T(0.8), ease: 'power3.inOut', absolute: false });
+  gsap.fromTo(prevEl, { opacity: 0 }, { opacity: 1, duration: T(0.6), ease: 'power1.out' });
   gsap.set(bgEl, { opacity: 0.95 });
   await bleedGrow(id, from);
   renderContent(id);
   showContent(true);
-  busy = false;
+  done();
 }
 
 async function goHome(replay = true) {
@@ -246,13 +258,15 @@ async function goHome(replay = true) {
   const flipState = Flip.getState(all);
   layoutNav();
   gsap.set(activeEl, { pointerEvents: 'auto' });
+  activeEl.removeAttribute('tabindex');
+  activeEl.focus({ preventScroll: true });
   Flip.from(flipState, { duration: T(0.9), ease: 'power3.inOut', stagger: reduce ? 0 : 0.04, absolute: false });
   gsap.fromTo(activeEl, { opacity: 0 }, { opacity: 1, duration: T(0.8), delay: T(0.2) });
   document.title = SITE.name;
   setHash('#/');
   if (!replay) { /* reserved */ }
   await new Promise((r) => setTimeout(r, T(1) * 1000));
-  busy = false;
+  done();
 }
 
 /* ---------- entrances ---------- */
@@ -261,6 +275,7 @@ function fanIn() {
   SECTIONS.forEach((s, i) => {
     const el = stampEls.get(s.id)!;
     const side = i % 2 === 0 ? -1 : 1;
+    if (reduce) { gsap.fromTo(el, { opacity: 0 }, { opacity: 1, duration: 0.2 }); return; }
     gsap.fromTo(el,
       { x: side * W * 0.9, y: gsap.utils.random(-120, 120), rotation: tilt[s.id] + side * gsap.utils.random(25, 60), opacity: 0 },
       { x: 0, y: 0, rotation: tilt[s.id], opacity: 1, duration: T(1.4), delay: i * 0.08 * (reduce ? 0 : 1), ease: 'power3.out', overwrite: 'auto' });
@@ -296,8 +311,9 @@ async function runOpener() {
   stage.dataset.state = 'nav';
   layoutNav();
   fanIn();
+  stampsEl.inert = false;
   await new Promise((r) => setTimeout(r, T(1.5) * 1000));
-  busy = false;
+  done();
 }
 function startOpenerClock() {
   let left = 4000;
@@ -323,7 +339,10 @@ function enterInstant(id: SectionId | null) {
   openerEl.hidden = true;
   openerDone = true;
   clearTimeout(openerTimer);
+  try { sessionStorage.setItem('opener-seen', '1'); } catch { /* ignore */ }
+  stampsEl.inert = false;
   gsap.killTweensOf([...stampEls.values(), contentEl, bgEl]);
+  stampEls.forEach((el) => { gsap.set(el, { pointerEvents: 'auto', opacity: 1 }); el.removeAttribute('tabindex'); });
   if (id) {
     state = 'page';
     active = id;
@@ -379,11 +398,12 @@ function boot() {
   try { seen = sessionStorage.getItem('opener-seen') === '1'; } catch { /* ignore */ }
   if (hashId) enterInstant(hashId);
   else if (seen) { enterInstant(null); fanIn(); }
-  else { layoutNav(); stampEls.forEach((el) => gsap.set(el, { opacity: 0 })); startOpenerClock(); }
+  else { layoutNav(); stampEls.forEach((el) => gsap.set(el, { opacity: 0 })); stampsEl.inert = true; startOpenerClock(); }
 
   window.addEventListener('hashchange', () => {
-    if (busy) return;
+    if (busy || state === 'opener') return; // done() re-syncs when a transition ends
     const id = parseHash();
+    if (location.hash && !id) history.replaceState(null, '', '#/');
     if (id === active) return;
     enterInstant(id);
   });
