@@ -15,7 +15,9 @@ const project = defineType({
     defineField({ name: 'clientOrContext', type: 'string', description: 'Only if publishable.' }),
     defineField({ name: 'collaborators', type: 'array', of: [{ type: 'string' }] }),
     defineField({ name: 'accent', title: 'Project colour', type: 'string', description: 'Hex, e.g. #c4b268. Colour is project-led.' }),
-    defineField({ name: 'heroMedia', type: 'image', options: { hotspot: true } }),
+    defineField({ name: 'heroMedia', type: 'image', options: { hotspot: true }, fields: [{ name: 'alt', type: 'string', title: 'Alt text' }] }),
+    defineField({ name: 'heroVideoUrl', title: 'Hero video URL', type: 'url', description: 'Optional. Hosted video link.' }),
+    defineField({ name: 'externalUrl', title: 'External link', type: 'url' }),
     defineField({
       name: 'caseStudyBlocks', type: 'array',
       of: [
@@ -39,7 +41,8 @@ const craft = defineType({
     defineField({ name: 'slug', type: 'slug', options: { source: 'title' }, validation: (r) => r.required() }),
     defineField({ name: 'summary', type: 'text', rows: 2 }),
     defineField({ name: 'year', type: 'number' }),
-    defineField({ name: 'media', type: 'image', options: { hotspot: true }, validation: (r) => r.required() }),
+    defineField({ name: 'media', type: 'image', options: { hotspot: true }, fields: [{ name: 'alt', type: 'string', title: 'Alt text' }], validation: (r) => r.required() }),
+    defineField({ name: 'date', type: 'date', description: 'Optional; year is used for sorting if empty.' }),
     defineField({ name: 'notes', title: 'Notes / caption', type: 'text', rows: 2 }),
     defineField({ name: 'relatedProject', type: 'reference', to: [{ type: 'project' }] }),
   ],

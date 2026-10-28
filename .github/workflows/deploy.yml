@@ -23,6 +23,8 @@ jobs:
       - run: npm run build
         env:
           NEXT_PUBLIC_BASE_PATH: /Matt-Portfolio-Site
+          NEXT_PUBLIC_SANITY_PROJECT_ID: ${{ vars.NEXT_PUBLIC_SANITY_PROJECT_ID }}
+          NEXT_PUBLIC_SANITY_DATASET: ${{ vars.NEXT_PUBLIC_SANITY_DATASET }}
       - uses: actions/upload-pages-artifact@v3
         with:
           path: out

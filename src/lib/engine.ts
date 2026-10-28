@@ -27,11 +27,13 @@ let active: SectionId | null = null;
 let order: SectionId[] = []; // ids in mini-nav slots, left to right
 let busy = false;
 let clockTimer = 0;
+let disposed = false;
 let openerTimer = 0;
 let openerDone = false;
 /** End a transition, then re-sync with the URL/viewport if they changed meanwhile. */
 function done() {
   busy = false;
+  if (disposed) return;
   if (state === 'opener') return;
   const id = parseHash();
   if (id !== active) enterInstant(id);
@@ -456,6 +458,11 @@ return () => {
   window.removeEventListener('hashchange', onHash);
   window.removeEventListener('resize', onResize);
   document.removeEventListener('keydown', onKey);
-  gsap.killTweensOf('*');
+  disposed = true;
+  gsap.killTweensOf([...stampEls.values(), contentEl, bgEl, openerStamp, homeBtn, skipBtn]);
+  stampsEl.replaceChildren();
+  bleedLayer.replaceChildren();
+  openerStamp.replaceChildren();
+  document.title = 'Matthew Bloomfield';
 };
 }

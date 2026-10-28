@@ -14,8 +14,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en" className={`${display.variable} ${body.variable} ${mono.variable}`}>
       <body>
         {children}
-        {/* Cookieless, privacy-friendly; free on Vercel's Hobby plan. No-op elsewhere. */}
-        <Analytics />
+        {/* Cookieless, privacy-friendly, free on Vercel Hobby. Only rendered on Vercel (it ignores basePath elsewhere). */}
+        {process.env.VERCEL ? <Analytics /> : null}
       </body>
     </html>
   );
