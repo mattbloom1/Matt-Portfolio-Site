@@ -139,3 +139,9 @@ body {
 .more { margin: 16px 0; }
 .more summary { cursor: pointer; font: 500 12px var(--mono); letter-spacing: .14em; text-transform: uppercase; }
 .fun { font-style: italic; margin-top: 20px; }
+.home { overflow: visible; border: 0; background: none; width: 52px; height: 52px; color: var(--ink); padding: 0; }
+.home:hover { background: none; color: var(--ink); }
+.home .logo { position: absolute; left: 50%; top: 50%; width: 104px; height: 117px; transform: translate(-50%, -50%); pointer-events: none; overflow: visible; }
+.about-top { display: grid; grid-template-columns: minmax(0, 1fr); gap: 24px; }
+.portrait { width: 100%; height: auto; display: block; }
+@media (min-width: 760px) { .about-top { grid-template-columns: 5fr 7fr; align-items: start; } }

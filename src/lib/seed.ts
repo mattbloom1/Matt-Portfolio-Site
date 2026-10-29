@@ -29,12 +29,31 @@ export const SEED_EXPERIENCE: Experience[] = [
   { organization: 'Ignite Adaptive Sports', role: 'Volunteer: Graphic Design and On the Slopes' },
 ];
 
+const asset = (path: string) => `${process.env.NEXT_PUBLIC_BASE_PATH || ''}${path}`;
+export const PROFILE_PHOTO = { src: asset('/about/profile.webp'), alt: 'Portrait of Matt in front of a rock wall' };
+
 const p = (title: string, group: string, extra: Partial<Project> = {}): Project => ({ title, slug: title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, ''), disciplines: [group], ...extra });
 
 export const SEED_PROJECTS: Project[] = [
   ...['GearBook', 'Le Reve', 'Casa Avenida', 'The Edge Delray', 'The GVC Team', 'Liv Portfolio Site', 'GVC Workspace', 'Essays In Bloom'].map((t) => p(t, 'Websites')),
-  p('Posters', 'Posters', { summary: 'A selection to come.' }),
+  ...([
+    ['Variex', '01-type-specimen', 'Type specimen poster for the Variex typeface'],
+    ['Improve Your Golf', '02-golfer', 'Poster'],
+    ['The Frog', '03-frog', 'Poster'],
+    ['Handbook of Pictorial Symbols', '04-pictorial-symbols', 'Poster'],
+    ['I’m Going to the Mountains', '05-mountain-helicopter', 'Poster'],
+  ] as const).map(([t, f, d]) => p(t, 'Posters', { summary: d, heroImage: asset(`/posters/${f}.webp`) })),
   ...['Le Reve', 'Casa Avenida', 'Trimble Business Systems'].map((t) => p(t, 'Branding')),
+  ...([
+    ['True Colors gala poster', '01-gala-poster', 'Graphic design'],
+    ['True Colors gala mailer', '02-gala-mailer', 'Graphic design'],
+    ['Three events', '03-three-events', 'Graphic design'],
+    ['True Colors wordmark', '04-true-colors-wordmark', 'Graphic design'],
+    ['Thank-you card', '05-thank-you-card', 'Graphic design'],
+    ['Race group, 2026', '06-race-group-2026', 'On the slopes'],
+    ['Instructor with child', '07-instructor-with-child', 'On the slopes'],
+    ['Caribou Lodge', '08-caribou-lodge-exterior', 'On the slopes'],
+  ] as const).map(([t, f, d]) => p(t, 'Ignite Adaptive Sports', { summary: d, heroImage: asset(`/ignite/${f}.webp`) })),
   p('Opus', 'Branding', { summary: 'In progress.' }),
   p('Essays In Bloom', 'Branding', { summary: 'In progress.' }),
   ...['CU Skate Forge', 'Bloom Coffee Table', 'Bloc CNC', 'Topomaps'].map((t) => p(t, 'Projects')),

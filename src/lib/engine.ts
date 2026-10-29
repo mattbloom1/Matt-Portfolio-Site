@@ -60,12 +60,70 @@ function buildOpener() {
   openerStamp.innerHTML = `<svg viewBox="0 0 ${w} ${h}" role="img" aria-label="${SITE.name}, ${SITE.openerDate}">
     <path d="${perforatedPath(w, h, 6, 20)}" fill="#c9553d" fill-rule="evenodd"/>
     <rect x="22" y="22" width="${w - 44}" height="${h - 44}" fill="none" stroke="#141414" stroke-width="2"/>
-    <circle cx="150" cy="150" r="62" fill="none" stroke="#141414" stroke-width="2"/>
-    <text x="150" y="176" text-anchor="middle" font-size="78" font-weight="600">M</text>
+    <svg id="opener-logo" x="95" y="62" width="110" height="124" style="color:#141414"></svg>
     <text x="150" y="268" text-anchor="middle" font-size="30" font-weight="600" letter-spacing="3">MATT</text>
     <text x="150" y="300" text-anchor="middle" font-size="30" font-weight="600" letter-spacing="3">BLOOMFIELD</text>
     <text x="150" y="344" text-anchor="middle" font-size="15" letter-spacing="4">${SITE.openerDate}</text>
   </svg>`;
+}
+
+/* ---------- logo explosion (home button) ---------- */
+interface LogoSprite { width: number; height: number; frames: string[] }
+let logoSprite: LogoSprite | null = null;
+let logoPromise: Promise<LogoSprite> | null = null;
+const loadLogo = () => (logoPromise ??= fetch(`${process.env.NEXT_PUBLIC_BASE_PATH || ''}/logo/sprite.json`).then((r) => r.json() as Promise<LogoSprite>));
+function mountLogo() {
+  const svgNS = 'http://www.w3.org/2000/svg';
+  homeBtn.textContent = '';
+  const svg = document.createElementNS(svgNS, 'svg');
+  svg.setAttribute('class', 'logo');
+  svg.setAttribute('aria-hidden', 'true');
+  homeBtn.appendChild(svg);
+  const frame = { i: 0, target: 0, last: 0, raf: 0 };
+  const draw = () => { if (logoSprite) svg.innerHTML = logoSprite.frames[frame.i]; };
+  const tick = (now: number) => {
+    frame.raf = 0;
+    if (!logoSprite) return;
+    if (now - frame.last >= 25) {
+      frame.last = now;
+      frame.i += Math.sign(frame.target - frame.i);
+      draw();
+    }
+    if (frame.i !== frame.target) frame.raf = requestAnimationFrame(tick);
+  };
+  const go = (t: number) => {
+    if (reduce) return; // static logo for reduced motion
+    frame.target = t;
+    if (!frame.raf) frame.raf = requestAnimationFrame(tick);
+  };
+  loadLogo().then((s) => {
+    logoSprite = s;
+    svg.setAttribute('viewBox', `0 0 ${s.width} ${s.height}`);
+    draw();
+  }).catch(() => { homeBtn.textContent = '\u2302'; });
+  const over = () => go((logoSprite?.frames.length ?? 1) - 1);
+  const out = () => go(0);
+  homeBtn.addEventListener('pointerenter', over);
+  homeBtn.addEventListener('pointerleave', out);
+  homeBtn.addEventListener('focus', over);
+  homeBtn.addEventListener('blur', out);
+  logoCleanup = () => {
+    cancelAnimationFrame(frame.raf);
+    homeBtn.removeEventListener('pointerenter', over);
+    homeBtn.removeEventListener('pointerleave', out);
+    homeBtn.removeEventListener('focus', over);
+    homeBtn.removeEventListener('blur', out);
+  };
+}
+let logoCleanup = () => {};
+
+function fillOpenerLogo() {
+  loadLogo().then((s) => {
+    const el = openerStamp.querySelector('#opener-logo');
+    if (!el) return;
+    el.setAttribute('viewBox', `0 0 ${s.width} ${s.height}`);
+    el.innerHTML = s.frames[0];
+  }).catch(() => { /* opener still reads without the mark */ });
 }
 
 /* ---------- stamps ---------- */
@@ -407,9 +465,10 @@ function replayIntro() {
 
 /* ---------- boot ---------- */
 buildOpener();
+fillOpenerLogo();
 buildStamps();
 buildFooter();
-homeBtn.textContent = '\u2302';
+mountLogo();
 const replayBtn = document.getElementById('replay');
 const onHome = () => goHome();
 const onSkip = () => runOpener();
@@ -459,6 +518,7 @@ return () => {
   window.removeEventListener('resize', onResize);
   document.removeEventListener('keydown', onKey);
   disposed = true;
+  logoCleanup();
   gsap.killTweensOf([...stampEls.values(), contentEl, bgEl, openerStamp, homeBtn, skipBtn]);
   stampsEl.replaceChildren();
   bleedLayer.replaceChildren();

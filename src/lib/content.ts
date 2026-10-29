@@ -1,5 +1,5 @@
 import { urlFor } from './sanity';
-import { BIO_LONG, BIO_SHORT, EDUCATION, FUN_NOTE, SEED_CRAFTS, SEED_EXPERIENCE, SEED_PROJECTS } from './seed';
+import { PROFILE_PHOTO, BIO_LONG, BIO_SHORT, EDUCATION, FUN_NOTE, SEED_CRAFTS, SEED_EXPERIENCE, SEED_PROJECTS } from './seed';
 
 export type SectionId = 'projects' | 'experience' | 'about' | 'crafts' | 'photography';
 
@@ -67,11 +67,11 @@ const safeColor = (v = '') => (/^#[0-9a-f]{3,8}$/i.test(v) ? v : '');
 const todo = (t: string) => `<p class="todo">${t}</p>`;
 const dates = (e: Experience) => [e.startDate, e.endDate].filter(Boolean).join(' – ');
 
-const GROUPS = ['Websites', 'Posters', 'Branding', 'Projects'];
+const GROUPS = ['Websites', 'Posters', 'Branding', 'Projects', 'Ignite Adaptive Sports'];
 function projectsHtml(c: SiteContent) {
   const card = (p: Project, i: number) => `
     <article class="card">
-      <div class="card-img" style="--c:${safeColor(p.accent) || accents[i % accents.length]};${safeUrl(p.heroImage) ? `background-image:url('${encodeURI(safeUrl(p.heroImage))}');background-size:cover` : ''}"></div>
+      <div class="card-img" role="img" aria-label="${esc(p.title)}" style="--c:${safeColor(p.accent) || accents[i % accents.length]};${safeUrl(p.heroImage) ? `background-image:url('${encodeURI(safeUrl(p.heroImage))}');background-size:cover` : ''}"></div>
       <h3>${esc(p.title)}</h3>
       <p class="meta">${esc([p.role, p.year].filter(Boolean).join(' · '))}</p>
       ${p.summary ? `<p>${esc(p.summary)}</p>` : ''}
@@ -109,8 +109,8 @@ function photographyHtml(c: SiteContent) {
 function aboutHtml() {
   const links = SITE.links.map((l) => `<li><a href="${l.href}" target="_blank" rel="noopener">${l.label}</a></li>`).join('');
   const paras = (a: string[]) => a.map((t) => `<p>${esc(t)}</p>`).join('');
-  return `<p class="lead">${esc(SITE.role)}.</p>
-    ${paras(BIO_SHORT)}
+  return `<div class="about-top"><img class="portrait" src="${esc(PROFILE_PHOTO.src)}" alt="${esc(PROFILE_PHOTO.alt)}" width="1600" height="1061" /><div><p class="lead">${esc(SITE.role)}.</p>
+    ${paras(BIO_SHORT)}</div></div>
     <details class="more"><summary>Longer bio</summary>${paras(BIO_LONG)}</details>
     <p class="fun">${esc(FUN_NOTE)}</p>
     <p class="meta">Elsewhere</p><ul class="links">${links}<li><a href="mailto:${SITE.email}">${SITE.email}</a></li></ul>`;
