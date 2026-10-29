@@ -134,3 +134,4 @@ body {
 .links a { color: inherit; text-underline-offset: 3px; }
 @media (max-width: 640px) { .replay { display: none; } }
 .card .meta a { color: inherit; text-underline-offset: 3px; }
+.series { font: 600 24px/1.2 var(--serif); margin: 24px 0 6px; }

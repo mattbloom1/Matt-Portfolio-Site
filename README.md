@@ -10,10 +10,10 @@ npm run build    # static site in ./out
 ```
 
 ## Content (Sanity, free plan)
-Without a Sanity project the site shows clearly marked placeholders. To connect content:
-1. `cd studio && npm install && npx sanity init --env` (create a free project, dataset `production`).
-2. Add `NEXT_PUBLIC_SANITY_PROJECT_ID` (and optional `NEXT_PUBLIC_SANITY_DATASET`) to Vercel / GitHub Actions env.
-3. `npm run dev` in `studio/` to edit Projects, Crafts and Experience. Schemas live in `studio/schemaTypes`.
+Project `6zrc4vv3`, dataset `production`. The site reads it at build time (public id, no token needed); each section shows marked placeholders until it has entries.
+- Edit content: `cd studio && npm install && npm run dev`. Document types: Project, Craft / experiment, Experience entry, Photography series (`studio/schemaTypes`).
+- Add the studio's origin to the project's CORS list only if you later query from the browser. Static builds do not need it.
+- Rebuild the site after publishing (Vercel deploy hook or push; a Sanity webhook to the hook can automate it).
 Projects and Crafts are separate document types; nothing is duplicated between them.
 
 ## Hosting
@@ -27,5 +27,3 @@ Edit `src/app/fonts.ts`. Own fonts: add files and use `next/font/local` with the
 ## Docs
 Branding, positioning and wireframes are in `docs/`.
 
-## Seed content
-`studio/seed/projects.ndjson` has the one real draft entry (Gearbook). Import with `cd studio && npx sanity dataset import seed/projects.ndjson production`. Upload its hero image (`public/projects/gearbook-just-go-outside.jpg`) in the Studio afterwards.

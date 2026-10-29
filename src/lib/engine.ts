@@ -382,7 +382,7 @@ function buildFooter() {
   $('email').textContent = SITE.email;
   ($('email') as HTMLAnchorElement).href = `mailto:${SITE.email}`;
   const clock = $<HTMLTimeElement>('clock');
-  const fmt = new Intl.DateTimeFormat('en-US', { hour: 'numeric', minute: '2-digit', timeZone: SITE.timeZone, timeZoneName: 'short' });
+  const fmt = new Intl.DateTimeFormat('en-US', { hour: 'numeric', minute: '2-digit', timeZoneName: 'short' /* visitor's local time */ });
   const tick = () => { const d = new Date(); clock.textContent = fmt.format(d); clock.dateTime = d.toISOString(); };
   tick();
   clockTimer = window.setInterval(tick, 15000);

@@ -61,4 +61,23 @@ const experience = defineType({
   ],
 });
 
-export const schemaTypes = [project, craft, experience];
+const photoSeries = defineType({
+  name: 'photoSeries', title: 'Photography series', type: 'document',
+  fields: [
+    defineField({ name: 'title', type: 'string', validation: (r) => r.required() }),
+    defineField({ name: 'slug', type: 'slug', options: { source: 'title' }, validation: (r) => r.required() }),
+    defineField({ name: 'summary', type: 'text', rows: 3 }),
+    defineField({ name: 'year', type: 'number' }),
+    defineField({ name: 'coverImage', type: 'image', options: { hotspot: true }, fields: [{ name: 'alt', type: 'string', title: 'Alt text' }] }),
+    defineField({
+      name: 'frames', type: 'array',
+      of: [{ type: 'object', name: 'frame', fields: [
+        { name: 'image', type: 'image', options: { hotspot: true }, validation: (r: { required: () => unknown }) => r.required() },
+        { name: 'alt', type: 'string', title: 'Alt text' },
+        { name: 'caption', type: 'string', description: 'e.g. month, place, film stock' },
+      ] }],
+    }),
+  ],
+});
+
+export const schemaTypes = [project, craft, experience, photoSeries];
