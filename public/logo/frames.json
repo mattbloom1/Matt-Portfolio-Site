@@ -1,0 +1,353 @@
+{
+ "canvas": {
+  "width": 64.99,
+  "height": 73.36
+ },
+ "frameCount": 49,
+ "order": "ascending artboard size (rest -> burst)",
+ "frames": [
+  {
+   "index": 1,
+   "file": "frame-01.svg",
+   "source": "Artboard 3.svg",
+   "contentWidth": 37.91,
+   "contentHeight": 37.64
+  },
+  {
+   "index": 2,
+   "file": "frame-02.svg",
+   "source": "Artboard 4.svg",
+   "contentWidth": 37.92,
+   "contentHeight": 37.73
+  },
+  {
+   "index": 3,
+   "file": "frame-03.svg",
+   "source": "Artboard 5.svg",
+   "contentWidth": 37.96,
+   "contentHeight": 37.83
+  },
+  {
+   "index": 4,
+   "file": "frame-04.svg",
+   "source": "Artboard 6.svg",
+   "contentWidth": 38.02,
+   "contentHeight": 37.93
+  },
+  {
+   "index": 5,
+   "file": "frame-05.svg",
+   "source": "Artboard 6 copy 2.svg",
+   "contentWidth": 38.08,
+   "contentHeight": 38.04
+  },
+  {
+   "index": 6,
+   "file": "frame-06.svg",
+   "source": "Artboard 7.svg",
+   "contentWidth": 38.15,
+   "contentHeight": 38.14
+  },
+  {
+   "index": 7,
+   "file": "frame-07.svg",
+   "source": "Artboard 8.svg",
+   "contentWidth": 38.22,
+   "contentHeight": 38.24
+  },
+  {
+   "index": 8,
+   "file": "frame-08.svg",
+   "source": "Artboard 9.svg",
+   "contentWidth": 38.29,
+   "contentHeight": 38.35
+  },
+  {
+   "index": 9,
+   "file": "frame-09.svg",
+   "source": "Artboard 10.svg",
+   "contentWidth": 38.36,
+   "contentHeight": 38.45
+  },
+  {
+   "index": 10,
+   "file": "frame-10.svg",
+   "source": "Artboard 11.svg",
+   "contentWidth": 38.43,
+   "contentHeight": 38.55
+  },
+  {
+   "index": 11,
+   "file": "frame-11.svg",
+   "source": "Artboard 12.svg",
+   "contentWidth": 38.43,
+   "contentHeight": 38.55
+  },
+  {
+   "index": 12,
+   "file": "frame-12.svg",
+   "source": "Artboard 13.svg",
+   "contentWidth": 38.51,
+   "contentHeight": 38.66
+  },
+  {
+   "index": 13,
+   "file": "frame-13.svg",
+   "source": "Artboard 14.svg",
+   "contentWidth": 38.59,
+   "contentHeight": 38.76
+  },
+  {
+   "index": 14,
+   "file": "frame-14.svg",
+   "source": "Artboard 15.svg",
+   "contentWidth": 38.66,
+   "contentHeight": 38.87
+  },
+  {
+   "index": 15,
+   "file": "frame-15.svg",
+   "source": "Artboard 16.svg",
+   "contentWidth": 38.74,
+   "contentHeight": 38.97
+  },
+  {
+   "index": 16,
+   "file": "frame-16.svg",
+   "source": "Artboard 17.svg",
+   "contentWidth": 38.82,
+   "contentHeight": 39.08
+  },
+  {
+   "index": 17,
+   "file": "frame-17.svg",
+   "source": "Artboard 18.svg",
+   "contentWidth": 38.9,
+   "contentHeight": 39.19
+  },
+  {
+   "index": 18,
+   "file": "frame-18.svg",
+   "source": "Artboard 19.svg",
+   "contentWidth": 38.97,
+   "contentHeight": 39.29
+  },
+  {
+   "index": 19,
+   "file": "frame-19.svg",
+   "source": "Artboard 20.svg",
+   "contentWidth": 39.05,
+   "contentHeight": 39.4
+  },
+  {
+   "index": 20,
+   "file": "frame-20.svg",
+   "source": "Artboard 21.svg",
+   "contentWidth": 39.13,
+   "contentHeight": 39.5
+  },
+  {
+   "index": 21,
+   "file": "frame-21.svg",
+   "source": "Artboard 22.svg",
+   "contentWidth": 39.21,
+   "contentHeight": 39.61
+  },
+  {
+   "index": 22,
+   "file": "frame-22.svg",
+   "source": "Artboard 23.svg",
+   "contentWidth": 39.29,
+   "contentHeight": 39.72
+  },
+  {
+   "index": 23,
+   "file": "frame-23.svg",
+   "source": "Artboard 24.svg",
+   "contentWidth": 39.37,
+   "contentHeight": 39.82
+  },
+  {
+   "index": 24,
+   "file": "frame-24.svg",
+   "source": "Artboard 25.svg",
+   "contentWidth": 39.45,
+   "contentHeight": 39.93
+  },
+  {
+   "index": 25,
+   "file": "frame-25.svg",
+   "source": "Artboard 26.svg",
+   "contentWidth": 39.53,
+   "contentHeight": 40.07
+  },
+  {
+   "index": 26,
+   "file": "frame-26.svg",
+   "source": "Artboard 27.svg",
+   "contentWidth": 39.61,
+   "contentHeight": 40.22
+  },
+  {
+   "index": 27,
+   "file": "frame-27.svg",
+   "source": "Artboard 28.svg",
+   "contentWidth": 39.69,
+   "contentHeight": 40.37
+  },
+  {
+   "index": 28,
+   "file": "frame-28.svg",
+   "source": "Artboard 29.svg",
+   "contentWidth": 39.77,
+   "contentHeight": 40.51
+  },
+  {
+   "index": 29,
+   "file": "frame-29.svg",
+   "source": "Artboard 50.svg",
+   "contentWidth": 39.93,
+   "contentHeight": 40.81
+  },
+  {
+   "index": 30,
+   "file": "frame-30.svg",
+   "source": "Artboard 30.svg",
+   "contentWidth": 40.09,
+   "contentHeight": 41.11
+  },
+  {
+   "index": 31,
+   "file": "frame-31.svg",
+   "source": "Artboard 31.svg",
+   "contentWidth": 40.25,
+   "contentHeight": 41.41
+  },
+  {
+   "index": 32,
+   "file": "frame-32.svg",
+   "source": "Artboard 32.svg",
+   "contentWidth": 40.41,
+   "contentHeight": 41.71
+  },
+  {
+   "index": 33,
+   "file": "frame-33.svg",
+   "source": "Artboard 33.svg",
+   "contentWidth": 40.73,
+   "contentHeight": 42.31
+  },
+  {
+   "index": 34,
+   "file": "frame-34.svg",
+   "source": "Artboard 34.svg",
+   "contentWidth": 41.05,
+   "contentHeight": 42.92
+  },
+  {
+   "index": 35,
+   "file": "frame-35.svg",
+   "source": "Artboard 35.svg",
+   "contentWidth": 41.37,
+   "contentHeight": 43.52
+  },
+  {
+   "index": 36,
+   "file": "frame-36.svg",
+   "source": "Artboard 36.svg",
+   "contentWidth": 41.69,
+   "contentHeight": 44.13
+  },
+  {
+   "index": 37,
+   "file": "frame-37.svg",
+   "source": "Artboard 37.svg",
+   "contentWidth": 42.01,
+   "contentHeight": 44.74
+  },
+  {
+   "index": 38,
+   "file": "frame-38.svg",
+   "source": "Artboard 38.svg",
+   "contentWidth": 42.34,
+   "contentHeight": 45.35
+  },
+  {
+   "index": 39,
+   "file": "frame-39.svg",
+   "source": "Artboard 39.svg",
+   "contentWidth": 42.66,
+   "contentHeight": 45.96
+  },
+  {
+   "index": 40,
+   "file": "frame-40.svg",
+   "source": "Artboard 40.svg",
+   "contentWidth": 42.98,
+   "contentHeight": 46.57
+  },
+  {
+   "index": 41,
+   "file": "frame-41.svg",
+   "source": "Artboard 41.svg",
+   "contentWidth": 43.3,
+   "contentHeight": 47.18
+  },
+  {
+   "index": 42,
+   "file": "frame-42.svg",
+   "source": "Artboard 42.svg",
+   "contentWidth": 43.63,
+   "contentHeight": 47.79
+  },
+  {
+   "index": 43,
+   "file": "frame-43.svg",
+   "source": "Artboard 43.svg",
+   "contentWidth": 43.95,
+   "contentHeight": 48.4
+  },
+  {
+   "index": 44,
+   "file": "frame-44.svg",
+   "source": "Artboard 44.svg",
+   "contentWidth": 46.1,
+   "contentHeight": 51.45
+  },
+  {
+   "index": 45,
+   "file": "frame-45.svg",
+   "source": "Artboard 45.svg",
+   "contentWidth": 48.68,
+   "contentHeight": 54.51
+  },
+  {
+   "index": 46,
+   "file": "frame-46.svg",
+   "source": "Artboard 46.svg",
+   "contentWidth": 51.33,
+   "contentHeight": 57.57
+  },
+  {
+   "index": 47,
+   "file": "frame-47.svg",
+   "source": "Artboard 47.svg",
+   "contentWidth": 53.97,
+   "contentHeight": 60.63
+  },
+  {
+   "index": 48,
+   "file": "frame-48.svg",
+   "source": "Artboard 48.svg",
+   "contentWidth": 57.09,
+   "contentHeight": 64.23
+  },
+  {
+   "index": 49,
+   "file": "frame-49.svg",
+   "source": "Artboard 49.svg",
+   "contentWidth": 64.99,
+   "contentHeight": 73.36
+  }
+ ]
+}

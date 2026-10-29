@@ -1,0 +1,504 @@
+{
+ "generated": "2026-10-29",
+ "note": "width/height in px (SVG: canvas viewBox units)",
+ "files": [
+  {
+   "file": "/logo/frames/frame-01.svg",
+   "width": 64.99,
+   "height": 73.36,
+   "bytes": 1496,
+   "original": "Logo Explosion/Artboard 3.svg",
+   "note": "content 37.91x37.64, centred on shared 64.99x73.36 canvas"
+  },
+  {
+   "file": "/logo/frames/frame-02.svg",
+   "width": 64.99,
+   "height": 73.36,
+   "bytes": 1492,
+   "original": "Logo Explosion/Artboard 4.svg",
+   "note": "content 37.92x37.73, centred on shared 64.99x73.36 canvas"
+  },
+  {
+   "file": "/logo/frames/frame-03.svg",
+   "width": 64.99,
+   "height": 73.36,
+   "bytes": 1500,
+   "original": "Logo Explosion/Artboard 5.svg",
+   "note": "content 37.96x37.83, centred on shared 64.99x73.36 canvas"
+  },
+  {
+   "file": "/logo/frames/frame-04.svg",
+   "width": 64.99,
+   "height": 73.36,
+   "bytes": 1500,
+   "original": "Logo Explosion/Artboard 6.svg",
+   "note": "content 38.02x37.93, centred on shared 64.99x73.36 canvas"
+  },
+  {
+   "file": "/logo/frames/frame-05.svg",
+   "width": 64.99,
+   "height": 73.36,
+   "bytes": 1513,
+   "original": "Logo Explosion/Artboard 6 copy 2.svg",
+   "note": "content 38.08x38.04, centred on shared 64.99x73.36 canvas"
+  },
+  {
+   "file": "/logo/frames/frame-06.svg",
+   "width": 64.99,
+   "height": 73.36,
+   "bytes": 1501,
+   "original": "Logo Explosion/Artboard 7.svg",
+   "note": "content 38.15x38.14, centred on shared 64.99x73.36 canvas"
+  },
+  {
+   "file": "/logo/frames/frame-07.svg",
+   "width": 64.99,
+   "height": 73.36,
+   "bytes": 1497,
+   "original": "Logo Explosion/Artboard 8.svg",
+   "note": "content 38.22x38.24, centred on shared 64.99x73.36 canvas"
+  },
+  {
+   "file": "/logo/frames/frame-08.svg",
+   "width": 64.99,
+   "height": 73.36,
+   "bytes": 1481,
+   "original": "Logo Explosion/Artboard 9.svg",
+   "note": "content 38.29x38.35, centred on shared 64.99x73.36 canvas"
+  },
+  {
+   "file": "/logo/frames/frame-09.svg",
+   "width": 64.99,
+   "height": 73.36,
+   "bytes": 1482,
+   "original": "Logo Explosion/Artboard 10.svg",
+   "note": "content 38.36x38.45, centred on shared 64.99x73.36 canvas"
+  },
+  {
+   "file": "/logo/frames/frame-10.svg",
+   "width": 64.99,
+   "height": 73.36,
+   "bytes": 1483,
+   "original": "Logo Explosion/Artboard 11.svg",
+   "note": "content 38.43x38.55, centred on shared 64.99x73.36 canvas"
+  },
+  {
+   "file": "/logo/frames/frame-11.svg",
+   "width": 64.99,
+   "height": 73.36,
+   "bytes": 1483,
+   "original": "Logo Explosion/Artboard 12.svg",
+   "note": "content 38.43x38.55, centred on shared 64.99x73.36 canvas"
+  },
+  {
+   "file": "/logo/frames/frame-12.svg",
+   "width": 64.99,
+   "height": 73.36,
+   "bytes": 1495,
+   "original": "Logo Explosion/Artboard 13.svg",
+   "note": "content 38.51x38.66, centred on shared 64.99x73.36 canvas"
+  },
+  {
+   "file": "/logo/frames/frame-13.svg",
+   "width": 64.99,
+   "height": 73.36,
+   "bytes": 1488,
+   "original": "Logo Explosion/Artboard 14.svg",
+   "note": "content 38.59x38.76, centred on shared 64.99x73.36 canvas"
+  },
+  {
+   "file": "/logo/frames/frame-14.svg",
+   "width": 64.99,
+   "height": 73.36,
+   "bytes": 1491,
+   "original": "Logo Explosion/Artboard 15.svg",
+   "note": "content 38.66x38.87, centred on shared 64.99x73.36 canvas"
+  },
+  {
+   "file": "/logo/frames/frame-15.svg",
+   "width": 64.99,
+   "height": 73.36,
+   "bytes": 1490,
+   "original": "Logo Explosion/Artboard 16.svg",
+   "note": "content 38.74x38.97, centred on shared 64.99x73.36 canvas"
+  },
+  {
+   "file": "/logo/frames/frame-16.svg",
+   "width": 64.99,
+   "height": 73.36,
+   "bytes": 1494,
+   "original": "Logo Explosion/Artboard 17.svg",
+   "note": "content 38.82x39.08, centred on shared 64.99x73.36 canvas"
+  },
+  {
+   "file": "/logo/frames/frame-17.svg",
+   "width": 64.99,
+   "height": 73.36,
+   "bytes": 1495,
+   "original": "Logo Explosion/Artboard 18.svg",
+   "note": "content 38.9x39.19, centred on shared 64.99x73.36 canvas"
+  },
+  {
+   "file": "/logo/frames/frame-18.svg",
+   "width": 64.99,
+   "height": 73.36,
+   "bytes": 1493,
+   "original": "Logo Explosion/Artboard 19.svg",
+   "note": "content 38.97x39.29, centred on shared 64.99x73.36 canvas"
+  },
+  {
+   "file": "/logo/frames/frame-19.svg",
+   "width": 64.99,
+   "height": 73.36,
+   "bytes": 1492,
+   "original": "Logo Explosion/Artboard 20.svg",
+   "note": "content 39.05x39.4, centred on shared 64.99x73.36 canvas"
+  },
+  {
+   "file": "/logo/frames/frame-20.svg",
+   "width": 64.99,
+   "height": 73.36,
+   "bytes": 1486,
+   "original": "Logo Explosion/Artboard 21.svg",
+   "note": "content 39.13x39.5, centred on shared 64.99x73.36 canvas"
+  },
+  {
+   "file": "/logo/frames/frame-21.svg",
+   "width": 64.99,
+   "height": 73.36,
+   "bytes": 1501,
+   "original": "Logo Explosion/Artboard 22.svg",
+   "note": "content 39.21x39.61, centred on shared 64.99x73.36 canvas"
+  },
+  {
+   "file": "/logo/frames/frame-22.svg",
+   "width": 64.99,
+   "height": 73.36,
+   "bytes": 1490,
+   "original": "Logo Explosion/Artboard 23.svg",
+   "note": "content 39.29x39.72, centred on shared 64.99x73.36 canvas"
+  },
+  {
+   "file": "/logo/frames/frame-23.svg",
+   "width": 64.99,
+   "height": 73.36,
+   "bytes": 1498,
+   "original": "Logo Explosion/Artboard 24.svg",
+   "note": "content 39.37x39.82, centred on shared 64.99x73.36 canvas"
+  },
+  {
+   "file": "/logo/frames/frame-24.svg",
+   "width": 64.99,
+   "height": 73.36,
+   "bytes": 1490,
+   "original": "Logo Explosion/Artboard 25.svg",
+   "note": "content 39.45x39.93, centred on shared 64.99x73.36 canvas"
+  },
+  {
+   "file": "/logo/frames/frame-25.svg",
+   "width": 64.99,
+   "height": 73.36,
+   "bytes": 1499,
+   "original": "Logo Explosion/Artboard 26.svg",
+   "note": "content 39.53x40.07, centred on shared 64.99x73.36 canvas"
+  },
+  {
+   "file": "/logo/frames/frame-26.svg",
+   "width": 64.99,
+   "height": 73.36,
+   "bytes": 1498,
+   "original": "Logo Explosion/Artboard 27.svg",
+   "note": "content 39.61x40.22, centred on shared 64.99x73.36 canvas"
+  },
+  {
+   "file": "/logo/frames/frame-27.svg",
+   "width": 64.99,
+   "height": 73.36,
+   "bytes": 1500,
+   "original": "Logo Explosion/Artboard 28.svg",
+   "note": "content 39.69x40.37, centred on shared 64.99x73.36 canvas"
+  },
+  {
+   "file": "/logo/frames/frame-28.svg",
+   "width": 64.99,
+   "height": 73.36,
+   "bytes": 1493,
+   "original": "Logo Explosion/Artboard 29.svg",
+   "note": "content 39.77x40.51, centred on shared 64.99x73.36 canvas"
+  },
+  {
+   "file": "/logo/frames/frame-29.svg",
+   "width": 64.99,
+   "height": 73.36,
+   "bytes": 1492,
+   "original": "Logo Explosion/Artboard 50.svg",
+   "note": "content 39.93x40.81, centred on shared 64.99x73.36 canvas"
+  },
+  {
+   "file": "/logo/frames/frame-30.svg",
+   "width": 64.99,
+   "height": 73.36,
+   "bytes": 1505,
+   "original": "Logo Explosion/Artboard 30.svg",
+   "note": "content 40.09x41.11, centred on shared 64.99x73.36 canvas"
+  },
+  {
+   "file": "/logo/frames/frame-31.svg",
+   "width": 64.99,
+   "height": 73.36,
+   "bytes": 1505,
+   "original": "Logo Explosion/Artboard 31.svg",
+   "note": "content 40.25x41.41, centred on shared 64.99x73.36 canvas"
+  },
+  {
+   "file": "/logo/frames/frame-32.svg",
+   "width": 64.99,
+   "height": 73.36,
+   "bytes": 1502,
+   "original": "Logo Explosion/Artboard 32.svg",
+   "note": "content 40.41x41.71, centred on shared 64.99x73.36 canvas"
+  },
+  {
+   "file": "/logo/frames/frame-33.svg",
+   "width": 64.99,
+   "height": 73.36,
+   "bytes": 1514,
+   "original": "Logo Explosion/Artboard 33.svg",
+   "note": "content 40.73x42.31, centred on shared 64.99x73.36 canvas"
+  },
+  {
+   "file": "/logo/frames/frame-34.svg",
+   "width": 64.99,
+   "height": 73.36,
+   "bytes": 1519,
+   "original": "Logo Explosion/Artboard 34.svg",
+   "note": "content 41.05x42.92, centred on shared 64.99x73.36 canvas"
+  },
+  {
+   "file": "/logo/frames/frame-35.svg",
+   "width": 64.99,
+   "height": 73.36,
+   "bytes": 1521,
+   "original": "Logo Explosion/Artboard 35.svg",
+   "note": "content 41.37x43.52, centred on shared 64.99x73.36 canvas"
+  },
+  {
+   "file": "/logo/frames/frame-36.svg",
+   "width": 64.99,
+   "height": 73.36,
+   "bytes": 1522,
+   "original": "Logo Explosion/Artboard 36.svg",
+   "note": "content 41.69x44.13, centred on shared 64.99x73.36 canvas"
+  },
+  {
+   "file": "/logo/frames/frame-37.svg",
+   "width": 64.99,
+   "height": 73.36,
+   "bytes": 1533,
+   "original": "Logo Explosion/Artboard 37.svg",
+   "note": "content 42.01x44.74, centred on shared 64.99x73.36 canvas"
+  },
+  {
+   "file": "/logo/frames/frame-38.svg",
+   "width": 64.99,
+   "height": 73.36,
+   "bytes": 1531,
+   "original": "Logo Explosion/Artboard 38.svg",
+   "note": "content 42.34x45.35, centred on shared 64.99x73.36 canvas"
+  },
+  {
+   "file": "/logo/frames/frame-39.svg",
+   "width": 64.99,
+   "height": 73.36,
+   "bytes": 1530,
+   "original": "Logo Explosion/Artboard 39.svg",
+   "note": "content 42.66x45.96, centred on shared 64.99x73.36 canvas"
+  },
+  {
+   "file": "/logo/frames/frame-40.svg",
+   "width": 64.99,
+   "height": 73.36,
+   "bytes": 1541,
+   "original": "Logo Explosion/Artboard 40.svg",
+   "note": "content 42.98x46.57, centred on shared 64.99x73.36 canvas"
+  },
+  {
+   "file": "/logo/frames/frame-41.svg",
+   "width": 64.99,
+   "height": 73.36,
+   "bytes": 1561,
+   "original": "Logo Explosion/Artboard 41.svg",
+   "note": "content 43.3x47.18, centred on shared 64.99x73.36 canvas"
+  },
+  {
+   "file": "/logo/frames/frame-42.svg",
+   "width": 64.99,
+   "height": 73.36,
+   "bytes": 1562,
+   "original": "Logo Explosion/Artboard 42.svg",
+   "note": "content 43.63x47.79, centred on shared 64.99x73.36 canvas"
+  },
+  {
+   "file": "/logo/frames/frame-43.svg",
+   "width": 64.99,
+   "height": 73.36,
+   "bytes": 1536,
+   "original": "Logo Explosion/Artboard 43.svg",
+   "note": "content 43.95x48.4, centred on shared 64.99x73.36 canvas"
+  },
+  {
+   "file": "/logo/frames/frame-44.svg",
+   "width": 64.99,
+   "height": 73.36,
+   "bytes": 1833,
+   "original": "Logo Explosion/Artboard 44.svg",
+   "note": "content 46.1x51.45, centred on shared 64.99x73.36 canvas"
+  },
+  {
+   "file": "/logo/frames/frame-45.svg",
+   "width": 64.99,
+   "height": 73.36,
+   "bytes": 2019,
+   "original": "Logo Explosion/Artboard 45.svg",
+   "note": "content 48.68x54.51, centred on shared 64.99x73.36 canvas"
+  },
+  {
+   "file": "/logo/frames/frame-46.svg",
+   "width": 64.99,
+   "height": 73.36,
+   "bytes": 2098,
+   "original": "Logo Explosion/Artboard 46.svg",
+   "note": "content 51.33x57.57, centred on shared 64.99x73.36 canvas"
+  },
+  {
+   "file": "/logo/frames/frame-47.svg",
+   "width": 64.99,
+   "height": 73.36,
+   "bytes": 2356,
+   "original": "Logo Explosion/Artboard 47.svg",
+   "note": "content 53.97x60.63, centred on shared 64.99x73.36 canvas"
+  },
+  {
+   "file": "/logo/frames/frame-48.svg",
+   "width": 64.99,
+   "height": 73.36,
+   "bytes": 2880,
+   "original": "Logo Explosion/Artboard 48.svg",
+   "note": "content 57.09x64.23, centred on shared 64.99x73.36 canvas"
+  },
+  {
+   "file": "/logo/frames/frame-49.svg",
+   "width": 64.99,
+   "height": 73.36,
+   "bytes": 3849,
+   "original": "Logo Explosion/Artboard 49.svg",
+   "note": "content 64.99x73.36, centred on shared 64.99x73.36 canvas"
+  },
+  {
+   "file": "/logo/logo.svg",
+   "width": 37.91,
+   "height": 37.64,
+   "bytes": 1478,
+   "original": "Logo Explosion/Artboard 3.svg",
+   "note": "resting state, original unmodified"
+  },
+  {
+   "file": "/about/profile.webp",
+   "width": 1600,
+   "height": 1061,
+   "bytes": 253916,
+   "original": "Photos/Film Squamish 26/000029820013.jpg"
+  },
+  {
+   "file": "/posters/01-type-specimen.webp",
+   "width": 1035,
+   "height": 1600,
+   "bytes": 228378,
+   "original": "Posters/finals exported/Type Specimen.jpg"
+  },
+  {
+   "file": "/posters/02-golfer.webp",
+   "width": 1224,
+   "height": 1584,
+   "bytes": 507258,
+   "original": "Posters/finals exported/Golfer.jpg"
+  },
+  {
+   "file": "/posters/03-frog.webp",
+   "width": 1224,
+   "height": 1584,
+   "bytes": 108876,
+   "original": "Posters/finals exported/frog.jpg"
+  },
+  {
+   "file": "/posters/04-pictorial-symbols.webp",
+   "width": 1236,
+   "height": 1600,
+   "bytes": 332144,
+   "original": "Posters/finals exported/Pictorial Symbols Poster.jpg"
+  },
+  {
+   "file": "/posters/05-mountain-helicopter.webp",
+   "width": 1236,
+   "height": 1600,
+   "bytes": 394270,
+   "original": "Posters/finals exported/Mountain & helicopter.jpg"
+  },
+  {
+   "file": "/ignite/01-gala-poster.webp",
+   "width": 1290,
+   "height": 1273,
+   "bytes": 317890,
+   "original": "Ignite Sports/Gala 2026/archive/poster.jpeg"
+  },
+  {
+   "file": "/ignite/02-gala-mailer.webp",
+   "width": 1092,
+   "height": 1440,
+   "bytes": 275230,
+   "original": "Ignite Sports/Gala 2026/archive/mailer.png"
+  },
+  {
+   "file": "/ignite/03-three-events.webp",
+   "width": 1600,
+   "height": 1064,
+   "bytes": 273278,
+   "original": "Ignite Sports/Gala 2026/archive/three events.png"
+  },
+  {
+   "file": "/ignite/04-true-colors-wordmark.webp",
+   "width": 1536,
+   "height": 1024,
+   "bytes": 96206,
+   "original": "Ignite Sports/Gala 2026/archive/true colors.png"
+  },
+  {
+   "file": "/ignite/05-thank-you-card.webp",
+   "width": 1600,
+   "height": 1143,
+   "bytes": 107300,
+   "original": "Ignite Sports/Thank you Cards/thankyoucards.jpg"
+  },
+  {
+   "file": "/ignite/06-race-group-2026.webp",
+   "width": 1600,
+   "height": 1200,
+   "bytes": 467470,
+   "original": "Ignite Sports/imgs/2026RaceGroup.jpg"
+  },
+  {
+   "file": "/ignite/07-instructor-with-child.webp",
+   "width": 1060,
+   "height": 1600,
+   "bytes": 294668,
+   "original": "Ignite Sports/imgs/Ignite instructor with child.jpg"
+  },
+  {
+   "file": "/ignite/08-caribou-lodge-exterior.webp",
+   "width": 1600,
+   "height": 1067,
+   "bytes": 279464,
+   "original": "Ignite Sports/imgs/caribou-lodge-exterior-winter-skiers.jpg"
+  }
+ ]
+}
