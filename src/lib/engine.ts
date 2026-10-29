@@ -84,6 +84,7 @@ function mountLogo() {
   const tick = (now: number) => {
     frame.raf = 0;
     if (!logoSprite) return;
+    frame.target = Math.min(frame.target, logoSprite.frames.length - 1);
     if (now - frame.last >= 25) {
       frame.last = now;
       frame.i += Math.sign(frame.target - frame.i);
@@ -100,8 +101,9 @@ function mountLogo() {
     logoSprite = s;
     svg.setAttribute('viewBox', `0 0 ${s.width} ${s.height}`);
     draw();
+    if (frame.i !== frame.target && !frame.raf) frame.raf = requestAnimationFrame(tick); // hover happened while loading
   }).catch(() => { homeBtn.textContent = '\u2302'; });
-  const over = () => go((logoSprite?.frames.length ?? 1) - 1);
+  const over = () => go((logoSprite?.frames.length ?? 49) - 1);
   const out = () => go(0);
   homeBtn.addEventListener('pointerenter', over);
   homeBtn.addEventListener('pointerleave', out);

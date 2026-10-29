@@ -37,7 +37,7 @@ const p = (title: string, group: string, extra: Partial<Project> = {}): Project 
 export const SEED_PROJECTS: Project[] = [
   ...['GearBook', 'Le Reve', 'Casa Avenida', 'The Edge Delray', 'The GVC Team', 'Liv Portfolio Site', 'GVC Workspace', 'Essays In Bloom'].map((t) => p(t, 'Websites')),
   ...([
-    ['Variex', '01-type-specimen', 'Type specimen poster for the Variex typeface'],
+    ['Variex', '01-type-specimen', 'Poster'],
     ['Improve Your Golf', '02-golfer', 'Poster'],
     ['The Frog', '03-frog', 'Poster'],
     ['Handbook of Pictorial Symbols', '04-pictorial-symbols', 'Poster'],

@@ -109,7 +109,7 @@ function photographyHtml(c: SiteContent) {
 function aboutHtml() {
   const links = SITE.links.map((l) => `<li><a href="${l.href}" target="_blank" rel="noopener">${l.label}</a></li>`).join('');
   const paras = (a: string[]) => a.map((t) => `<p>${esc(t)}</p>`).join('');
-  return `<div class="about-top"><img class="portrait" src="${esc(PROFILE_PHOTO.src)}" alt="${esc(PROFILE_PHOTO.alt)}" width="1600" height="1061" /><div><p class="lead">${esc(SITE.role)}.</p>
+  return `<div class="about-top"><img class="portrait" src="${esc(PROFILE_PHOTO.src)}" alt="${esc(PROFILE_PHOTO.alt)}" width="1600" height="1061" loading="lazy" decoding="async" /><div><p class="lead">${esc(SITE.role)}.</p>
     ${paras(BIO_SHORT)}</div></div>
     <details class="more"><summary>Longer bio</summary>${paras(BIO_LONG)}</details>
     <p class="fun">${esc(FUN_NOTE)}</p>
