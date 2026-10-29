@@ -1,6 +1,6 @@
 # Matthew Bloomfield portfolio
 
-Stamp-themed portfolio. Next.js (static export), CSS-first with selective GSAP, Sanity for content, free-tier hosting.
+Stamp-themed portfolio. Live preview: Vercel project `matt-portfolio-site` (auto-deploys on push to `main`). Next.js (static export), CSS-first with selective GSAP, Sanity for content, free-tier hosting.
 
 ## Run
 ```
