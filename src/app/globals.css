@@ -104,7 +104,8 @@ body {
 
 /* bleed overlay */
 .bleed-layer { position: absolute; inset: 0; z-index: 5; pointer-events: none; overflow: hidden; }
-.bleed { position: absolute; background-size: cover; background-position: center; will-change: transform, filter, opacity; }
+.bleed { position: absolute; display: grid; place-items: center; will-change: transform, filter, opacity; }
+.bleed img { filter: drop-shadow(0 12px 14px rgba(0,0,0,.26)); }
 
 /* footer */
 .footer {
