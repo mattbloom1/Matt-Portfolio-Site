@@ -1,5 +1,5 @@
 import { urlFor } from './sanity';
-import { PROFILE_PHOTO, BIO_LONG, BIO_SHORT, EDUCATION, FUN_NOTE, SEED_CRAFTS, SEED_EXPERIENCE, SEED_PROJECTS } from './seed';
+import { PROFILE_PHOTO, BIO_SHORT, EDUCATION, FUN_NOTE, SEED_CRAFTS, SEED_EXPERIENCE, SEED_PROJECTS } from './seed';
 
 export type SectionId = 'projects' | 'experience' | 'about' | 'crafts' | 'photography';
 
@@ -111,7 +111,6 @@ function aboutHtml() {
   const paras = (a: string[]) => a.map((t) => `<p>${esc(t)}</p>`).join('');
   return `<div class="about-top"><img class="portrait" src="${esc(PROFILE_PHOTO.src)}" alt="${esc(PROFILE_PHOTO.alt)}" width="1600" height="1061" loading="lazy" decoding="async" /><div><p class="lead">${esc(SITE.role)}.</p>
     ${paras(BIO_SHORT)}</div></div>
-    <details class="more"><summary>Longer bio</summary>${paras(BIO_LONG)}</details>
     <p class="fun">${esc(FUN_NOTE)}</p>
     <p class="meta">Elsewhere</p><ul class="links">${links}<li><a href="mailto:${SITE.email}">${SITE.email}</a></li></ul>`;
 }
