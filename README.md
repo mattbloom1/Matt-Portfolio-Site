@@ -27,3 +27,6 @@ Edit `src/app/fonts.ts`. Own fonts: add files and use `next/font/local` with the
 ## Docs
 Branding, positioning and wireframes are in `docs/`.
 
+
+## Seeding the CMS
+`npx tsx studio/seed/make-seed.ts` writes `studio/seed/content.ndjson` from `src/lib/seed.ts`; import it with `cd studio && npx sanity dataset import seed/content.ndjson production`. Until the dataset has entries the site uses the same seed data directly.

@@ -1,4 +1,5 @@
 import { urlFor } from './sanity';
+import { BIO_LONG, BIO_SHORT, EDUCATION, FUN_NOTE, SEED_CRAFTS, SEED_EXPERIENCE, SEED_PROJECTS } from './seed';
 
 export type SectionId = 'projects' | 'experience' | 'about' | 'crafts' | 'photography';
 
@@ -50,15 +51,13 @@ export interface SiteContent {
 const base = process.env.NEXT_PUBLIC_BASE_PATH || '';
 const accents = ['#c4b268', '#c9a0a0', '#8fb3c9', '#7fbf7a', '#a9c0bf'];
 
-/** Clearly identified placeholders, used until Sanity has content. */
+/** Matt's supplied content (src/lib/seed.ts); used until Sanity has entries. */
 export const PLACEHOLDER: SiteContent = {
-  placeholder: { projects: true, crafts: true, experience: true, photography: true },
+  placeholder: { projects: false, crafts: false, experience: false, photography: true },
+  projects: SEED_PROJECTS,
+  crafts: SEED_CRAFTS,
+  experience: SEED_EXPERIENCE,
   photography: [{ title: 'Placeholder series', slug: 'placeholder-series', summary: 'Photography content has not been supplied.' }],
-  projects: [
-    ...[1, 2, 3, 4].map((n) => ({ title: `Placeholder project ${n}`, slug: `placeholder-${n}`, summary: 'Project selection is deferred.', disciplines: ['Discipline'], accent: accents[n - 1] })),
-  ],
-  crafts: [1, 2, 3, 4, 5, 6].map((n) => ({ title: `Placeholder piece ${n}`, slug: `placeholder-craft-${n}` })),
-  experience: [1, 2, 3].map((n) => ({ organization: `Organization ${n}`, role: 'Role title', startDate: 'Year', endDate: 'Year', description: 'Placeholder. Experience content has not been supplied.' })),
 };
 
 const esc = (s = '') => s.replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c] as string));
@@ -68,27 +67,34 @@ const safeColor = (v = '') => (/^#[0-9a-f]{3,8}$/i.test(v) ? v : '');
 const todo = (t: string) => `<p class="todo">${t}</p>`;
 const dates = (e: Experience) => [e.startDate, e.endDate].filter(Boolean).join(' – ');
 
+const GROUPS = ['Websites', 'Posters', 'Branding', 'Projects'];
 function projectsHtml(c: SiteContent) {
-  const cards = c.projects.map((p, i) => `
+  const card = (p: Project, i: number) => `
     <article class="card">
       <div class="card-img" style="--c:${safeColor(p.accent) || accents[i % accents.length]};${safeUrl(p.heroImage) ? `background-image:url('${encodeURI(safeUrl(p.heroImage))}');background-size:cover` : ''}"></div>
       <h3>${esc(p.title)}</h3>
-      <p class="meta">${esc([p.role, p.year, ...(p.disciplines || [])].filter(Boolean).join(' · '))}</p>
+      <p class="meta">${esc([p.role, p.year].filter(Boolean).join(' · '))}</p>
       ${p.summary ? `<p>${esc(p.summary)}</p>` : ''}
       ${safeUrl(p.videoUrl) || safeUrl(p.href) ? `<p class="meta">${safeUrl(p.videoUrl) ? `<a href="${esc(safeUrl(p.videoUrl))}" target="_blank" rel="noopener">Watch</a>` : ''}${safeUrl(p.videoUrl) && safeUrl(p.href) ? ' · ' : ''}${safeUrl(p.href) ? `<a href="${esc(safeUrl(p.href))}" target="_blank" rel="noopener">${esc(p.linkLabel || 'Link')}</a>` : ''}</p>` : ''}
-    </article>`).join('');
-  return `<div class="cards">${cards}</div>${c.placeholder.projects ? todo('Placeholders. Project selection and priorities are deferred.') : ''}`;
+    </article>`;
+  const groups = [...new Set([...GROUPS, ...c.projects.flatMap((p) => p.disciplines || [])])];
+  const html = groups.map((g) => {
+    const items = c.projects.filter((p) => (p.disciplines || [])[0] === g);
+    return items.length ? `<section><h2 class="group">${esc(g)}</h2><div class="cards">${items.map(card).join('')}</div></section>` : '';
+  }).join('');
+  return `${html}${todo('Titles are from Matt’s list. Images, descriptions and links are still to come.')}`;
 }
 function experienceHtml(c: SiteContent) {
   const items = c.experience.map((e) => `
     <li><span class="meta">${esc(dates(e))}</span><h3>${esc(e.role)}, ${esc(e.organization)}</h3>${e.description ? `<p>${esc(e.description)}</p>` : ''}</li>`).join('');
-  return `<ol class="timeline">${items}</ol>${c.placeholder.experience ? todo('Placeholder timeline. Experience content has not been supplied.') : ''}`;
+  const edu = `<p class="meta">Education</p><p><strong>${esc(EDUCATION.school)}</strong>, ${esc(EDUCATION.year)}<br>${esc(EDUCATION.detail)}</p>`;
+  return `<ol class="timeline">${items}</ol>${edu}${c.placeholder.experience ? todo('Placeholder timeline. Experience content has not been supplied.') : ''}`;
 }
 function craftsHtml(c: SiteContent) {
   const shots = c.crafts.map((k, i) => `
     <figure class="shot" style="--c:${accents[i % accents.length]};${safeUrl(k.image) ? `background-image:url('${encodeURI(safeUrl(k.image))}');background-size:cover` : ''}">
       <figcaption>${esc(k.title)}${k.year ? ` · ${k.year}` : ''}</figcaption></figure>`).join('');
-  return `<p class="lead">Crafts and experiments, kept separate from Projects.</p><div class="gallery">${shots}</div>${c.placeholder.crafts ? todo('Placeholder gallery. Crafts content has not been supplied.') : ''}`;
+  return `<div class="gallery">${shots}</div>${todo('Titles are from Matt’s list; photos and notes are still to come.')}`;
 }
 function photographyHtml(c: SiteContent) {
   const series = c.photography.map((s) => {
@@ -102,8 +108,11 @@ function photographyHtml(c: SiteContent) {
 }
 function aboutHtml() {
   const links = SITE.links.map((l) => `<li><a href="${l.href}" target="_blank" rel="noopener">${l.label}</a></li>`).join('');
+  const paras = (a: string[]) => a.map((t) => `<p>${esc(t)}</p>`).join('');
   return `<p class="lead">${esc(SITE.role)}.</p>
-    ${todo('Biography copy has not been supplied. Placeholder.')}
+    ${paras(BIO_SHORT)}
+    <details class="more"><summary>Longer bio</summary>${paras(BIO_LONG)}</details>
+    <p class="fun">${esc(FUN_NOTE)}</p>
     <p class="meta">Elsewhere</p><ul class="links">${links}<li><a href="mailto:${SITE.email}">${SITE.email}</a></li></ul>`;
 }
 

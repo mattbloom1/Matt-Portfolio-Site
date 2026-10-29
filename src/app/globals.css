@@ -135,3 +135,7 @@ body {
 @media (max-width: 640px) { .replay { display: none; } }
 .card .meta a { color: inherit; text-underline-offset: 3px; }
 .series { font: 600 24px/1.2 var(--serif); margin: 24px 0 6px; }
+.group { font: 600 20px/1.2 var(--serif); letter-spacing: .02em; margin: 32px 0 12px; border-bottom: 1px solid var(--ink); padding-bottom: 6px; }
+.more { margin: 16px 0; }
+.more summary { cursor: pointer; font: 500 12px var(--mono); letter-spacing: .14em; text-transform: uppercase; }
+.fun { font-style: italic; margin-top: 20px; }

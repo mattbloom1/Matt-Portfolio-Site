@@ -1,6 +1,6 @@
 import { defineField, defineType } from 'sanity';
 
-export const DISCIPLINES = ['Web design', 'Graphic design', 'Creative technology', 'Direction', 'Motion', 'Photography', 'Other'];
+export const DISCIPLINES = ['Websites', 'Posters', 'Branding', 'Projects', 'Direction', 'Photography', 'Other'];
 
 const project = defineType({
   name: 'project', title: 'Project', type: 'document',

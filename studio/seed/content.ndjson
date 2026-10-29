@@ -1,0 +1,29 @@
+{"_id":"project-gearbook-0","_type":"project","title":"GearBook","slug":{"_type":"slug","current":"gearbook-0"},"disciplines":["Websites"]}
+{"_id":"project-le-reve-1","_type":"project","title":"Le Reve","slug":{"_type":"slug","current":"le-reve-1"},"disciplines":["Websites"]}
+{"_id":"project-casa-avenida-2","_type":"project","title":"Casa Avenida","slug":{"_type":"slug","current":"casa-avenida-2"},"disciplines":["Websites"]}
+{"_id":"project-the-edge-delray-3","_type":"project","title":"The Edge Delray","slug":{"_type":"slug","current":"the-edge-delray-3"},"disciplines":["Websites"]}
+{"_id":"project-the-gvc-team-4","_type":"project","title":"The GVC Team","slug":{"_type":"slug","current":"the-gvc-team-4"},"disciplines":["Websites"]}
+{"_id":"project-liv-portfolio-site-5","_type":"project","title":"Liv Portfolio Site","slug":{"_type":"slug","current":"liv-portfolio-site-5"},"disciplines":["Websites"]}
+{"_id":"project-gvc-workspace-6","_type":"project","title":"GVC Workspace","slug":{"_type":"slug","current":"gvc-workspace-6"},"disciplines":["Websites"]}
+{"_id":"project-essays-in-bloom-7","_type":"project","title":"Essays In Bloom","slug":{"_type":"slug","current":"essays-in-bloom-7"},"disciplines":["Websites"]}
+{"_id":"project-posters-8","_type":"project","title":"Posters","slug":{"_type":"slug","current":"posters-8"},"summary":"A selection to come.","disciplines":["Posters"]}
+{"_id":"project-le-reve-9","_type":"project","title":"Le Reve","slug":{"_type":"slug","current":"le-reve-9"},"disciplines":["Branding"]}
+{"_id":"project-casa-avenida-10","_type":"project","title":"Casa Avenida","slug":{"_type":"slug","current":"casa-avenida-10"},"disciplines":["Branding"]}
+{"_id":"project-trimble-business-systems-11","_type":"project","title":"Trimble Business Systems","slug":{"_type":"slug","current":"trimble-business-systems-11"},"disciplines":["Branding"]}
+{"_id":"project-opus-12","_type":"project","title":"Opus","slug":{"_type":"slug","current":"opus-12"},"summary":"In progress.","disciplines":["Branding"]}
+{"_id":"project-essays-in-bloom-13","_type":"project","title":"Essays In Bloom","slug":{"_type":"slug","current":"essays-in-bloom-13"},"summary":"In progress.","disciplines":["Branding"]}
+{"_id":"project-cu-skate-forge-14","_type":"project","title":"CU Skate Forge","slug":{"_type":"slug","current":"cu-skate-forge-14"},"disciplines":["Projects"]}
+{"_id":"project-bloom-coffee-table-15","_type":"project","title":"Bloom Coffee Table","slug":{"_type":"slug","current":"bloom-coffee-table-15"},"disciplines":["Projects"]}
+{"_id":"project-bloc-cnc-16","_type":"project","title":"Bloc CNC","slug":{"_type":"slug","current":"bloc-cnc-16"},"disciplines":["Projects"]}
+{"_id":"project-topomaps-17","_type":"project","title":"Topomaps","slug":{"_type":"slug","current":"topomaps-17"},"disciplines":["Projects"]}
+{"_id":"craft-pottery-0","_type":"craft","title":"Pottery","slug":{"_type":"slug","current":"pottery"}}
+{"_id":"craft-skate-rings-1","_type":"craft","title":"Skate Rings","slug":{"_type":"slug","current":"skate-rings"}}
+{"_id":"craft-recycled-climbing-rope-crafts-2","_type":"craft","title":"Recycled Climbing Rope Crafts","slug":{"_type":"slug","current":"recycled-climbing-rope-crafts"}}
+{"_id":"experience-0","_type":"experience","organization":"GVC","role":"Graphic Design, 3D Modelling, Web Design","startDate":"August 2025","endDate":"Present","sortOrder":1}
+{"_id":"experience-1","_type":"experience","organization":"Trimble","role":"Business Systems Management & Design","startDate":"May 2025","endDate":"August 2025","sortOrder":2}
+{"_id":"experience-2","_type":"experience","organization":"Environmental Center, University of Colorado Boulder","role":"Graphic Designer","startDate":"August 2023","endDate":"May 2025","sortOrder":3}
+{"_id":"experience-3","_type":"experience","organization":"millerBlaker, Bronx, NY","role":"Associate Project Manager & Intern on Engineering Team","startDate":"May 2024","endDate":"August 2024","sortOrder":4}
+{"_id":"experience-4","_type":"experience","organization":"Free Float Media LLC, Boulder, CO","role":"Web Developer","startDate":"May 2023","endDate":"October 2023","sortOrder":5}
+{"_id":"experience-5","_type":"experience","organization":"Gravity Vault Indoor Rock Climbing, Upper Saddle River, NJ","role":"Instructor","startDate":"May 2022","endDate":"August 2023","sortOrder":6}
+{"_id":"experience-6","_type":"experience","organization":"Woodward Camps, Woodward, PA","role":"Recreational Staff","startDate":"May 2021","endDate":"August 2022","sortOrder":7}
+{"_id":"experience-7","_type":"experience","organization":"Ignite Adaptive Sports","role":"Volunteer: Graphic Design and On the Slopes","sortOrder":8}
