@@ -12,29 +12,23 @@ const $ = <E extends HTMLElement>(id: string) => document.getElementById(id) as 
 
 const stage = $('stage');
 const stampsEl = $('stamps');
-const openerEl = $('opener');
-const openerStamp = $('opener-stamp');
-const skipBtn = $<HTMLButtonElement>('skip');
 const homeBtn = $<HTMLButtonElement>('home');
 const contentEl = $('content');
 const bgEl = $('bg');
 const bleedLayer = $('bleed-layer');
 const dispEl = document.getElementById('bleed-disp') as unknown as SVGElement;
 
-type State = 'opener' | 'nav' | 'page';
-let state: State = 'opener';
+type State = 'nav' | 'page';
+let state: State = 'nav';
 let active: SectionId | null = null;
 let order: SectionId[] = []; // ids in mini-nav slots, left to right
 let busy = false;
 let clockTimer = 0;
 let disposed = false;
-let openerTimer = 0;
-let openerDone = false;
 /** End a transition, then re-sync with the URL/viewport if they changed meanwhile. */
 function done() {
   busy = false;
   if (disposed) return;
-  if (state === 'opener') return;
   const id = parseHash();
   if (id !== active) enterInstant(id);
   else if (state === 'nav') layoutNav();
@@ -44,28 +38,6 @@ function done() {
 const byId = (id: SectionId) => SECTIONS.find((s) => s.id === id) as Section;
 const isMobile = () => window.innerWidth < 640;
 const img = (id: SectionId) => `${process.env.NEXT_PUBLIC_BASE_PATH || ''}/stamps/${id}.webp`;
-
-/* ---------- opener (placeholder stamp: logo, name, date) ---------- */
-function perforatedPath(w: number, h: number, r: number, pitch: number): string {
-  let d = `M0 0H${w}V${h}H0Z`;
-  const holes = (len: number) => Math.round(len / pitch);
-  const nx = holes(w), ny = holes(h);
-  const hole = (cx: number, cy: number) => `M${cx - r} ${cy}a${r} ${r} 0 1 0 ${2 * r} 0a${r} ${r} 0 1 0 ${-2 * r} 0Z`;
-  for (let i = 0; i <= nx; i++) { d += hole((i * w) / nx, 0) + hole((i * w) / nx, h); }
-  for (let j = 1; j < ny; j++) { d += hole(0, (j * h) / ny) + hole(w, (j * h) / ny); }
-  return d;
-}
-function buildOpener() {
-  const w = 300, h = 400;
-  openerStamp.innerHTML = `<svg viewBox="0 0 ${w} ${h}" role="img" aria-label="${SITE.name}, ${SITE.openerDate}">
-    <path d="${perforatedPath(w, h, 6, 20)}" fill="#c9553d" fill-rule="evenodd"/>
-    <rect x="22" y="22" width="${w - 44}" height="${h - 44}" fill="none" stroke="#141414" stroke-width="2"/>
-    <svg id="opener-logo" x="95" y="62" width="110" height="124" style="color:#141414"></svg>
-    <text x="150" y="268" text-anchor="middle" font-size="30" font-weight="600" letter-spacing="3">MATT</text>
-    <text x="150" y="300" text-anchor="middle" font-size="30" font-weight="600" letter-spacing="3">BLOOMFIELD</text>
-    <text x="150" y="344" text-anchor="middle" font-size="15" letter-spacing="4">${SITE.openerDate}</text>
-  </svg>`;
-}
 
 /* ---------- logo explosion (home button) ---------- */
 interface LogoSprite { width: number; height: number; frames: string[] }
@@ -118,15 +90,6 @@ function mountLogo() {
   };
 }
 let logoCleanup = () => {};
-
-function fillOpenerLogo() {
-  loadLogo().then((s) => {
-    const el = openerStamp.querySelector('#opener-logo');
-    if (!el) return;
-    el.setAttribute('viewBox', `0 0 ${s.width} ${s.height}`);
-    el.innerHTML = s.frames[0];
-  }).catch(() => { /* opener still reads without the mark */ });
-}
 
 /* ---------- stamps ---------- */
 const stampEls = new Map<SectionId, HTMLButtonElement>();
@@ -259,7 +222,7 @@ function setHash(h: string) {
 }
 
 async function select(id: SectionId) {
-  if (busy || id === active || state === 'opener') return;
+  if (busy || id === active) return;
   setHash(`#/${id}`);
   if (state === 'nav') await navToPage(id);
   else await pageSwap(id);
@@ -348,51 +311,6 @@ function fanIn() {
   });
 }
 
-function openerExit(): Promise<void> {
-  return new Promise((resolve) => {
-    const p = { disp: 0, blur: 0 };
-    const apply = () => {
-      dispEl.setAttribute('scale', String(p.disp));
-      openerStamp.style.filter = `url(#bleed) blur(${p.blur}px)`;
-    };
-    const dur = T(1.6);
-    gsap.timeline({ onComplete: () => { openerEl.hidden = true; dispEl.setAttribute('scale', '0'); resolve(); } })
-      .to(openerStamp, { scale: reduce ? 1 : 5, duration: dur, ease: 'power3.in' }, 0)
-      .to(p, { disp: reduce ? 0 : 60, blur: reduce ? 0 : 14, duration: dur, ease: 'power2.in', onUpdate: apply }, 0)
-      .to(openerStamp, { opacity: 0, duration: dur * 0.5, ease: 'power1.in' }, dur * 0.55)
-      .to(skipBtn, { opacity: 0, duration: 0.2 }, 0);
-  });
-}
-
-async function runOpener() {
-  if (openerDone) return;
-  openerDone = true;
-  clearTimeout(openerTimer);
-  busy = true;
-  await openerExit();
-  try { sessionStorage.setItem('opener-seen', '1'); } catch { /* storage may be blocked */ }
-  state = 'nav';
-  stage.dataset.state = 'nav';
-  layoutNav();
-  fanIn();
-  stampsEl.inert = false;
-  await new Promise((r) => setTimeout(r, T(1.5) * 1000));
-  done();
-}
-function startOpenerClock() {
-  let left = 4000;
-  let last = performance.now();
-  const tick = () => {
-    const now = performance.now();
-    if (!document.hidden) left -= now - last; // pause while the tab is hidden
-    last = now;
-    if (openerDone) return;
-    if (left <= 0) { runOpener(); return; }
-    openerTimer = window.setTimeout(tick, 100);
-  };
-  tick();
-}
-
 /* ---------- routing ---------- */
 function parseHash(): SectionId | null {
   const m = location.hash.match(/^#\/([a-z]+)$/);
@@ -400,10 +318,6 @@ function parseHash(): SectionId | null {
   return id && SECTIONS.some((s) => s.id === id) ? id : null;
 }
 function enterInstant(id: SectionId | null) {
-  openerEl.hidden = true;
-  openerDone = true;
-  clearTimeout(openerTimer);
-  try { sessionStorage.setItem('opener-seen', '1'); } catch { /* ignore */ }
   stampsEl.inert = false;
   gsap.killTweensOf([...stampEls.values(), contentEl, bgEl]);
   stampEls.forEach((el) => { gsap.set(el, { pointerEvents: 'auto', opacity: 1 }); el.removeAttribute('tabindex'); });
@@ -433,12 +347,7 @@ function enterInstant(id: SectionId | null) {
 }
 
 /* ---------- footer ---------- */
-const crosshair = `<svg viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1"><circle cx="11" cy="11" r="8"/><path d="M11 0v22M0 11h22"/></svg>`;
-const barcode = `<svg viewBox="0 0 40 22" fill="currentColor">${[0, 3, 5, 9, 11, 14, 18, 20, 24, 26, 30, 33, 36].map((x, i) => `<rect x="${x}" y="2" width="${i % 3 === 0 ? 2 : 1}" height="18"/>`).join('')}</svg>`;
-const cancel = `<svg viewBox="0 0 64 22" fill="none" stroke="currentColor" stroke-width="1"><circle cx="11" cy="11" r="9"/><path d="M20 7h40M20 11h40M20 15h40"/></svg>`;
 function buildFooter() {
-  $('micro-l').innerHTML = crosshair + barcode;
-  $('micro-r').innerHTML = cancel;
   $('email').textContent = SITE.email;
   ($('email') as HTMLAnchorElement).href = `mailto:${SITE.email}`;
   const clock = $<HTMLTimeElement>('clock');
@@ -448,34 +357,13 @@ function buildFooter() {
   clockTimer = window.setInterval(tick, 15000);
 }
 
-/* ---------- replay ---------- */
-function replayIntro() {
-  if (busy || state === 'opener') return;
-  enterInstant(null);
-  history.replaceState(null, '', '#/');
-  openerDone = false;
-  state = 'opener';
-  stage.dataset.state = 'opener';
-  openerEl.hidden = false;
-  gsap.set(openerStamp, { clearProps: 'all' });
-  openerStamp.style.filter = '';
-  gsap.set(skipBtn, { opacity: 1 });
-  stampEls.forEach((el) => gsap.set(el, { opacity: 0 }));
-  stampsEl.inert = true;
-  startOpenerClock();
-}
-
 /* ---------- boot ---------- */
-buildOpener();
-fillOpenerLogo();
 buildStamps();
 buildFooter();
 mountLogo();
-const replayBtn = document.getElementById('replay');
 const onHome = () => goHome();
-const onSkip = () => runOpener();
 const onHash = () => {
-  if (busy || state === 'opener') return; // done() re-syncs when a transition ends
+  if (busy) return; // done() re-syncs when a transition ends
   const id = parseHash();
   if (location.hash && !id) history.replaceState(null, '', '#/');
   if (id === active) return;
@@ -494,37 +382,28 @@ const onResize = () => {
 };
 const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape' && state === 'page') goHome(); };
 homeBtn.addEventListener('click', onHome);
-skipBtn.addEventListener('click', onSkip);
-replayBtn?.addEventListener('click', replayIntro);
 window.addEventListener('hashchange', onHash);
 window.addEventListener('resize', onResize);
 document.addEventListener('keydown', onKey);
 
 {
   const hashId = parseHash();
-  let seen = false;
-  try { seen = sessionStorage.getItem('opener-seen') === '1'; } catch { /* ignore */ }
   if (hashId) enterInstant(hashId);
-  else if (seen) { enterInstant(null); fanIn(); }
-  else { layoutNav(); stampEls.forEach((el) => gsap.set(el, { opacity: 0 })); stampsEl.inert = true; startOpenerClock(); }
+  else { enterInstant(null); fanIn(); }
 }
 
 return () => {
-  clearTimeout(openerTimer);
   cancelAnimationFrame(resizeRaf);
   clearInterval(clockTimer);
   homeBtn.removeEventListener('click', onHome);
-  skipBtn.removeEventListener('click', onSkip);
-  replayBtn?.removeEventListener('click', replayIntro);
   window.removeEventListener('hashchange', onHash);
   window.removeEventListener('resize', onResize);
   document.removeEventListener('keydown', onKey);
   disposed = true;
   logoCleanup();
-  gsap.killTweensOf([...stampEls.values(), contentEl, bgEl, openerStamp, homeBtn, skipBtn]);
+  gsap.killTweensOf([...stampEls.values(), contentEl, bgEl, homeBtn]);
   stampsEl.replaceChildren();
   bleedLayer.replaceChildren();
-  openerStamp.replaceChildren();
   document.title = 'Matthew Bloomfield';
 };
 }

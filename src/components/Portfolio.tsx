@@ -18,11 +18,7 @@ export default function Portfolio({ content }: { content: SiteContent }) {
       <div className="grain" aria-hidden="true" />
       <div className="bg" id="bg" aria-hidden="true" />
       <h1 className="sr-only">Matthew Bloomfield, Creative Technologist &amp; Director</h1>
-      <main id="stage" className="stage" data-state="opener">
-        <div className="opener" id="opener">
-          <div id="opener-stamp" className="opener-stamp" />
-          <button className="skip" id="skip" type="button">Skip</button>
-        </div>
+      <main id="stage" className="stage" data-state="nav">
         <nav id="stamps" className="stamps" aria-label="Sections" />
         <button className="home" id="home" type="button" aria-label="Home" hidden />
         <section id="content" className="content" tabIndex={-1} hidden />
@@ -30,13 +26,10 @@ export default function Portfolio({ content }: { content: SiteContent }) {
       </main>
       <footer className="footer">
         <div className="foot-left">
-          <span className="micro" id="micro-l" />
           <span>Matthew Bloomfield</span>
           <a href="mailto:matthewb3333@gmail.com" id="email">matthewb3333@gmail.com</a>
         </div>
         <div className="foot-right">
-          <button className="replay" id="replay" type="button">Replay intro</button>
-          <span className="micro" id="micro-r" />
           <time id="clock" />
         </div>
       </footer>
