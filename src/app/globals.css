@@ -6,10 +6,11 @@
   --sky: #8fb3c9;
   --green: #7fbf7a;
   --sage: #a9c0bf;
-  --serif: var(--font-display), 'Cormorant Garamond', Georgia, serif;
-  --body: var(--font-body), 'Newsreader', Georgia, serif;
-  --mono: var(--font-mono), 'IBM Plex Mono', ui-monospace, Menlo, monospace;
+  --serif: 'Recoleta', var(--font-display), 'Fraunces', Georgia, serif;
+  --body: 'Sitka Display', 'Sitka Text', var(--font-body), 'Newsreader', Georgia, serif;
+  --mono: 'Sitka Subheading', var(--font-mono), 'IBM Plex Mono', ui-monospace, Menlo, monospace;
   --footer-h: 56px;
+  --row-h: 112px;
 }
 * { box-sizing: border-box; }
 html, body { margin: 0; height: 100%; }
@@ -75,7 +76,7 @@ body {
 
 /* content */
 .content {
-  position: absolute; inset: 0; z-index: 2; overflow-y: auto; padding: 120px 24px 40px; outline: none;
+  position: absolute; inset: var(--row-h) 0 0 0; z-index: 2; overflow-y: auto; padding: 16px 24px 40px; outline: none;
 }
 .panel {
   max-width: 920px; margin: 0 auto; padding: 32px clamp(20px, 4vw, 48px) 40px;
@@ -123,7 +124,8 @@ body {
   .footer { font-size: 11px; padding: 0 14px; }
   .foot-left { flex-wrap: wrap; row-gap: 0; gap: 0 10px; }
   .micro { display: none; }
-  .content { padding: 96px 14px 24px; }
+  :root { --row-h: 94px; }
+  .content { padding: 12px 14px 24px; }
   .lead { font-size: 24px; }
 }
 @media (prefers-reduced-motion: reduce) { .stamp img { filter: drop-shadow(0 6px 8px rgba(0,0,0,.25)); } }
@@ -164,7 +166,7 @@ body {
 .stamp.held img { filter: drop-shadow(2px 4px 3px rgba(0,0,0,.25)) drop-shadow(0 24px 24px rgba(0,0,0,.3)); }
 
 /* labels under the mini stamps on detail pages */
-.stamps[data-mode='mini'] .stamp .tag { display: block; opacity: .85; font-size: 9px; letter-spacing: .12em; transform: translate(-50%, 5px); pointer-events: none; }
+.stamps[data-mode='mini'] .stamp .tag { display: block; opacity: .9; font-size: 12px; letter-spacing: .12em; transform: translate(-50%, 6px); pointer-events: none; }
 
 /* font switcher (?fonts) */
 .fontsw { position: fixed; right: 12px; bottom: calc(var(--footer-h) + 8px); z-index: 30; font: 500 12px var(--mono); color: var(--ink); }
@@ -178,3 +180,5 @@ body {
 .fontsw-load, .fontsw-reset { font: inherit; border: 1px solid var(--ink); background: none; padding: 6px 8px; cursor: pointer; margin-right: 6px; }
 .fontsw-status { margin: 8px 0; font-size: 11px; line-height: 1.4; text-transform: none; letter-spacing: 0; }
 .stamp .tag { user-select: none; }
+
+@media (max-width: 640px) { .stamps[data-mode='mini'] .stamp .tag { font-size: 9px; } }
