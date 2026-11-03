@@ -6,7 +6,7 @@
   --sky: #8fb3c9;
   --green: #7fbf7a;
   --sage: #a9c0bf;
-  --serif: 'Recoleta', var(--font-display), 'Fraunces', Georgia, serif;
+  --serif: var(--font-display), 'Young Serif', Georgia, serif;
   --body: 'Sitka Display', 'Sitka Text', var(--font-body), 'Newsreader', Georgia, serif;
   --mono: 'Sitka Subheading', var(--font-mono), 'IBM Plex Mono', ui-monospace, Menlo, monospace;
   --footer-h: 56px;
