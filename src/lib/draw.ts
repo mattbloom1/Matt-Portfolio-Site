@@ -1,10 +1,12 @@
 /** Charcoal-pencil drawing on the paper. Pointer events are read from the document so links, buttons and text keep working. */
-export function initDrawing(canvas: HTMLCanvasElement, resetBtn: HTMLButtonElement): () => void {
+export function initDrawing(canvas: HTMLCanvasElement, sendBtn: HTMLButtonElement): () => void {
   const ctx = canvas.getContext('2d');
   if (!ctx) return () => {};
   const c = ctx;
   const dpr = Math.min(window.devicePixelRatio || 1, 2);
   let drawn = false;
+  let erasing = false;
+  let cooldownUntil = 0;
 
   function size() {
     const w = window.innerWidth, h = window.innerHeight;
@@ -19,6 +21,13 @@ export function initDrawing(canvas: HTMLCanvasElement, resetBtn: HTMLButtonEleme
   }
   size();
 
+  function erase(x: number, y: number) {
+    c.save();
+    c.globalCompositeOperation = 'destination-out';
+    c.fillStyle = 'rgba(0,0,0,.9)';
+    c.beginPath(); c.arc(x, y, 16, 0, Math.PI * 2); c.fill();
+    c.restore();
+  }
   const gauss = () => (Math.random() + Math.random() + Math.random() - 1.5) / 1.5;
   /** One charcoal "dab": a faint soft core plus scattered grain specks. */
   function dab(x: number, y: number, r: number, pressure: number) {
@@ -45,31 +54,62 @@ export function initDrawing(canvas: HTMLCanvasElement, resetBtn: HTMLButtonEleme
     const dx = x - last.x, dy = y - last.y, d = Math.hypot(dx, dy);
     const speed = d / Math.max(t - last.t, 1);
     const target = Math.max(3.2, 7 - speed * 2) * (0.7 + p * 0.6);
-    const step = 1.2;
+    const step = erasing ? 6 : 1.2;
     const n = Math.max(1, Math.ceil(d / step));
     for (let i = 1; i <= n; i++) {
       const k = i / n;
+      if (erasing) { erase(last.x + dx * k, last.y + dy * k); continue; }
       last.w += (target - last.w) * 0.08;
       dab(last.x + dx * k, last.y + dy * k, last.w, 0.6 + p * 0.6);
     }
     last.x = x; last.y = y; last.t = t;
   }
-  function showReset() {
+  function showSend() {
     if (drawn) return;
     drawn = true;
-    resetBtn.hidden = false;
-    requestAnimationFrame(() => resetBtn.classList.add('on'));
+    sendBtn.hidden = false;
+    requestAnimationFrame(() => sendBtn.classList.add('on'));
+  }
+  const isBlank = () => {
+    const d = c.getImageData(0, 0, canvas.width, canvas.height).data;
+    for (let i = 3; i < d.length; i += 4 * 7) if (d[i] > 8) return false;
+    return true;
+  };
+  const flash = (t: string, ms = 2500) => { sendBtn.textContent = t; window.setTimeout(() => { sendBtn.textContent = 'send doodle'; sendBtn.disabled = Date.now() < cooldownUntil; }, ms); };
+  /** Flatten onto paper, downscale, and POST to the serverless mailer. */
+  async function send() {
+    if (sendBtn.disabled) return;
+    if (isBlank()) { flash('draw something first'); return; }
+    sendBtn.disabled = true; sendBtn.textContent = 'sending\u2026';
+    try {
+      const out = document.createElement('canvas');
+      const scale = Math.min(1, 1400 / canvas.width);
+      out.width = Math.round(canvas.width * scale); out.height = Math.round(canvas.height * scale);
+      const o = out.getContext('2d')!;
+      o.fillStyle = '#ece9e2'; o.fillRect(0, 0, out.width, out.height);
+      o.drawImage(canvas, 0, 0, out.width, out.height);
+      const res = await fetch('/api/doodle', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ image: out.toDataURL('image/jpeg', 0.85), website: '' }),
+      });
+      if (!res.ok) throw new Error(String(res.status));
+      cooldownUntil = Date.now() + 30000;
+      flash('sent \u2713');
+    } catch {
+      flash("couldn't send");
+    }
   }
 
   const down = (e: PointerEvent) => {
-    if (e.button !== 0 || id !== -1 || !stageOnly(e.target)) return;
+    if ((e.button !== 0 && e.button !== 2) || id !== -1 || !stageOnly(e.target)) return;
+    erasing = e.button === 2;
     if (document.getElementById('stage')?.dataset.state === 'page' && e.pointerType === 'touch') return; // let touch scroll content
     e.preventDefault();
     id = e.pointerId;
     last = { x: e.clientX, y: e.clientY, t: e.timeStamp, w: 5 };
     const p = e.pressure || 0.5;
-    dab(e.clientX, e.clientY, 5, 0.6 + p * 0.6);
-    showReset();
+    if (erasing) erase(e.clientX, e.clientY);
+    else { dab(e.clientX, e.clientY, 5, 0.6 + p * 0.6); showSend(); }
   };
   const move = (e: PointerEvent) => {
     if (e.pointerId !== id) return;
@@ -77,25 +117,22 @@ export function initDrawing(canvas: HTMLCanvasElement, resetBtn: HTMLButtonEleme
     for (const ev of evs) segment(ev.clientX, ev.clientY, ev.timeStamp, ev.pressure || 0.5);
   };
   const up = (e: PointerEvent) => { if (e.pointerId === id) { id = -1; last = null; } };
-  const reset = () => {
-    c.clearRect(0, 0, canvas.width, canvas.height);
-    drawn = false;
-    resetBtn.classList.remove('on');
-    window.setTimeout(() => { if (!drawn) resetBtn.hidden = true; }, 250);
-  };
+  const ctxMenu = (e: Event) => { if (stageOnly(e.target)) e.preventDefault(); };
 
   document.addEventListener('pointerdown', down);
   document.addEventListener('pointermove', move);
   document.addEventListener('pointerup', up);
   document.addEventListener('pointercancel', up);
   window.addEventListener('resize', size);
-  resetBtn.addEventListener('click', reset);
+  document.addEventListener('contextmenu', ctxMenu);
+  sendBtn.addEventListener('click', send);
   return () => {
     document.removeEventListener('pointerdown', down);
     document.removeEventListener('pointermove', move);
     document.removeEventListener('pointerup', up);
     document.removeEventListener('pointercancel', up);
     window.removeEventListener('resize', size);
-    resetBtn.removeEventListener('click', reset);
+    document.removeEventListener('contextmenu', ctxMenu);
+    sendBtn.removeEventListener('click', send);
   };
 }

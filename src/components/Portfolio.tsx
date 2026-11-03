@@ -8,9 +8,9 @@ import type { SiteContent } from '@/lib/content';
 
 export default function Portfolio({ content }: { content: SiteContent }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const resetRef = useRef<HTMLButtonElement>(null);
+  const sendRef = useRef<HTMLButtonElement>(null);
   useEffect(() => initPortfolio(content), [content]);
-  useEffect(() => initDrawing(canvasRef.current as HTMLCanvasElement, resetRef.current as HTMLButtonElement), []);
+  useEffect(() => initDrawing(canvasRef.current as HTMLCanvasElement, sendRef.current as HTMLButtonElement), []);
   useEffect(() => initFontSwitcher(), []);
 
   return (
@@ -24,7 +24,8 @@ export default function Portfolio({ content }: { content: SiteContent }) {
       <div className="grain" aria-hidden="true" />
       <div className="bg" id="bg" aria-hidden="true" />
       <canvas ref={canvasRef} className="drawing" aria-hidden="true" />
-      <button ref={resetRef} className="draw-reset" type="button" hidden aria-label="Reset drawing" title="Reset drawing">reset drawing</button>
+      <p className="draw-hint" aria-hidden="true">left click to draw &middot; right click to erase</p>
+      <button ref={sendRef} className="send-doodle" type="button" hidden>send doodle</button>
       <h1 className="sr-only">Matthew Bloomfield, Creative Technologist &amp; Director</h1>
       <main id="stage" className="stage" data-state="nav">
         <nav id="stamps" className="stamps" aria-label="Sections" />
