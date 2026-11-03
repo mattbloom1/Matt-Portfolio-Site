@@ -119,14 +119,52 @@ function buildStamps() {
     b.dataset.id = s.id;
     b.setAttribute('aria-label', `${s.label}, stamp ${s.no}`);
     b.innerHTML = `<img src="${img(s.id)}" alt="${s.alt}" width="${s.ratio >= 1 ? 1000 : 682}" height="${s.ratio >= 1 ? 682 : 1000}" draggable="false" /><span class="tag">${s.label}</span>`;
-    b.addEventListener('click', () => select(s.id));
-    b.addEventListener('pointermove', (e) => nudge(b, s.id, e.clientX, e.clientY));
+    b.addEventListener('click', () => { if (!justDragged) select(s.id); });
+    b.addEventListener('pointermove', (e) => { if (!dragging) nudge(b, s.id, e.clientX, e.clientY); });
+    enableDrag(b, s.id);
     b.addEventListener('pointerleave', () => unnudge(b, s.id));
     b.addEventListener('focus', () => nudge(b, s.id));
     b.addEventListener('blur', () => unnudge(b, s.id));
     stampsEl.appendChild(b);
     stampEls.set(s.id, b);
   }
+}
+
+/** Pick a stamp up and move it; on release it springs back to its spot. */
+let dragging = false;
+let justDragged = false;
+function enableDrag(el: HTMLButtonElement, id: SectionId) {
+  let pid = -1, sx = 0, sy = 0, ox = 0, oy = 0, moved = false;
+  el.addEventListener('pointerdown', (e) => {
+    if (e.button !== 0 || busy || pid !== -1) return;
+    pid = e.pointerId; sx = e.clientX; sy = e.clientY; moved = false;
+    ox = Number(gsap.getProperty(el, 'x')) || 0; oy = Number(gsap.getProperty(el, 'y')) || 0;
+  });
+  el.addEventListener('pointermove', (e) => {
+    if (e.pointerId !== pid) return;
+    const dx = e.clientX - sx, dy = e.clientY - sy;
+    if (!moved) {
+      if (Math.hypot(dx, dy) < 6) return;
+      moved = true; dragging = true;
+      el.setPointerCapture(pid);
+      el.classList.add('held');
+      gsap.killTweensOf(el);
+      gsap.to(el, { scale: 1.08, duration: 0.2, ease: 'power2.out', overwrite: 'auto' });
+    }
+    gsap.set(el, { x: ox + dx, y: oy + dy, rotation: (state === 'nav' ? tilt[id] : 0) + Math.max(-8, Math.min(8, e.movementX * 0.6)) });
+  });
+  const end = (e: PointerEvent) => {
+    if (e.pointerId !== pid) return;
+    pid = -1;
+    if (!moved) return;
+    dragging = false;
+    justDragged = true;
+    setTimeout(() => { justDragged = false; }, 0);
+    el.classList.remove('held');
+    gsap.to(el, { x: 0, y: 0, scale: 1, rotation: state === 'nav' ? tilt[id] : 0, duration: reduce ? 0.2 : 0.8, ease: reduce ? 'power2.out' : 'elastic.out(1, 0.55)', overwrite: 'auto' });
+  };
+  el.addEventListener('pointerup', end);
+  el.addEventListener('pointercancel', end);
 }
 
 function nudge(el: HTMLElement, id: SectionId, cx?: number, cy?: number) {
@@ -413,6 +451,7 @@ return () => {
   window.removeEventListener('resize', onResize);
   document.removeEventListener('keydown', onKey);
   disposed = true;
+  dragging = false; justDragged = false;
   logoCleanup();
   gsap.killTweensOf([...stampEls.values(), contentEl, bgEl, homeBtn]);
   stampsEl.replaceChildren();
