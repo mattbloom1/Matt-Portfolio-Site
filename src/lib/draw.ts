@@ -70,9 +70,15 @@ export function initDrawing(canvas: HTMLCanvasElement, sendBtn: HTMLButtonElemen
     sendBtn.hidden = false;
     requestAnimationFrame(() => sendBtn.classList.add('on'));
   }
+  function hideSend() {
+    if (!drawn) return;
+    drawn = false;
+    sendBtn.classList.remove('on');
+    window.setTimeout(() => { if (!drawn) sendBtn.hidden = true; }, 250);
+  }
   const isBlank = () => {
     const d = c.getImageData(0, 0, canvas.width, canvas.height).data;
-    for (let i = 3; i < d.length; i += 4 * 7) if (d[i] > 8) return false;
+    for (let i = 3; i < d.length; i += 4) if (d[i] > 8) return false;
     return true;
   };
   const flash = (t: string, ms = 2500) => { sendBtn.textContent = t; window.setTimeout(() => { sendBtn.textContent = 'send doodle'; sendBtn.disabled = Date.now() < cooldownUntil; }, ms); };
@@ -116,7 +122,11 @@ export function initDrawing(canvas: HTMLCanvasElement, sendBtn: HTMLButtonElemen
     const evs = e.getCoalescedEvents?.() ?? [e];
     for (const ev of evs) segment(ev.clientX, ev.clientY, ev.timeStamp, ev.pressure || 0.5);
   };
-  const up = (e: PointerEvent) => { if (e.pointerId === id) { id = -1; last = null; } };
+  const up = (e: PointerEvent) => {
+    if (e.pointerId !== id) return;
+    id = -1; last = null;
+    if (erasing && drawn && isBlank()) hideSend();
+  };
   const ctxMenu = (e: Event) => { if (stageOnly(e.target)) e.preventDefault(); };
 
   document.addEventListener('pointerdown', down);
