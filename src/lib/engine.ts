@@ -37,6 +37,12 @@ function done() {
 
 const byId = (id: SectionId) => SECTIONS.find((s) => s.id === id) as Section;
 const isMobile = () => window.innerWidth < 640;
+/** Wide screens: section pages are a full-screen split, with the other stamps in the dark left column. */
+const isSplit = () => window.innerWidth >= 900;
+const colWidth = () => Math.max(300, stage.clientWidth * 0.32);
+/** Where the stamps rest on a section page, as fractions of the left column's width and the screen height. */
+const splitSpots = [{ x: 0.19, y: 0.15 }, { x: 0.63, y: 0.25 }, { x: 0.4, y: 0.44 }, { x: 0.66, y: 0.61 }];
+const restRotation = (id: SectionId) => (state === 'nav' || isSplit() ? tilt[id] : 0);
 const img = (id: SectionId) => `${process.env.NEXT_PUBLIC_BASE_PATH || ''}/stamps/${id}.webp`;
 
 /* ---------- logo explosion (home button) ---------- */
@@ -151,7 +157,7 @@ function enableDrag(el: HTMLButtonElement, id: SectionId) {
       gsap.killTweensOf(el);
       gsap.to(el, { scale: 1.08, duration: 0.2, ease: 'power2.out', overwrite: 'auto' });
     }
-    gsap.set(el, { x: ox + dx, y: oy + dy, rotation: (state === 'nav' ? tilt[id] : 0) + Math.max(-8, Math.min(8, e.movementX * 0.6)) });
+    gsap.set(el, { x: ox + dx, y: oy + dy, rotation: restRotation(id) + Math.max(-8, Math.min(8, e.movementX * 0.6)) });
   });
   const end = (e: PointerEvent) => {
     if (e.pointerId !== pid) return;
@@ -161,7 +167,7 @@ function enableDrag(el: HTMLButtonElement, id: SectionId) {
     justDragged = true;
     setTimeout(() => { justDragged = false; }, 0);
     el.classList.remove('held');
-    gsap.to(el, { x: 0, y: 0, scale: 1, rotation: state === 'nav' ? tilt[id] : 0, duration: reduce ? 0.2 : 0.8, ease: reduce ? 'power2.out' : 'elastic.out(1, 0.55)', overwrite: 'auto' });
+    gsap.to(el, { x: 0, y: 0, scale: 1, rotation: restRotation(id), duration: reduce ? 0.2 : 0.8, ease: reduce ? 'power2.out' : 'elastic.out(1, 0.55)', overwrite: 'auto' });
   };
   el.addEventListener('pointerup', end);
   el.addEventListener('pointercancel', end);
@@ -206,6 +212,14 @@ function miniSlots() {
   return slots.map((x) => { const o = { ...x, left: left + (x.w - x.sw) / 2 }; left += x.w + gap; return o; });
 }
 function placeMini(id: SectionId, slot: number) {
+  if (isSplit()) {
+    const spot = splitSpots[slot % splitSpots.length];
+    const cw = colWidth();
+    const w = cw * (byId(id).ratio >= 1 ? 0.36 : 0.27);
+    const h = w / byId(id).ratio;
+    gsap.set(stampEls.get(id)!, { left: spot.x * cw - w / 2, top: spot.y * stage.clientHeight - h / 2, width: w, rotation: tilt[id], x: 0, y: 0, opacity: 1, scale: 1 });
+    return;
+  }
   const hgt = isMobile() ? 46 : 62;
   const sp = miniSlots()[slot];
   gsap.set(stampEls.get(id)!, { left: sp.left, top: isMobile() ? 14 : 18, width: hgt * byId(id).ratio, rotation: 0, x: 0, y: 0, opacity: 1, scale: 1 });
@@ -299,11 +313,11 @@ async function navToPage(id: SectionId) {
   order = SECTIONS.map((s) => s.id).filter((x) => x !== id);
   const others = order.map((x) => stampEls.get(x)!);
   const flipState = Flip.getState(others);
+  state = 'page';
+  stage.dataset.state = 'page'; // the footer leaves and the stage fills the screen before the column is laid out
   layoutMini();
   gsap.set(clicked, { opacity: 0 });
   Flip.from(flipState, { duration: T(0.9), ease: 'power3.inOut', stagger: reduce ? 0 : 0.05, absolute: false });
-  state = 'page';
-  stage.dataset.state = 'page';
   homeBtn.hidden = false;
   gsap.fromTo(homeBtn, { opacity: 0 }, { opacity: 1, duration: T(0.5), delay: T(0.6) });
   await bleedGrow(id, geo);
@@ -386,8 +400,8 @@ function enterInstant(id: SectionId | null) {
     state = 'page';
     active = id;
     order = SECTIONS.map((s) => s.id).filter((x) => x !== id);
-    layoutMini();
     stage.dataset.state = 'page';
+    layoutMini();
     homeBtn.hidden = false;
     gsap.set(homeBtn, { opacity: 1 });
     swapBackground(id);
