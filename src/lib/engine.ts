@@ -116,16 +116,16 @@ interface NavSpot { x: number; y: number; w: number }
 const navDesktop: Record<SectionId, NavSpot> = {
   projects: { x: 0.2, y: 0.5, w: 0.15 },
   experience: { x: 0.37, y: 0.4, w: 0.19 },
-  about: { x: 0.54, y: 0.57, w: 0.14 },
-  crafts: { x: 0.69, y: 0.42, w: 0.155 },
-  photography: { x: 0.85, y: 0.58, w: 0.19 },
+  crafts: { x: 0.54, y: 0.57, w: 0.155 },
+  photography: { x: 0.7, y: 0.42, w: 0.19 },
+  about: { x: 0.86, y: 0.58, w: 0.14 },
 };
 const navMobile: Record<SectionId, NavSpot> = {
   projects: { x: 0.3, y: 0.2, w: 0.38 },
   experience: { x: 0.68, y: 0.33, w: 0.5 },
-  about: { x: 0.3, y: 0.5, w: 0.36 },
-  crafts: { x: 0.7, y: 0.66, w: 0.38 },
-  photography: { x: 0.42, y: 0.86, w: 0.52 },
+  crafts: { x: 0.3, y: 0.5, w: 0.38 },
+  photography: { x: 0.64, y: 0.66, w: 0.5 },
+  about: { x: 0.3, y: 0.85, w: 0.34 },
 };
 
 function buildStamps() {
