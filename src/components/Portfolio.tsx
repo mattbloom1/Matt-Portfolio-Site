@@ -24,7 +24,6 @@ export default function Portfolio({ content }: { content: SiteContent }) {
       <div className="grain" aria-hidden="true" />
       <div className="bg" id="bg" aria-hidden="true" />
       <canvas ref={canvasRef} className="drawing" aria-hidden="true" />
-      <button ref={sendRef} className="send-doodle" type="button" hidden>send doodle</button>
       <h1 className="sr-only">Matthew Bloomfield, Creative Technologist &amp; Director</h1>
       <main id="stage" className="stage" data-state="nav">
         <nav id="stamps" className="stamps" aria-label="Sections" />
@@ -45,6 +44,18 @@ export default function Portfolio({ content }: { content: SiteContent }) {
           <button type="button" className="tool" id="tool-eraser" aria-label="Eraser" aria-pressed="false" title="Eraser">
             <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinejoin="round"><path d="M4 16l9-9a2 2 0 013 0l3 3a2 2 0 010 3l-6 6H8z"/><path d="M8 20h12M9 11l5 5"/></svg>
           </button>
+          <button type="button" className="tool" id="tool-undo" aria-label="Undo" title="Undo">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinejoin="round" strokeLinecap="round"><path d="M9 7L4 12l5 5"/><path d="M4 12h10a5 5 0 010 7"/></svg>
+          </button>
+          <button type="button" className="tool" id="tool-reset" aria-label="Clear drawing" title="Clear drawing">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinejoin="round" strokeLinecap="round"><path d="M5 7h14M10 7V4h4v3M7 7l1 13h8l1-13"/></svg>
+          </button>
+          <span className="send-wrap">
+            <span className="bubble" aria-hidden="true"><span id="send-bubble" /></span>
+            <button ref={sendRef} type="button" className="tool" id="tool-send" aria-label="Send doodle to Matt">
+              <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinejoin="round" strokeLinecap="round"><path d="M21 3L3 11l7 3 3 7z"/><path d="M10 14l11-11"/></svg>
+            </button>
+          </span>
         </div>
         <div className="foot-right">
           <time id="clock" />

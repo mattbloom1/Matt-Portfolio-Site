@@ -56,6 +56,26 @@ export function initDrawing(canvas: HTMLCanvasElement, sendBtn: HTMLButtonElemen
     }
   }
 
+  const undoStack: ImageData[] = [];
+  const snapshot = () => { try { undoStack.push(c.getImageData(0, 0, canvas.width, canvas.height)); if (undoStack.length > 12) undoStack.shift(); } catch { /* ignore */ } };
+  const undo = () => {
+    const prev = undoStack.pop();
+    c.save(); c.setTransform(1, 0, 0, 1, 0, 0); c.clearRect(0, 0, canvas.width, canvas.height);
+    if (prev && prev.width === canvas.width && prev.height === canvas.height) c.putImageData(prev, 0, 0);
+    c.restore();
+    drawn = !isBlank();
+  };
+  const reset = () => {
+    if (isBlank()) return;
+    snapshot();
+    c.save(); c.setTransform(1, 0, 0, 1, 0, 0); c.clearRect(0, 0, canvas.width, canvas.height); c.restore();
+    drawn = false;
+  };
+  const undoBtn = document.getElementById('tool-undo');
+  const resetBtn = document.getElementById('tool-reset');
+  undoBtn?.addEventListener('click', undo);
+  resetBtn?.addEventListener('click', reset);
+
   let last: { x: number; y: number; t: number; w: number } | null = null;
   let id = -1;
   const stageOnly = (t: EventTarget | null) => {
@@ -78,29 +98,37 @@ export function initDrawing(canvas: HTMLCanvasElement, sendBtn: HTMLButtonElemen
     }
     last.x = x; last.y = y; last.t = t;
   }
-  function showSend() {
-    if (drawn) return;
-    drawn = true;
-    sendBtn.hidden = false;
-    requestAnimationFrame(() => sendBtn.classList.add('on'));
-  }
-  function hideSend() {
-    if (!drawn) return;
-    drawn = false;
-    sendBtn.classList.remove('on');
-    window.setTimeout(() => { if (!drawn) sendBtn.hidden = true; }, 250);
-  }
   const isBlank = () => {
     const d = c.getImageData(0, 0, canvas.width, canvas.height).data;
     for (let i = 3; i < d.length; i += 4) if (d[i] > 8) return false;
     return true;
   };
-  const flash = (t: string, ms = 2500) => { sendBtn.textContent = t; window.setTimeout(() => { sendBtn.textContent = 'send doodle'; sendBtn.disabled = Date.now() < cooldownUntil; }, ms); };
+  const bubble = document.getElementById('send-bubble');
+  const DEFAULT_MSG = 'Send doodle to Matt';
+  let typer = 0;
+  /** Typewriter-style text in the speech bubble. */
+  function typeInto(text: string) {
+    if (!bubble) return;
+    window.clearInterval(typer);
+    bubble.textContent = '';
+    let i = 0;
+    typer = window.setInterval(() => { bubble.textContent = text.slice(0, ++i); if (i >= text.length) window.clearInterval(typer); }, 28);
+  }
+  let hold = 0;
+  const flash = (t: string, ms = 2500) => {
+    bubble?.parentElement?.classList.add('show');
+    typeInto(t);
+    window.clearTimeout(hold);
+    hold = window.setTimeout(() => { hold = 0; bubble?.parentElement?.classList.remove('show'); sendBtn.disabled = Date.now() < cooldownUntil; }, ms);
+  };
+  const onEnter = () => { if (hold) return; typeInto(DEFAULT_MSG); };
+  sendBtn.addEventListener('mouseenter', onEnter);
+  sendBtn.addEventListener('focus', onEnter);
   /** Flatten onto paper, downscale, and POST to the serverless mailer. */
   async function send() {
     if (sendBtn.disabled) return;
     if (isBlank()) { flash('draw something first'); return; }
-    sendBtn.disabled = true; sendBtn.textContent = 'sending\u2026';
+    sendBtn.disabled = true; flash('sending\u2026', 60000);
     try {
       const out = document.createElement('canvas');
       const scale = Math.min(1, 1400 / canvas.width);
@@ -114,22 +142,23 @@ export function initDrawing(canvas: HTMLCanvasElement, sendBtn: HTMLButtonElemen
       });
       if (!res.ok) throw new Error(String(res.status));
       cooldownUntil = Date.now() + 30000;
-      flash('sent \u2713');
+      flash('sent, thank you!');
     } catch {
-      flash("couldn't send");
+      flash("couldn't send, try again");
     }
   }
 
   const down = (e: PointerEvent) => {
     if ((e.button !== 0 && e.button !== 2) || id !== -1 || !stageOnly(e.target)) return;
     erasing = e.button === 2 || tool === 'eraser';
+    snapshot();
     if (document.getElementById('stage')?.dataset.state === 'page' && e.pointerType === 'touch') return; // let touch scroll content
     e.preventDefault();
     id = e.pointerId;
     last = { x: e.clientX, y: e.clientY, t: e.timeStamp, w: 5 };
     const p = e.pressure || 0.5;
     if (erasing) erase(e.clientX, e.clientY);
-    else { dab(e.clientX, e.clientY, 5, 0.6 + p * 0.6); showSend(); }
+    else { dab(e.clientX, e.clientY, 5, 0.6 + p * 0.6); drawn = true; }
   };
   const move = (e: PointerEvent) => {
     if (e.pointerId !== id) return;
@@ -139,7 +168,7 @@ export function initDrawing(canvas: HTMLCanvasElement, sendBtn: HTMLButtonElemen
   const up = (e: PointerEvent) => {
     if (e.pointerId !== id) return;
     id = -1; last = null;
-    if (erasing && drawn && isBlank()) hideSend();
+    drawn = !isBlank();
   };
   const ctxMenu = (e: Event) => { if (stageOnly(e.target)) e.preventDefault(); };
 
@@ -160,5 +189,9 @@ export function initDrawing(canvas: HTMLCanvasElement, sendBtn: HTMLButtonElemen
     sendBtn.removeEventListener('click', send);
     pencilBtn?.removeEventListener('click', pickPencil);
     eraserBtn?.removeEventListener('click', pickEraser);
+    undoBtn?.removeEventListener('click', undo);
+    resetBtn?.removeEventListener('click', reset);
+    sendBtn.removeEventListener('mouseenter', onEnter);
+    sendBtn.removeEventListener('focus', onEnter);
   };
 }
