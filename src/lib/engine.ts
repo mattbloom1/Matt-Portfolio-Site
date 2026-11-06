@@ -42,6 +42,19 @@ const isSplit = () => window.innerWidth >= 900;
 const colWidth = () => Math.max(300, stage.clientWidth * 0.32);
 const restRotation = (id: SectionId) => (state === 'nav' ? tilt[id] : 0);
 const img = (id: SectionId) => `${process.env.NEXT_PUBLIC_BASE_PATH || ''}/stamps/${id}.webp`;
+/** The horizontal artwork used in the section-page column (Experience and Photography are already horizontal). */
+const HRATIO = 1000 / 682;
+const imgH = (id: SectionId) => (byId(id).ratio >= 1 ? img(id) : `${process.env.NEXT_PUBLIC_BASE_PATH || ''}/stamps/${id}-h.webp`);
+/** Swap a stamp between its home-page artwork and its horizontal column artwork. */
+function setArt(id: SectionId, horizontal: boolean) {
+  const im = stampEls.get(id)?.querySelector('img');
+  if (!im) return;
+  const src = horizontal ? imgH(id) : img(id);
+  if (!im.src.endsWith(src)) im.src = src;
+  const landscape = horizontal || byId(id).ratio >= 1;
+  im.width = landscape ? 1000 : 682;
+  im.height = landscape ? 682 : 1000;
+}
 
 /* ---------- logo explosion (home button) ---------- */
 interface LogoSprite { width: number; height: number; frames: string[] }
@@ -116,6 +129,7 @@ const navMobile: Record<SectionId, NavSpot> = {
 };
 
 function buildStamps() {
+  for (const s of SECTIONS) new Image().src = imgH(s.id); // warm the horizontal art so the column never pops
   for (const s of SECTIONS) {
     const b = document.createElement('button');
     b.type = 'button';
@@ -193,6 +207,7 @@ function placeNav(id: SectionId) {
   const sp = spots[id];
   const W = stage.clientWidth, H = stage.clientHeight;
   const { w, h } = sizeOf(id, sp.w * W);
+  setArt(id, false);
   gsap.set(stampEls.get(id)!, { left: sp.x * W - w / 2, top: sp.y * H - h / 2, width: w, rotation: tilt[id], x: 0, y: 0, opacity: 1, scale: 1 });
 }
 /** Label font size (px) and the width a slot needs so neighbouring labels never collide. */
@@ -216,12 +231,14 @@ function placeMini(id: SectionId, slot: number) {
     const pad = Math.min(44, Math.max(24, stage.clientWidth * 0.03));
     const top = 48, bottom = 210, label = 14;
     const slotH = Math.max(70, (H - top - bottom) / order.length);
-    const r = byId(id).ratio;
-    const w = Math.min((cw - pad * 2) * 0.4, (slotH - label) * r);
+    const r = HRATIO;
+    setArt(id, true);
+    const w = Math.min((cw - pad * 2) * 0.55, (slotH - label) * r);
     const h = w / r;
     gsap.set(stampEls.get(id)!, { left: pad, top: top + slot * slotH + (slotH - label - h) / 2, width: w, rotation: 0, x: 0, y: 0, scale: 1 });
     return;
   }
+  setArt(id, false);
   const hgt = isMobile() ? 46 : 62;
   const sp = miniSlots()[slot];
   gsap.set(stampEls.get(id)!, { left: sp.left, top: isMobile() ? 14 : 18, width: hgt * byId(id).ratio, rotation: 0, x: 0, y: 0, opacity: 1, scale: 1 });
