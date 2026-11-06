@@ -24,7 +24,7 @@ const TWEAKS: Tweak[] = [
   { key: 'headLeading', group: 'Type', label: 'Heading line height', type: 'range', min: 0.8, max: 1.5, step: 0.02, def: 1.05 },
   { key: 'headTrack', group: 'Type', label: 'Heading letter spacing', type: 'range', min: -0.06, max: 0.2, step: 0.005, def: 0, unit: 'em' },
   { key: 'labelTrack', group: 'Type', label: 'Label letter spacing', type: 'range', min: 0, max: 0.4, step: 0.01, def: 0.14, unit: 'em' },
-  { key: 'labelCase', group: 'Type', label: 'Label case', type: 'select', def: 'uppercase', options: ['uppercase', 'none', 'lowercase', 'capitalize'] },
+  { key: 'labelCase', group: 'Type', label: 'Label case', type: 'select', def: 'lowercase', options: ['lowercase', 'uppercase', 'none', 'capitalize'] },
   { key: 'paper', group: 'Color', label: 'Paper', type: 'color', def: '#ece9e2', cssVar: '--paper' },
   { key: 'ink', group: 'Color', label: 'Ink', type: 'color', def: '#141414', cssVar: '--ink' },
   { key: 'ochre', group: 'Color', label: 'Ochre', type: 'color', def: '#c4b268', cssVar: '--ochre' },
