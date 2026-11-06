@@ -75,7 +75,7 @@ function projectsHtml(c: SiteContent) {
     safeUrl(p.href) ? `<a href="${esc(safeUrl(p.href))}" target="_blank" rel="noopener">${esc(p.linkLabel || 'Visit')}</a>` : '',
   ].filter(Boolean).join(' · ');
   const card = (p: Project, i: number) => `
-    <button type="button" class="card" data-detail="d-${esc(p.slug)}" aria-label="${esc(p.title)}: view details">
+    <button type="button" class="card${safeUrl(p.heroImage) ? '' : ' no-img'}" data-detail="d-${esc(p.slug)}" aria-label="${esc(p.title)}: view details">
       <span class="card-img" style="${bg(p, i)}"></span>
       <span class="card-over"><span class="card-name">${esc(p.title)}</span><span class="card-sub">${esc([p.role, p.year].filter(Boolean).join(' · '))}</span></span>
     </button>`;
@@ -96,7 +96,7 @@ function projectsHtml(c: SiteContent) {
   const groups = [...new Set([...GROUPS, ...c.projects.flatMap((p) => p.disciplines || [])])];
   const html = groups.map((g) => {
     const items = c.projects.filter((p) => (p.disciplines || [])[0] === g);
-    return items.length ? `<section><h2 class="group">${esc(g)}</h2><div class="cards">${items.map(card).join('')}</div></section>` : '';
+    return items.length ? `<section><h2 class="group"><span>${esc(g)}</span><span class="count">${String(items.length).padStart(2, '0')}</span></h2><div class="cards">${items.map(card).join('')}</div></section>` : '';
   }).join('');
   return `${html}${c.projects.map(detail).join('')}${todo('Titles are from Matt’s list. Images, descriptions and links are still to come.')}`;
 }

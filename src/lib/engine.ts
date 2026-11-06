@@ -242,44 +242,6 @@ function layoutMini() {
   }
 }
 
-/* ---------- ink bleed ---------- */
-interface Geo { cx: number; cy: number; w: number; h: number; rot: number }
-/** The stamp's real (unrotated) size and centre, so the overlay matches it exactly. */
-function captureGeo(el: HTMLElement): Geo {
-  const sr = stage.getBoundingClientRect();
-  const r = el.getBoundingClientRect(); // rotation keeps the centre
-  return { cx: r.left + r.width / 2 - sr.left, cy: r.top + r.height / 2 - sr.top, w: el.offsetWidth, h: el.offsetHeight, rot: Number(gsap.getProperty(el, 'rotation')) || 0 };
-}
-
-function bleedGrow(id: SectionId, g: Geo): Promise<void> {
-  return new Promise((resolve) => {
-    const W = stage.clientWidth, H = stage.clientHeight;
-    // Padded wrapper so the displacement filter never clips at the stamp's bounding box.
-    const pad = 1.8;
-    const el = document.createElement('div');
-    el.className = 'bleed';
-    const im = document.createElement('img');
-    im.src = img(id);
-    im.alt = '';
-    im.style.cssText = `width:${g.w}px;height:${g.h}px;display:block;`;
-    el.appendChild(im);
-    bleedLayer.appendChild(el);
-    gsap.set(el, { width: g.w * pad, height: g.h * pad, left: g.cx - (g.w * pad) / 2, top: g.cy - (g.h * pad) / 2, rotation: g.rot, transformOrigin: '50% 50%' });
-    const p = { disp: 0, blur: 0 };
-    const apply = () => {
-      dispEl.setAttribute('scale', String(p.disp));
-      el.style.filter = `url(#bleed) blur(${p.blur}px)`;
-    };
-    bgEl.style.backgroundImage = `url(${img(id)})`;
-    const dur = T(1.1);
-    const scale = Math.max(W / g.w, H / g.h) * 1.25;
-    const tl = gsap.timeline({ onComplete: () => { el.remove(); dispEl.setAttribute('scale', '0'); resolve(); } });
-    if (!reduce) tl.to(el, { x: W / 2 - g.cx, y: H / 2 - g.cy, scale, rotation: 0, duration: dur, ease: 'power3.in' }, 0);
-    tl.to(p, { disp: reduce ? 0 : 30, blur: reduce ? 0 : 10, duration: dur, ease: 'power2.in', onUpdate: apply }, 0)
-      .to(bgEl, { opacity: 0.95, duration: dur * 0.7, ease: 'power1.inOut' }, dur * 0.3)
-      .to(el, { opacity: 0, duration: dur * 0.45, ease: 'power1.out' }, dur * 0.55);
-  });
-}
 function swapBackground(id: SectionId) {
   bgEl.style.backgroundImage = `url(${img(id)})`;
 }
@@ -309,24 +271,25 @@ async function select(id: SectionId) {
   else await pageSwap(id);
 }
 
+const wait = (sec: number) => new Promise<void>((r) => { gsap.delayedCall(sec, r); });
+
 async function navToPage(id: SectionId) {
   busy = true;
   gsap.killTweensOf([...stampEls.values()]);
   const clicked = stampEls.get(id)!;
   gsap.set([...stampEls.values()], { x: 0, y: 0, rotation: (_i: number, t: Element) => tilt[(t as HTMLElement).dataset.id as SectionId] });
-  const geo = captureGeo(clicked);
   active = id;
-  order = SECTIONS.map((s) => s.id).filter((x) => x !== id);
-  const others = order.map((x) => stampEls.get(x)!);
-  const flipState = Flip.getState(others);
+  order = SECTIONS.filter((s) => s.id !== id).map((s) => s.id); // fixed order, never reshuffled
+  const flipState = Flip.getState(order.map((x) => stampEls.get(x)!));
   state = 'page';
   stage.dataset.state = 'page'; // the footer leaves and the stage fills the screen before the column is laid out
   layoutMini();
-  gsap.set(clicked, { opacity: 0 });
-  Flip.from(flipState, { duration: T(0.9), ease: 'power3.inOut', stagger: reduce ? 0 : 0.05, absolute: false });
+  // The chosen stamp quietly fades away; the others slide into the column.
+  gsap.fromTo(clicked, { opacity: 1 }, { opacity: 0, duration: T(0.45), ease: 'power1.out' });
+  Flip.from(flipState, { duration: T(0.8), ease: 'power3.inOut', stagger: reduce ? 0 : 0.04, absolute: false });
   homeBtn.hidden = false;
-  gsap.fromTo(homeBtn, { opacity: 0 }, { opacity: 1, duration: T(0.5), delay: T(0.6) });
-  await bleedGrow(id, geo);
+  gsap.fromTo(homeBtn, { opacity: 0 }, { opacity: 1, duration: T(0.5), delay: T(0.5) });
+  await wait(T(0.35));
   renderContent(id);
   showContent(true);
   done();
@@ -335,20 +298,19 @@ async function navToPage(id: SectionId) {
 async function pageSwap(id: SectionId) {
   busy = true;
   const prev = active as SectionId;
-  const slot = order.indexOf(id);
-  const slotEl = stampEls.get(id)!;
-  const geo = captureGeo(slotEl);
-  order[slot] = prev;
-  active = id;
-  gsap.to(contentEl, { opacity: 0, duration: T(0.25) });
+  const nextEl = stampEls.get(id)!;
   const prevEl = stampEls.get(prev)!;
+  active = id;
+  order = SECTIONS.filter((s) => s.id !== id).map((s) => s.id); // fixed order: the old stamp returns to its own place
+  gsap.to(contentEl, { opacity: 0, duration: T(0.2) });
   gsap.set(prevEl, { opacity: 1, pointerEvents: 'auto' });
-  const flipState = Flip.getState([...stampEls.values()]);
-  layoutMini(); // re-pack every slot: stamp widths differ
-  Flip.from(flipState, { duration: T(0.8), ease: 'power3.inOut', absolute: false });
-  gsap.fromTo(prevEl, { opacity: 0 }, { opacity: 1, duration: T(0.6), ease: 'power1.out' });
-  gsap.set(bgEl, { opacity: 0.95 });
-  await bleedGrow(id, geo);
+  const stay = SECTIONS.map((x) => x.id).filter((x) => x !== prev && x !== id).map((x) => stampEls.get(x)!);
+  const flipState = Flip.getState(stay); // only stamps that stay on screen slide; the two swapping ones fade
+  layoutMini();
+  gsap.fromTo(nextEl, { opacity: 1 }, { opacity: 0, duration: T(0.3), ease: 'power1.out' });
+  gsap.fromTo(prevEl, { opacity: 0 }, { opacity: 1, duration: T(0.5), ease: 'power1.out' });
+  Flip.from(flipState, { duration: T(0.7), ease: 'power3.inOut', absolute: false });
+  await wait(T(0.5));
   renderContent(id);
   showContent(true);
   done();
