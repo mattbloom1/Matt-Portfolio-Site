@@ -35,7 +35,16 @@ export const PROFILE_PHOTO = { src: asset('/about/profile.webp'), alt: 'Portrait
 const p = (title: string, group: string, extra: Partial<Project> = {}): Project => ({ title, slug: title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, ''), disciplines: [group], ...extra });
 
 export const SEED_PROJECTS: Project[] = [
-  ...['GearBook', 'Le Reve', 'Casa Avenida', 'The Edge Delray', 'The GVC Team', 'Liv Portfolio Site', 'GVC Workspace', 'Essays In Bloom'].map((t) => p(t, 'Websites')),
+  ...['GearBook', 'Le Reve', 'Casa Avenida', 'The Edge Delray'].map((t) => p(t, 'Websites')),
+  p('The GVC Team', 'Websites', {
+    role: 'Design, development & content',
+    year: 2025,
+    summary: 'The home of the Gasdaska Verdiglione Conlon Real Estate Team, one of the top real estate teams working across three state markets (NY, NJ & FL). I rebuilt the site in 2025 as a single place where visitors can see what the team can do, learn who they are, and get in touch. I handled the design, development, and content, and I’ve maintained it since.',
+    heroImage: asset('/websites/gvc-team-mockup.webp'),
+    href: 'https://gvcrealestateteam.com/',
+    linkLabel: 'Visit site',
+  }),
+  ...['Liv Portfolio Site', 'GVC Workspace', 'Essays In Bloom'].map((t) => p(t, 'Websites')),
   ...([
     ['Variex', '01-type-specimen', 'Poster'],
     ['Improve Your Golf', '02-golfer', 'Poster'],
