@@ -466,7 +466,7 @@ const closeDetail = () => {
   const d = openDetail();
   if (!d) return false;
   d.hidden = true;
-  delete stage.dataset.detail;
+  delete stage.dataset.detailOpen;
   const opener = contentEl.querySelector<HTMLElement>(`[data-detail="${d.id}"]`);
   opener?.focus({ preventScroll: true });
   return true;
@@ -476,7 +476,7 @@ const onContentClick = (e: MouseEvent) => {
   const card = t.closest<HTMLElement>('[data-detail]');
   if (card) {
     const d = contentEl.querySelector<HTMLElement>(`#${card.dataset.detail}`);
-    if (d) { gsap.set(contentEl, { clearProps: 'transform' }); d.hidden = false; stage.dataset.detail = '1'; d.scrollTop = 0; gsap.fromTo(d, { opacity: 0 }, { opacity: 1, duration: T(0.35) }); d.querySelector<HTMLElement>('h2')?.focus({ preventScroll: true }); }
+    if (d) { gsap.set(contentEl, { clearProps: 'transform' }); d.hidden = false; stage.dataset.detailOpen = '1'; d.scrollTop = 0; gsap.fromTo(d, { opacity: 0 }, { opacity: 1, duration: T(0.35) }); d.querySelector<HTMLElement>('h2')?.focus({ preventScroll: true }); }
     return;
   }
   if (t.closest('[data-close]') || t.classList.contains('detail')) closeDetail();

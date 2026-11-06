@@ -251,4 +251,4 @@ body:has(#stage[data-state='page']) .send-doodle { opacity: 0; pointer-events: n
 .detail-sum { font: 400 22px/1.4 var(--serif); margin: 24px 0; }
 .detail-links a { color: inherit; text-underline-offset: 3px; }
 @media (max-width: 760px) { .detail-inner { grid-template-columns: minmax(0, 1fr); padding-top: 76px; } }
-.stage[data-detail] .stamps, .stage[data-detail] .home { visibility: hidden; }
+.stage[data-detail-open] .stamps, .stage[data-detail-open] .home { visibility: hidden; }
