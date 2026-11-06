@@ -41,7 +41,7 @@ const TWEAKS: Tweak[] = [
   { key: 'bgBlur', group: 'Background', label: 'Background blur', type: 'range', min: 0, max: 120, step: 1, def: 46, unit: 'px' },
   { key: 'bgSat', group: 'Background', label: 'Background saturation', type: 'range', min: 0, max: 2.5, step: 0.05, def: 1.05 },
   { key: 'rowH', group: 'Layout', label: 'Header row height', type: 'range', min: 60, max: 180, step: 2, def: 112, unit: 'px' },
-  { key: 'footH', group: 'Layout', label: 'Footer height', type: 'range', min: 32, max: 100, step: 2, def: 56, unit: 'px' },
+  { key: 'footH', group: 'Layout', label: 'Footer height', type: 'range', min: 32, max: 100, step: 2, def: 46, unit: 'px' },
   { key: 'radius', group: 'Layout', label: 'Corner radius', type: 'range', min: 0, max: 40, step: 1, def: 0, unit: 'px' },
   { key: 'border', group: 'Layout', label: 'Line thickness', type: 'range', min: 0, max: 4, step: 0.5, def: 1, unit: 'px' },
   { key: 'motion', group: 'Layout', label: 'Transition speed', type: 'range', min: 0, max: 3, step: 0.1, def: 1, unit: 'x' },
