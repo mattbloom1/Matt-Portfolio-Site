@@ -6,6 +6,20 @@ export function initDrawing(canvas: HTMLCanvasElement, sendBtn: HTMLButtonElemen
   const dpr = Math.min(window.devicePixelRatio || 1, 2);
   let drawn = false;
   let erasing = false;
+  let tool: 'pencil' | 'eraser' = 'pencil';
+  const pencilBtn = document.getElementById('tool-pencil');
+  const eraserBtn = document.getElementById('tool-eraser');
+  const setTool = (t: 'pencil' | 'eraser') => {
+    tool = t;
+    pencilBtn?.classList.toggle('on', t === 'pencil'); pencilBtn?.setAttribute('aria-pressed', String(t === 'pencil'));
+    eraserBtn?.classList.toggle('on', t === 'eraser'); eraserBtn?.setAttribute('aria-pressed', String(t === 'eraser'));
+    canvas.dataset.tool = t;
+  };
+  const pickPencil = () => setTool('pencil');
+  const pickEraser = () => setTool('eraser');
+  pencilBtn?.addEventListener('click', pickPencil);
+  eraserBtn?.addEventListener('click', pickEraser);
+  setTool('pencil');
   let cooldownUntil = 0;
 
   function size() {
@@ -108,7 +122,7 @@ export function initDrawing(canvas: HTMLCanvasElement, sendBtn: HTMLButtonElemen
 
   const down = (e: PointerEvent) => {
     if ((e.button !== 0 && e.button !== 2) || id !== -1 || !stageOnly(e.target)) return;
-    erasing = e.button === 2;
+    erasing = e.button === 2 || tool === 'eraser';
     if (document.getElementById('stage')?.dataset.state === 'page' && e.pointerType === 'touch') return; // let touch scroll content
     e.preventDefault();
     id = e.pointerId;
@@ -144,5 +158,7 @@ export function initDrawing(canvas: HTMLCanvasElement, sendBtn: HTMLButtonElemen
     window.removeEventListener('resize', size);
     document.removeEventListener('contextmenu', ctxMenu);
     sendBtn.removeEventListener('click', send);
+    pencilBtn?.removeEventListener('click', pickPencil);
+    eraserBtn?.removeEventListener('click', pickEraser);
   };
 }

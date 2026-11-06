@@ -118,8 +118,13 @@ body {
 .footer {
   position: fixed; left: 0; right: 0; bottom: 0; height: var(--footer-h); z-index: 4;
   display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 0 20px;
-  font: 500 12px var(--mono); letter-spacing: .12em; text-transform: lowercase;
+  font: 500 14px var(--font-footer), var(--mono); letter-spacing: .06em; text-transform: lowercase;
 }
+.foot-tools { position: absolute; left: 50%; transform: translateX(-50%); display: flex; gap: 6px; }
+.tool { background: none; border: 1px solid transparent; color: var(--ink); width: 34px; height: 34px; padding: 0; display: grid; place-items: center; cursor: pointer; opacity: .55; }
+.tool:hover { opacity: 1; }
+.tool.on { opacity: 1; border-color: var(--ink); }
+@media (pointer: coarse) { .foot-tools { display: none; } }
 .footer a { color: inherit; text-underline-offset: 3px; }
 .foot-left, .foot-right { display: flex; align-items: center; gap: 14px; min-width: 0; }
 .micro { display: inline-flex; align-items: center; gap: 8px; }

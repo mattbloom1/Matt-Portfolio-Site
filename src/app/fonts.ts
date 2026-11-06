@@ -1,3 +1,4 @@
+import localFont from 'next/font/local';
 import { Lora, Newsreader, IBM_Plex_Mono } from 'next/font/google';
 
 /**
@@ -14,3 +15,13 @@ import { Lora, Newsreader, IBM_Plex_Mono } from 'next/font/google';
 export const display = Lora({ subsets: ['latin'], style: ['normal', 'italic'], variable: '--font-display', display: 'swap' });
 export const body = Newsreader({ subsets: ['latin'], variable: '--font-body', display: 'swap' });
 export const mono = IBM_Plex_Mono({ subsets: ['latin'], weight: ['400', '500'], variable: '--font-mono', display: 'swap' });
+
+/** Footer text (Afacad Flux, SIL OFL), self-hosted from @fontsource. */
+export const footer = localFont({
+  src: [
+    { path: './fonts/afacad-flux-latin-400-normal.woff2', weight: '400', style: 'normal' },
+    { path: './fonts/afacad-flux-latin-500-normal.woff2', weight: '500', style: 'normal' },
+  ],
+  variable: '--font-footer',
+  display: 'swap',
+});

@@ -24,7 +24,6 @@ export default function Portfolio({ content }: { content: SiteContent }) {
       <div className="grain" aria-hidden="true" />
       <div className="bg" id="bg" aria-hidden="true" />
       <canvas ref={canvasRef} className="drawing" aria-hidden="true" />
-      <p className="draw-hint" aria-hidden="true">left click to draw &middot; right click to erase</p>
       <button ref={sendRef} className="send-doodle" type="button" hidden>send doodle</button>
       <h1 className="sr-only">Matthew Bloomfield, Creative Technologist &amp; Director</h1>
       <main id="stage" className="stage" data-state="nav">
@@ -37,6 +36,15 @@ export default function Portfolio({ content }: { content: SiteContent }) {
         <div className="foot-left">
           <span>Matthew Bloomfield</span>
           <a href="mailto:matthewb3333@gmail.com" id="email">matthewb3333@gmail.com</a>
+        </div>
+        <div className="foot-tools" role="group" aria-label="Drawing tools">
+          {/* Placeholder icons: swap for Matt's pencil/eraser images (public/tools/) */}
+          <button type="button" className="tool on" id="tool-pencil" aria-label="Pencil" aria-pressed="true" title="Pencil">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinejoin="round"><path d="M4 20l1-4L16.5 4.5a1.5 1.5 0 012 0l1 1a1.5 1.5 0 010 2L8 19z"/><path d="M14.5 6.5l3 3"/></svg>
+          </button>
+          <button type="button" className="tool" id="tool-eraser" aria-label="Eraser" aria-pressed="false" title="Eraser">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinejoin="round"><path d="M4 16l9-9a2 2 0 013 0l3 3a2 2 0 010 3l-6 6H8z"/><path d="M8 20h12M9 11l5 5"/></svg>
+          </button>
         </div>
         <div className="foot-right">
           <time id="clock" />
