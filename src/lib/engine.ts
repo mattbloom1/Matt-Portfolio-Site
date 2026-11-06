@@ -40,9 +40,7 @@ const isMobile = () => window.innerWidth < 640;
 /** Wide screens: section pages are a full-screen split, with the other stamps in the dark left column. */
 const isSplit = () => window.innerWidth >= 900;
 const colWidth = () => Math.max(300, stage.clientWidth * 0.32);
-/** Where the stamps rest on a section page, as fractions of the left column's width and the screen height. */
-const splitSpots = [{ x: 0.19, y: 0.15 }, { x: 0.63, y: 0.25 }, { x: 0.4, y: 0.44 }, { x: 0.66, y: 0.61 }];
-const restRotation = (id: SectionId) => (state === 'nav' || isSplit() ? tilt[id] : 0);
+const restRotation = (id: SectionId) => (state === 'nav' ? tilt[id] : 0);
 const img = (id: SectionId) => `${process.env.NEXT_PUBLIC_BASE_PATH || ''}/stamps/${id}.webp`;
 
 /* ---------- logo explosion (home button) ---------- */
@@ -213,11 +211,19 @@ function miniSlots() {
 }
 function placeMini(id: SectionId, slot: number) {
   if (isSplit()) {
-    const spot = splitSpots[slot % splitSpots.length];
-    const cw = colWidth();
-    const w = cw * (byId(id).ratio >= 1 ? 0.36 : 0.27);
-    const h = w / byId(id).ratio;
-    gsap.set(stampEls.get(id)!, { left: spot.x * cw - w / 2, top: spot.y * stage.clientHeight - h / 2, width: w, rotation: tilt[id], x: 0, y: 0, opacity: 1, scale: 1 });
+    // Tidy 2x2 grid inside the column's padding, upright, below the home button and above the heading.
+    const cw = colWidth(), H = stage.clientHeight;
+    const pad = Math.min(44, Math.max(24, stage.clientWidth * 0.03));
+    const gap = 16, top = 84, bottom = 230, label = 26;
+    const cellW = (cw - pad * 2 - gap) / 2;
+    const cellH = Math.max(110, (H - top - bottom - gap) / 2);
+    const r = byId(id).ratio;
+    const w = Math.min(cellW * 0.92, (cellH - label) * r);
+    const h = w / r;
+    const col = slot % 2, row = Math.floor(slot / 2);
+    const cx = pad + cellW / 2 + col * (cellW + gap);
+    const cy = top + (cellH - label) / 2 + row * (cellH + gap);
+    gsap.set(stampEls.get(id)!, { left: cx - w / 2, top: cy - h / 2, width: w, rotation: 0, x: 0, y: 0, opacity: 1, scale: 1 });
     return;
   }
   const hgt = isMobile() ? 46 : 62;
@@ -287,7 +293,7 @@ function renderContent(id: SectionId) {
   document.title = `${s.label} · ${SITE.name}`;
 }
 function showContent(focus: boolean) {
-  gsap.fromTo(contentEl, { opacity: 0, y: 18 }, { opacity: 1, y: 0, duration: T(0.6), ease: 'power2.out' });
+  gsap.fromTo(contentEl, { opacity: 0, y: 18 }, { opacity: 1, y: 0, duration: T(0.6), ease: 'power2.out', onComplete: () => { gsap.set(contentEl, { clearProps: 'transform' }); } });
   if (focus) (contentEl.querySelector('h1') as HTMLElement | null)?.focus({ preventScroll: true });
 }
 
@@ -455,7 +461,28 @@ const onResize = () => {
     else if (state === 'page') layoutMini();
   });
 };
-const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape' && state === 'page') goHome(); };
+const openDetail = () => contentEl.querySelector<HTMLElement>('.detail:not([hidden])');
+const closeDetail = () => {
+  const d = openDetail();
+  if (!d) return false;
+  d.hidden = true;
+  delete stage.dataset.detailOpen;
+  const opener = contentEl.querySelector<HTMLElement>(`[data-detail="${d.id}"]`);
+  opener?.focus({ preventScroll: true });
+  return true;
+};
+const onContentClick = (e: MouseEvent) => {
+  const t = e.target as HTMLElement;
+  const card = t.closest<HTMLElement>('[data-detail]');
+  if (card) {
+    const d = contentEl.querySelector<HTMLElement>(`#${card.dataset.detail}`);
+    if (d) { gsap.set(contentEl, { clearProps: 'transform' }); d.hidden = false; stage.dataset.detailOpen = '1'; d.scrollTop = 0; gsap.fromTo(d, { opacity: 0 }, { opacity: 1, duration: T(0.35) }); d.querySelector<HTMLElement>('h2')?.focus({ preventScroll: true }); }
+    return;
+  }
+  if (t.closest('[data-close]') || t.classList.contains('detail')) closeDetail();
+};
+const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape' && state === 'page' && !closeDetail()) goHome(); };
+contentEl.addEventListener('click', onContentClick);
 homeBtn.addEventListener('click', onHome);
 window.addEventListener('hashchange', onHash);
 window.addEventListener('resize', onResize);
@@ -474,6 +501,7 @@ return () => {
   window.removeEventListener('hashchange', onHash);
   window.removeEventListener('resize', onResize);
   document.removeEventListener('keydown', onKey);
+  contentEl.removeEventListener('click', onContentClick);
   disposed = true;
   dragging = false; justDragged = false;
   logoCleanup();
