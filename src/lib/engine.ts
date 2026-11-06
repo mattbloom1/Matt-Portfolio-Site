@@ -211,19 +211,15 @@ function miniSlots() {
 }
 function placeMini(id: SectionId, slot: number) {
   if (isSplit()) {
-    // Tidy 2x2 grid inside the column's padding, upright, below the home button and above the heading.
+    // One column down the left of the dark panel, all five stamps in fixed slots, above the heading.
     const cw = colWidth(), H = stage.clientHeight;
     const pad = Math.min(44, Math.max(24, stage.clientWidth * 0.03));
-    const gap = 16, top = 84, bottom = 230, label = 26;
-    const cellW = (cw - pad * 2 - gap) / 2;
-    const cellH = Math.max(110, (H - top - bottom - gap) / 2);
+    const top = 48, bottom = 210, label = 14;
+    const slotH = Math.max(70, (H - top - bottom) / order.length);
     const r = byId(id).ratio;
-    const w = Math.min(cellW * 0.92, (cellH - label) * r);
+    const w = Math.min((cw - pad * 2) * 0.4, (slotH - label) * r);
     const h = w / r;
-    const col = slot % 2, row = Math.floor(slot / 2);
-    const cx = pad + cellW / 2 + col * (cellW + gap);
-    const cy = top + (cellH - label) / 2 + row * (cellH + gap);
-    gsap.set(stampEls.get(id)!, { left: cx - w / 2, top: cy - h / 2, width: w, rotation: 0, x: 0, y: 0, opacity: 1, scale: 1 });
+    gsap.set(stampEls.get(id)!, { left: pad, top: top + slot * slotH + (slotH - label - h) / 2, width: w, rotation: 0, x: 0, y: 0, scale: 1 });
     return;
   }
   const hgt = isMobile() ? 46 : 62;
@@ -234,12 +230,11 @@ function layoutNav() { SECTIONS.forEach((s) => placeNav(s.id)); stampsEl.dataset
 function layoutMini() {
   stampsEl.dataset.mode = 'mini';
   order.forEach((id, i) => placeMini(id, i));
-  stampEls.forEach((el) => el.removeAttribute('tabindex'));
-  if (active) {
-    const a = stampEls.get(active)!;
-    gsap.set(a, { opacity: 0, pointerEvents: 'none' });
-    a.tabIndex = -1;
-  }
+  stampEls.forEach((el, id) => {
+    el.removeAttribute('tabindex');
+    gsap.set(el, { opacity: id === active ? 1 : 0.6, pointerEvents: 'auto' });
+    if (id === active) el.setAttribute('aria-current', 'page'); else el.removeAttribute('aria-current');
+  });
 }
 
 function swapBackground(id: SectionId) {
@@ -254,7 +249,14 @@ function renderContent(id: SectionId) {
   contentEl.scrollTop = 0;
   document.title = `${s.label} · ${SITE.name}`;
 }
-function showContent(focus: boolean) {
+function showContent(focus: boolean, swap = false) {
+  if (swap) {
+    // Section to section: the page frame stays put, only the body fades in, so the background never shows through.
+    const body = contentEl.querySelector('.panel-body');
+    if (body) gsap.fromTo(body, { opacity: 0 }, { opacity: 1, duration: T(0.4), ease: 'power1.out' });
+    if (focus) (contentEl.querySelector('h1') as HTMLElement | null)?.focus({ preventScroll: true });
+    return;
+  }
   gsap.fromTo(contentEl, { opacity: 0, y: 18 }, { opacity: 1, y: 0, duration: T(0.6), ease: 'power2.out', onComplete: () => { gsap.set(contentEl, { clearProps: 'transform' }); } });
   if (focus) (contentEl.querySelector('h1') as HTMLElement | null)?.focus({ preventScroll: true });
 }
@@ -276,16 +278,13 @@ const wait = (sec: number) => new Promise<void>((r) => { gsap.delayedCall(sec, r
 async function navToPage(id: SectionId) {
   busy = true;
   gsap.killTweensOf([...stampEls.values()]);
-  const clicked = stampEls.get(id)!;
   gsap.set([...stampEls.values()], { x: 0, y: 0, rotation: (_i: number, t: Element) => tilt[(t as HTMLElement).dataset.id as SectionId] });
   active = id;
-  order = SECTIONS.filter((s) => s.id !== id).map((s) => s.id); // fixed order, never reshuffled
-  const flipState = Flip.getState(order.map((x) => stampEls.get(x)!));
+  order = SECTIONS.map((s) => s.id); // all five stamps stay, in fixed slots
+  const flipState = Flip.getState([...stampEls.values()]);
   state = 'page';
   stage.dataset.state = 'page'; // the footer leaves and the stage fills the screen before the column is laid out
   layoutMini();
-  // The chosen stamp quietly fades away; the others slide into the column.
-  gsap.fromTo(clicked, { opacity: 1 }, { opacity: 0, duration: T(0.45), ease: 'power1.out' });
   Flip.from(flipState, { duration: T(0.8), ease: 'power3.inOut', stagger: reduce ? 0 : 0.04, absolute: false });
   homeBtn.hidden = false;
   gsap.fromTo(homeBtn, { opacity: 0 }, { opacity: 1, duration: T(0.5), delay: T(0.5) });
@@ -298,21 +297,16 @@ async function navToPage(id: SectionId) {
 async function pageSwap(id: SectionId) {
   busy = true;
   const prev = active as SectionId;
-  const nextEl = stampEls.get(id)!;
-  const prevEl = stampEls.get(prev)!;
   active = id;
-  order = SECTIONS.filter((s) => s.id !== id).map((s) => s.id); // fixed order: the old stamp returns to its own place
-  gsap.to(contentEl, { opacity: 0, duration: T(0.2) });
-  gsap.set(prevEl, { opacity: 1, pointerEvents: 'auto' });
-  const stay = SECTIONS.map((x) => x.id).filter((x) => x !== prev && x !== id).map((x) => stampEls.get(x)!);
-  const flipState = Flip.getState(stay); // only stamps that stay on screen slide; the two swapping ones fade
-  layoutMini();
-  gsap.fromTo(nextEl, { opacity: 1 }, { opacity: 0, duration: T(0.3), ease: 'power1.out' });
-  gsap.fromTo(prevEl, { opacity: 0 }, { opacity: 1, duration: T(0.5), ease: 'power1.out' });
-  Flip.from(flipState, { duration: T(0.7), ease: 'power3.inOut', absolute: false });
-  await wait(T(0.5));
+  // Stamps never move: just light up the new one. Only the page body swaps, the dark column stays.
+  gsap.to(stampEls.get(prev)!, { opacity: 0.6, duration: T(0.3) });
+  gsap.to(stampEls.get(id)!, { opacity: 1, duration: T(0.3) });
+  stampEls.get(prev)!.removeAttribute('aria-current');
+  stampEls.get(id)!.setAttribute('aria-current', 'page');
+  gsap.to(contentEl.querySelector('.panel-body'), { opacity: 0, duration: T(0.2) });
+  await wait(T(0.25));
   renderContent(id);
-  showContent(true);
+  showContent(true, true);
   done();
 }
 
@@ -333,7 +327,6 @@ async function goHome(replay = true) {
   activeEl.removeAttribute('tabindex');
   activeEl.focus({ preventScroll: true });
   Flip.from(flipState, { duration: T(0.9), ease: 'power3.inOut', stagger: reduce ? 0 : 0.04, absolute: false });
-  gsap.fromTo(activeEl, { opacity: 0 }, { opacity: 1, duration: T(0.8), delay: T(0.2) });
   document.title = SITE.name;
   setHash('#/');
   if (!replay) { /* reserved */ }
@@ -367,7 +360,7 @@ function enterInstant(id: SectionId | null) {
   if (id) {
     state = 'page';
     active = id;
-    order = SECTIONS.map((s) => s.id).filter((x) => x !== id);
+    order = SECTIONS.map((s) => s.id);
     stage.dataset.state = 'page';
     layoutMini();
     homeBtn.hidden = false;
