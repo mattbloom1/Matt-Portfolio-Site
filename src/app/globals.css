@@ -189,3 +189,41 @@ body {
 
 @media (max-width: 640px) { .stamps[data-mode='mini'] .stamp .tag { font-size: 9px; } }
 html { font-synthesis-weight: none; }
+
+/* ---------- full-screen section pages ---------- */
+/* On a section page the footer and drawing hints step aside and the page fills the whole screen. */
+.footer, .draw-hint, .send-doodle { transition: opacity .35s; }
+body:has(#stage[data-state='page']) .footer,
+body:has(#stage[data-state='page']) .draw-hint,
+body:has(#stage[data-state='page']) .send-doodle { opacity: 0; pointer-events: none; }
+.stage[data-state='page'] { inset: 0; }
+
+.panel-body { min-width: 0; }
+.stage[data-state='page'] .panel { max-width: none; width: 100%; min-height: 100%; margin: 0; background: var(--paper); backdrop-filter: none; -webkit-backdrop-filter: none; padding: 0; }
+.stage[data-state='page'] .content { padding: 0; }
+.stage[data-state='page'] .cards { grid-template-columns: repeat(auto-fill, minmax(min(100%, 240px), 1fr)); gap: 28px; }
+.stage[data-state='page'] .gallery { grid-template-columns: repeat(auto-fill, minmax(min(100%, 260px), 1fr)); gap: 20px; }
+.stage[data-state='page'] .gallery.wide { grid-template-columns: repeat(auto-fill, minmax(min(100%, 380px), 1fr)); }
+.stage[data-state='page'] .timeline { max-width: 920px; }
+.stage[data-state='page'] .about-top { max-width: 1180px; }
+
+/* wide screens: dark title column on the left holds the other stamps, content fills the rest */
+@media (min-width: 900px) {
+  .stage[data-state='page'] .content { inset: 0; }
+  .stage[data-state='page'] .panel { display: grid; grid-template-columns: minmax(300px, 32%) minmax(0, 1fr); }
+  .stage[data-state='page'] .panel-head { position: sticky; top: 0; align-self: start; height: 100vh; height: 100dvh; background: var(--ink); color: var(--paper); padding: clamp(24px, 3vw, 44px); display: flex; flex-direction: column; justify-content: flex-end; }
+  .stage[data-state='page'] .panel h1 { font-size: clamp(36px, 4vw, 72px); margin: 12px 0 0; overflow-wrap: break-word; }
+  .stage[data-state='page'] .panel-body { padding: clamp(28px, 4vw, 64px) clamp(24px, 5vw, 88px) 72px; }
+  .stage[data-state='page'] .home { left: calc(max(300px, 32vw) - 72px); right: auto; top: 20px; color: var(--paper); }
+  .stage[data-state='page'] .stamp .tag { color: var(--paper); }
+}
+/* narrow screens: title block on top, the stamps stay in a row under it */
+@media (max-width: 899px) {
+  .stage[data-state='page'] .panel-head { background: var(--ink); color: var(--paper); padding: 28px 20px 24px; }
+  .stage[data-state='page'] .panel h1 { font-size: clamp(44px, 14vw, 80px); margin: 6px 0 0; }
+  .stage[data-state='page'] .panel-body { padding: 24px 20px 64px; }
+}
+@media (max-width: 640px) {
+  .stage[data-state='page'] .cards, .stage[data-state='page'] .gallery { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+  .stage[data-state='page'] .gallery.wide { grid-template-columns: minmax(0, 1fr); }
+}
