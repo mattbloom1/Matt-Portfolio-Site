@@ -214,7 +214,7 @@ body:has(#stage[data-state='page']) .send-doodle { opacity: 0; pointer-events: n
   .stage[data-state='page'] .panel-head { position: sticky; top: 0; align-self: start; height: 100vh; height: 100dvh; background: var(--ink); color: var(--paper); padding: clamp(24px, 3vw, 44px); display: flex; flex-direction: column; justify-content: flex-end; }
   .stage[data-state='page'] .panel h1 { font-size: clamp(36px, 4vw, 72px); margin: 12px 0 0; overflow-wrap: break-word; }
   .stage[data-state='page'] .panel-body { padding: clamp(28px, 4vw, 64px) clamp(24px, 5vw, 88px) 72px; }
-  .stage[data-state='page'] .home { left: calc(max(300px, 32vw) - 72px); right: auto; top: 20px; color: var(--paper); }
+  .stage[data-state='page'] .home { top: 20px; right: 28px; }
   .stage[data-state='page'] .stamp .tag { color: var(--paper); }
 }
 /* narrow screens: title block on top, the stamps stay in a row under it */
@@ -227,3 +227,28 @@ body:has(#stage[data-state='page']) .send-doodle { opacity: 0; pointer-events: n
   .stage[data-state='page'] .cards, .stage[data-state='page'] .gallery { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
   .stage[data-state='page'] .gallery.wide { grid-template-columns: minmax(0, 1fr); }
 }
+
+/* project cards: image only, name on hover, click for details */
+.card { display: block; position: relative; overflow: hidden; padding: 0; border: 0; background: none; color: inherit; font: inherit; text-align: left; cursor: pointer; aspect-ratio: 4 / 5; }
+.card-img { position: absolute; inset: 0; display: block; aspect-ratio: auto; transition: transform .6s cubic-bezier(.2,.7,.2,1); }
+.card-over { position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: flex-end; gap: 4px; padding: 18px; color: #fff; background: linear-gradient(to top, rgba(14,14,14,.72), rgba(14,14,14,.12) 60%); opacity: 0; transition: opacity .35s ease; }
+.card-name { font: 500 24px/1.15 var(--serif); }
+.card-sub { font: 500 11px var(--mono); letter-spacing: .14em; text-transform: uppercase; }
+.card:hover .card-img, .card:focus-visible .card-img { transform: scale(1.05); }
+.card:hover .card-over, .card:focus-visible .card-over { opacity: 1; }
+.card:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
+@media (hover: none) { .card-over { opacity: 1; padding: 12px; } .card-name { font-size: 18px; } }
+@media (prefers-reduced-motion: reduce) { .card-img, .card-over { transition: none; } .card:hover .card-img { transform: none; } }
+
+/* project detail overlay */
+.detail { position: fixed; inset: 0; z-index: 6; overflow-y: auto; background: var(--paper); color: var(--ink); }
+.detail[hidden] { display: none; }
+.detail-close { position: fixed; top: 20px; right: 28px; z-index: 7; font: 500 12px var(--mono); letter-spacing: .14em; text-transform: uppercase; background: var(--paper); color: var(--ink); border: 1px solid var(--ink); padding: 10px 14px; cursor: pointer; }
+.detail-close:hover { background: var(--ink); color: var(--paper); }
+.detail-inner { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(280px, 1fr); gap: clamp(24px, 4vw, 64px); max-width: 1400px; margin: 0 auto; padding: 88px clamp(20px, 4vw, 64px) 72px; align-items: start; }
+.detail-img { aspect-ratio: 4 / 5; background: color-mix(in srgb, var(--c, var(--ochre)) 85%, white); }
+.detail-text h2 { font: 500 clamp(36px, 4.5vw, 64px)/1.05 var(--serif); margin: 10px 0 12px; outline: none; }
+.detail-sum { font: 400 22px/1.4 var(--serif); margin: 24px 0; }
+.detail-links a { color: inherit; text-underline-offset: 3px; }
+@media (max-width: 760px) { .detail-inner { grid-template-columns: minmax(0, 1fr); padding-top: 76px; } }
+.stage[data-detail] .stamps, .stage[data-detail] .home { visibility: hidden; }

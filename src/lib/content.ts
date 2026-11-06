@@ -69,20 +69,36 @@ const dates = (e: Experience) => [e.startDate, e.endDate].filter(Boolean).join('
 
 const GROUPS = ['Websites', 'Posters', 'Branding', 'Projects', 'Ignite Adaptive Sports'];
 function projectsHtml(c: SiteContent) {
+  const bg = (p: Project, i: number) => `--c:${safeColor(p.accent) || accents[i % accents.length]};${safeUrl(p.heroImage) ? `background-image:url('${encodeURI(safeUrl(p.heroImage))}');background-size:cover;background-position:center` : ''}`;
+  const links = (p: Project) => [
+    safeUrl(p.videoUrl) ? `<a href="${esc(safeUrl(p.videoUrl))}" target="_blank" rel="noopener">Watch</a>` : '',
+    safeUrl(p.href) ? `<a href="${esc(safeUrl(p.href))}" target="_blank" rel="noopener">${esc(p.linkLabel || 'Visit')}</a>` : '',
+  ].filter(Boolean).join(' · ');
   const card = (p: Project, i: number) => `
-    <article class="card">
-      <div class="card-img" role="img" aria-label="${esc(p.title)}" style="--c:${safeColor(p.accent) || accents[i % accents.length]};${safeUrl(p.heroImage) ? `background-image:url('${encodeURI(safeUrl(p.heroImage))}');background-size:cover` : ''}"></div>
-      <h3>${esc(p.title)}</h3>
-      <p class="meta">${esc([p.role, p.year].filter(Boolean).join(' · '))}</p>
-      ${p.summary ? `<p>${esc(p.summary)}</p>` : ''}
-      ${safeUrl(p.videoUrl) || safeUrl(p.href) ? `<p class="meta">${safeUrl(p.videoUrl) ? `<a href="${esc(safeUrl(p.videoUrl))}" target="_blank" rel="noopener">Watch</a>` : ''}${safeUrl(p.videoUrl) && safeUrl(p.href) ? ' · ' : ''}${safeUrl(p.href) ? `<a href="${esc(safeUrl(p.href))}" target="_blank" rel="noopener">${esc(p.linkLabel || 'Link')}</a>` : ''}</p>` : ''}
-    </article>`;
+    <button type="button" class="card" data-detail="d-${esc(p.slug)}" aria-label="${esc(p.title)}: view details">
+      <span class="card-img" style="${bg(p, i)}"></span>
+      <span class="card-over"><span class="card-name">${esc(p.title)}</span><span class="card-sub">${esc([p.role, p.year].filter(Boolean).join(' · '))}</span></span>
+    </button>`;
+  const detail = (p: Project, i: number) => `
+    <div class="detail" id="d-${esc(p.slug)}" role="dialog" aria-modal="true" aria-label="${esc(p.title)}" hidden>
+      <button type="button" class="detail-close" data-close aria-label="Close details">Close ×</button>
+      <div class="detail-inner">
+        <div class="detail-img" style="${bg(p, i)}"></div>
+        <div class="detail-text">
+          <p class="meta">${esc((p.disciplines || [])[0] || 'Project')}</p>
+          <h2 tabindex="-1">${esc(p.title)}</h2>
+          <p class="meta">${esc([p.role, p.year].filter(Boolean).join(' · '))}</p>
+          ${p.summary ? `<p class="detail-sum">${esc(p.summary)}</p>` : '<p class="todo">The story, images and details for this project are still to come.</p>'}
+          ${links(p) ? `<p class="meta detail-links">${links(p)}</p>` : ''}
+        </div>
+      </div>
+    </div>`;
   const groups = [...new Set([...GROUPS, ...c.projects.flatMap((p) => p.disciplines || [])])];
   const html = groups.map((g) => {
     const items = c.projects.filter((p) => (p.disciplines || [])[0] === g);
     return items.length ? `<section><h2 class="group">${esc(g)}</h2><div class="cards">${items.map(card).join('')}</div></section>` : '';
   }).join('');
-  return `${html}${todo('Titles are from Matt’s list. Images, descriptions and links are still to come.')}`;
+  return `${html}${c.projects.map(detail).join('')}${todo('Titles are from Matt’s list. Images, descriptions and links are still to come.')}`;
 }
 function experienceHtml(c: SiteContent) {
   const items = c.experience.map((e) => `
