@@ -76,7 +76,7 @@ function stackHtml(p: Project) {
     .map((g) => `<div class="stack-row"><dt>${esc(g)}</dt><dd>${(p.stack![g] || []).map((t) => `<span class="chip">${esc(t)}</span>`).join('')}</dd></div>`).join('');
   return rows ? `<dl class="stack" aria-label="Tech stack"><p class="meta">Built with</p>${rows}</dl>` : '';
 }
-const GROUPS = ['Websites', 'Posters', 'Branding', 'Projects', 'Ignite Adaptive Sports'];
+const GROUPS = ['Websites', 'Posters', 'GearBook Pre-Launch Posters', 'GearBook Post-Launch Posters', 'Branding', 'Projects', 'Ignite Adaptive Sports'];
 function projectsHtml(c: SiteContent) {
   const bg = (p: Project, i: number) => `--c:${safeColor(p.accent) || accents[i % accents.length]};${safeUrl(p.heroImage) ? `background-image:url('${encodeURI(safeUrl(p.heroImage))}');background-size:cover;background-position:center` : ''}`;
   const links = (p: Project) => [
