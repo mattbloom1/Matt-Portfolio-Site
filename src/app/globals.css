@@ -209,7 +209,7 @@ html { font-synthesis-weight: none; }
 /* On a section page the footer and drawing hints step aside and the page fills the whole screen. */
 .footer, .draw-hint { transition: opacity .35s; }
 body:has(#stage[data-state='page']) .footer,
-body:has(#stage[data-state='page']) .draw-hint,
+body:has(#stage[data-state='page']) .draw-hint { opacity: 0; pointer-events: none; }
 .stage[data-state='page'] { inset: 0; }
 
 .panel-body { min-width: 0; }
