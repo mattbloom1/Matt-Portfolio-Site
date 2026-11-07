@@ -110,14 +110,13 @@ function projectsHtml(c: SiteContent) {
       <span class="card-img" style="${mirrored(p)}${bg(p, i)}"></span>
       <span class="card-over"><span class="card-name">${esc(p.title)}</span><span class="card-sub">${esc([p.role, p.year].filter(Boolean).join(' · '))}</span></span>
     </button>`;
-  const lineArrow = (back: boolean) => `<svg class="step-arrow" viewBox="0 0 48 24" width="48" height="24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="${back ? 'M45 13C35 11 21 14 5 12M13 5c-2 3-5 5-8 7 3 2 6 4 8 7' : 'M3 13c10-2 24 1 40-1M35 5c2 3 5 5 8 7-3 2-6 4-8 7'}"/></svg>`;
   const siblings = (p: Project) => c.projects.filter((q) => (q.disciplines || [])[0] === (p.disciplines || [])[0]);
   const stepper = (p: Project) => {
     const sib = siblings(p);
     if (sib.length < 2) return '';
     const k = sib.findIndex((q) => q.slug === p.slug);
     const prev = sib[(k - 1 + sib.length) % sib.length], next = sib[(k + 1) % sib.length];
-    return `<nav class="detail-steps" aria-label="Other projects"><button type="button" class="detail-step prev" data-step="d-${esc(prev.slug)}" aria-label="Previous project: ${esc(prev.title)}">${lineArrow(true)}<span class="step-text"><span class="step-dir">previous</span><span class="step-name">${esc(prev.title)}</span></span></button><button type="button" class="detail-step next" data-step="d-${esc(next.slug)}" aria-label="Next project: ${esc(next.title)}"><span class="step-text"><span class="step-dir">next</span><span class="step-name">${esc(next.title)}</span></span>${lineArrow(false)}</button></nav>`;
+    return `<nav class="detail-steps" aria-label="Other projects"><button type="button" class="detail-step prev" data-step="d-${esc(prev.slug)}" aria-label="Previous project: ${esc(prev.title)}"><span class="step-dir">previous</span></button><button type="button" class="detail-step next" data-step="d-${esc(next.slug)}" aria-label="Next project: ${esc(next.title)}"><span class="step-dir">next</span></button></nav>`;
   };
   const detail = (p: Project, i: number) => `
     <div class="detail" id="d-${esc(p.slug)}"${(p.extras?.cursorIcons || []).length ? ` data-icon-cursor="${esc(JSON.stringify(p.extras!.cursorIcons!.filter((u) => safeUrl(u)).map((u) => encodeURI(safeUrl(u)))))}"` : ''} role="dialog" aria-modal="true" aria-label="${esc(p.title)}" hidden>

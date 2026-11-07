@@ -276,17 +276,9 @@ body:has(#stage[data-state='page']) .draw-hint { opacity: 0; pointer-events: non
 .detail[hidden] { display: none; }
 .detail-close { position: fixed; top: 20px; right: 28px; z-index: 7; font: 500 12px var(--mono); letter-spacing: .14em; text-transform: lowercase; background: var(--paper); color: var(--ink); border: 1px solid var(--ink); padding: 10px 14px; cursor: pointer; }
 .detail-steps { position: fixed; left: 0; right: 0; bottom: 0; z-index: 7; display: flex; justify-content: space-between; gap: 12px; padding: 0 clamp(16px, 3vw, 40px) clamp(16px, 2.5vw, 32px); pointer-events: none; }
-.detail-step { pointer-events: auto; display: flex; align-items: center; gap: 18px; max-width: min(46vw, 420px); padding: 14px 26px; background: var(--paper); color: var(--ink); border: 1px solid var(--ink); border-radius: 999px; cursor: pointer; font: inherit; text-align: left; transition: background .2s, color .2s; }
-.detail-step.next { text-align: right; }
-.step-arrow { flex: none; transition: transform .3s cubic-bezier(.2,.8,.2,1); }
-.detail-step.prev:hover .step-arrow { transform: translateX(-8px); }
-.detail-step.next:hover .step-arrow { transform: translateX(8px); }
+.detail-step { pointer-events: auto; padding: 10px 20px; background: var(--paper); color: var(--ink); border: 1px solid var(--ink); border-radius: 999px; cursor: pointer; font: inherit; transition: background .2s, color .2s; }
 .detail-step:hover { background: var(--ink); color: var(--paper); }
-.step-text { display: flex; flex-direction: column; min-width: 0; line-height: 1.15; }
-.step-dir { font: 500 12px var(--mono); letter-spacing: .14em; text-transform: lowercase; opacity: .65; }
-.step-name { font: 500 20px/1.15 var(--serif); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-@media (max-width: 560px) { .detail-step { padding: 12px 20px; } .step-text { display: none; } .step-arrow { width: 56px; } }
-@media (prefers-reduced-motion: reduce) { .step-arrow { transition: none; } }
+.step-dir { font: 500 12px var(--mono); letter-spacing: .14em; text-transform: lowercase; }
 .detail-close:hover { background: var(--ink); color: var(--paper); }
 .detail-inner { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(280px, 1fr); gap: clamp(24px, 4vw, 64px); max-width: 1400px; margin: 0 auto; padding: 88px clamp(20px, 4vw, 64px) 140px; align-items: start; }
 .detail-img { aspect-ratio: 4 / 5; background: color-mix(in srgb, var(--c, var(--ochre)) 85%, white); }
