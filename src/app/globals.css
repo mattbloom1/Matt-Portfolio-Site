@@ -270,8 +270,11 @@ body:has(#stage[data-state='page']) .draw-hint { opacity: 0; pointer-events: non
 .stack dd { margin: 0; display: flex; flex-wrap: wrap; gap: 6px; }
 .chip { font: 500 12px var(--mono); border: 1px solid var(--ink); border-radius: 999px; padding: 4px 10px; }
 .detail-links a { color: inherit; text-underline-offset: 3px; }
-.detail-gallery { display: grid; gap: clamp(16px, 2vw, 28px); max-width: 1400px; margin: 0 auto; padding: 0 clamp(20px, 4vw, 64px) 96px; }
+.detail-gallery { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(16px, 2vw, 28px); max-width: 1400px; margin: 0 auto; padding: 0 clamp(20px, 4vw, 64px) 96px; }
 .detail-gallery img { width: 100%; height: auto; display: block; }
+/* rhythm: two side by side, one full width, repeat; a lone last image spans full width */
+.detail-gallery img:nth-child(3n), .detail-gallery img:last-child:nth-child(3n + 1) { grid-column: 1 / -1; }
+@media (max-width: 560px) { .detail-gallery { grid-template-columns: minmax(0, 1fr); } }
 @media (max-width: 760px) { .detail-inner { grid-template-columns: minmax(0, 1fr); padding-top: 76px; } }
 .stage[data-detail-open] .stamps, .stage[data-detail-open] .home { visibility: hidden; }
 

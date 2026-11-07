@@ -48,7 +48,9 @@ export const SEED_PROJECTS: Project[] = [
   p('Le Reve', 'Websites', {
     role: 'Design, development & content',
     year: 2025,
-    summary: 'Le Rêve is the marketing site for five luxury townhomes in downtown Boca Raton, built for the Gasdaska Verdiglione Conlon Team at Douglas Elliman. It needed to capture leads and inquiries while showing off the finishes, the available residences, and the teams behind the development: Advanced Development Group, Netta Architects and EAJ Services. Details came from several parties, so the hardest part was keeping every spec and claim accurate. Leads go straight to the MLS. I handled the design, development and content, including the homepage hero video and the on-brand stylized elements, and edited the photography.',
+    summary: 'Le Rêve is the marketing site for five luxury townhomes in downtown Boca Raton, built for the Gasdaska Verdiglione Conlon Team at Douglas Elliman. It needed to capture leads and inquiries while showing off the finishes, the available residences, and the teams behind the development: Advanced Development Group, Netta Architects and EAJ Services. Details came from several parties, so the hardest part was keeping every spec and claim accurate. Leads go straight to the MLS, and the site has brought in 23 leads so far on roughly $5 million residences. I handled the design, development and content, including the homepage hero video and the on-brand stylized elements, and edited the photography.',
+    heroImage: asset('/websites/le-reve-macbook-1.webp'),
+    images: ['macbook-2', 'macbook-3', 'macbook-4', 'phones'].map((n) => asset(`/websites/le-reve-${n}.webp`)),
     stack: { Framework: ['Next.js', 'React'], Hosting: ['Vercel'], Integrations: ['MLS lead capture', 'Vercel Analytics', 'Vercel Speed Insights'] },
     href: 'https://www.lerevebocaraton.com/',
     linkLabel: 'Visit site',
