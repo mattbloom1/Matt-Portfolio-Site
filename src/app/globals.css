@@ -393,3 +393,4 @@ body:has(#stage[data-state='page']) .draw-hint { opacity: 0; pointer-events: non
 .roll-gallery { padding: 8px 0 clamp(48px, 7vw, 96px); max-width: none; }
 .roll-gallery .gimg:not(.ld) { aspect-ratio: 3 / 2; }
 .series-year { font: 500 13px var(--mono); letter-spacing: .12em; margin-left: 8px; opacity: .6; vertical-align: middle; }
+.roll-gallery { align-items: start; }
