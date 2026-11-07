@@ -55,7 +55,17 @@ export const SEED_PROJECTS: Project[] = [
     href: 'https://www.lerevebocaraton.com/',
     linkLabel: 'Visit site',
   }),
-  ...['Casa Avenida', 'The Edge Delray'].map((t) => p(t, 'Websites')),
+  p('Casa Avenida', 'Websites', {
+    role: 'Design, development & content',
+    year: 2025,
+    summary: 'Casa Avenida is the marketing site for eight luxury townhome-style condominiums one block from Atlantic Avenue in downtown Delray Beach. I built it in early 2025 for the Gasdaska Verdiglione Conlon Team at Douglas Elliman, with the developers Kastelo Development and 4TRO Development and Capital and RWB/Linares Architecture. The site captures inquiries and leads while presenting the residences, finishes, renderings and a 360 virtual tour. It was my first real client website, so I learned a lot on the fly. I handled the design, development and content, and assisted on the renderings. It is public and still maintained.',
+    heroImage: asset('/websites/casa-avenida-macbook-1.webp'),
+    images: ['macbook-2', 'macbook-3', 'macbook-4', 'phones'].map((n) => asset(`/websites/casa-avenida-${n}.webp`)),
+    stack: { Framework: ['Next.js 14', 'React'], Styling: ['Tailwind CSS', 'Motion'], Data: ['JSON content files'], Hosting: ['Vercel'], Integrations: ['Resend', 'Google Sheets', 'MailerLite', 'Google Maps', 'reCAPTCHA', 'Vercel Analytics'] },
+    href: 'https://casaavenidadelray.com/',
+    linkLabel: 'Visit site',
+  }),
+  ...['The Edge Delray'].map((t) => p(t, 'Websites')),
   p('The GVC Team', 'Websites', {
     role: 'Design, development & content',
     year: 2025,
