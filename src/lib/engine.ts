@@ -440,6 +440,13 @@ const onContentClick = (e: MouseEvent) => {
     if (d) { history.pushState({ detail: d.id }, '', location.href); showDetail(d); }
     return;
   }
+  const step = t.closest<HTMLElement>('[data-step]');
+  if (step) {
+    const d = contentEl.querySelector<HTMLElement>(`#${CSS.escape(step.dataset.step!)}`);
+    // replace (not push) the history entry so back still closes the project
+    if (d) { history.replaceState({ detail: d.id }, '', location.href); hideDetail(); showDetail(d); }
+    return;
+  }
   if (t.closest('[data-close]') || t.classList.contains('detail')) closeDetail();
 };
 const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape' && state === 'page' && !closeDetail()) goHome(); };

@@ -88,9 +88,19 @@ function projectsHtml(c: SiteContent) {
       <span class="card-img" style="${bg(p, i)}"></span>
       <span class="card-over"><span class="card-name">${esc(p.title)}</span><span class="card-sub">${esc([p.role, p.year].filter(Boolean).join(' · '))}</span></span>
     </button>`;
+  const arrow = (d: string) => `<svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="${d}"/></svg>`;
+  const siblings = (p: Project) => c.projects.filter((q) => (q.disciplines || [])[0] === (p.disciplines || [])[0]);
+  const stepper = (p: Project) => {
+    const sib = siblings(p);
+    if (sib.length < 2) return '';
+    const k = sib.findIndex((q) => q.slug === p.slug);
+    const prev = sib[(k - 1 + sib.length) % sib.length], next = sib[(k + 1) % sib.length];
+    return `<button type="button" class="detail-step prev" data-step="d-${esc(prev.slug)}" aria-label="Previous project: ${esc(prev.title)}">${arrow('M15 5l-7 7 7 7')}</button><button type="button" class="detail-step next" data-step="d-${esc(next.slug)}" aria-label="Next project: ${esc(next.title)}">${arrow('M9 5l7 7-7 7')}</button>`;
+  };
   const detail = (p: Project, i: number) => `
     <div class="detail" id="d-${esc(p.slug)}" role="dialog" aria-modal="true" aria-label="${esc(p.title)}" hidden>
       <button type="button" class="detail-close" data-close aria-label="Close details">Close ×</button>
+      ${stepper(p)}
       <div class="detail-inner">
         <div class="detail-img" style="${bg(p, i)}"></div>
         <div class="detail-text">
