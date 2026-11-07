@@ -11,7 +11,7 @@ from PIL import Image, ImageOps, ImageStat
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 MANIFEST = ROOT / 'src/lib/photography.json'
 EXT = {'.jpg', '.jpeg', '.png', '.heic', '.tif', '.tiff', '.webp'}
-LONG = 1800
+LONG = 1600
 BLANK_STD = 13  # luminance spread below this = unexposed/blank frame, skipped
 
 def main(slug, src):
@@ -28,7 +28,7 @@ def main(slug, src):
         if ImageStat.Stat(probe).stddev[0] < BLANK_STD:
             print('  skipped blank frame', f.name); continue
         n += 1
-        im.save(out / f'{n:02d}.webp', 'WEBP', quality=80, method=6)
+        im.save(out / f'{n:02d}.webp', 'WEBP', quality=72, method=6)
         frames.append({'w': im.width, 'h': im.height})
     data = json.loads(MANIFEST.read_text()) if MANIFEST.exists() else {}
     data[slug] = frames
