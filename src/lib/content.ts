@@ -36,6 +36,18 @@ export interface Project {
   disciplines?: string[]; role?: string; heroImage?: string; images?: string[]; accent?: string;
   videoUrl?: string; href?: string; linkLabel?: string;
   stack?: Partial<Record<StackGroup, string[]>>;
+  /** Optional case-study extras, rendered the same way on any project detail page. */
+  extras?: ProjectExtras;
+}
+export interface ProjectExtras {
+  /** Large figures with captions (e.g. a photo of a physical object). */
+  figures?: { src: string; alt: string; caption?: string }[];
+  /** Headline numbers shown in a row above the notes. */
+  stats?: { value: string; label: string }[];
+  /** "Worth a closer look" notes: a short heading and a paragraph each. */
+  notes?: { heading: string; body: string }[];
+  /** Replaces the mouse pointer on this page with a random one of these images. */
+  cursorIcons?: string[];
 }
 export interface Craft {
   title: string; slug: string; summary?: string; year?: number; image?: string; notes?: string;
@@ -76,6 +88,14 @@ function stackHtml(p: Project) {
     .map((g) => `<div class="stack-row"><dt>${esc(g)}</dt><dd>${(p.stack![g] || []).map((t) => `<span class="chip">${esc(t)}</span>`).join('')}</dd></div>`).join('');
   return rows ? `<dl class="stack" aria-label="Tech stack"><p class="meta">Built with</p>${rows}</dl>` : '';
 }
+function extrasHtml(p: Project) {
+  const x = p.extras;
+  if (!x) return '';
+  const figs = (x.figures || []).filter((f) => safeUrl(f.src)).map((f) => `<figure class="xfig"><img src="${esc(encodeURI(safeUrl(f.src)))}" alt="${esc(f.alt)}" loading="lazy" decoding="async">${f.caption ? `<figcaption>${esc(f.caption)}</figcaption>` : ''}</figure>`).join('');
+  const stats = (x.stats || []).map((s) => `<div class="xstat"><dt>${esc(s.label)}</dt><dd>${esc(s.value)}</dd></div>`).join('');
+  const notes = (x.notes || []).map((n) => `<div class="xnote"><h3>${esc(n.heading)}</h3><p>${esc(n.body)}</p></div>`).join('');
+  return `<div class="detail-extra">${figs ? `<div class="xfigs">${figs}</div>` : ''}${stats ? `<dl class="xstats">${stats}</dl>` : ''}${notes ? `<div class="xnotes"><p class="meta">Worth a closer look</p>${notes}</div>` : ''}</div>`;
+}
 const GROUPS = ['Websites', 'Posters', 'GearBook Pre-Launch Posters', 'GearBook Post-Launch Posters', 'Branding', 'Projects', 'Ignite Adaptive Sports'];
 function projectsHtml(c: SiteContent) {
   const bg = (p: Project, i: number) => `--c:${safeColor(p.accent) || accents[i % accents.length]};${safeUrl(p.heroImage) ? `background-image:url('${encodeURI(safeUrl(p.heroImage))}');background-size:cover;background-position:center` : ''}`;
@@ -100,7 +120,7 @@ function projectsHtml(c: SiteContent) {
     return `<nav class="detail-steps" aria-label="Other projects"><button type="button" class="detail-step prev" data-step="d-${esc(prev.slug)}" aria-label="Previous project: ${esc(prev.title)}">${lineArrow(true)}<span class="step-text"><span class="step-dir">previous</span><span class="step-name">${esc(prev.title)}</span></span></button><button type="button" class="detail-step next" data-step="d-${esc(next.slug)}" aria-label="Next project: ${esc(next.title)}"><span class="step-text"><span class="step-dir">next</span><span class="step-name">${esc(next.title)}</span></span>${lineArrow(false)}</button></nav>`;
   };
   const detail = (p: Project, i: number) => `
-    <div class="detail" id="d-${esc(p.slug)}" role="dialog" aria-modal="true" aria-label="${esc(p.title)}" hidden>
+    <div class="detail" id="d-${esc(p.slug)}"${(p.extras?.cursorIcons || []).length ? ` data-icon-cursor="${esc(JSON.stringify(p.extras!.cursorIcons!.filter((u) => safeUrl(u)).map((u) => encodeURI(safeUrl(u)))))}"` : ''} role="dialog" aria-modal="true" aria-label="${esc(p.title)}" hidden>
       <button type="button" class="detail-close" data-close aria-label="Close details">Close ×</button>
       ${stepper(p)}
       <div class="detail-inner">
@@ -115,6 +135,7 @@ function projectsHtml(c: SiteContent) {
         </div>
       </div>
       ${(p.images || []).filter((u) => safeUrl(u)).length ? `<div class="detail-gallery">${(p.images || []).filter((u) => safeUrl(u)).map((u) => `<figure class="gimg"><img src="${esc(encodeURI(safeUrl(u)))}" alt="${esc(p.title)} mockup" loading="lazy" decoding="async"></figure>`).join('')}</div>` : ''}
+      ${extrasHtml(p)}
     </div>`;
   const groups = [...new Set([...GROUPS, ...c.projects.flatMap((p) => p.disciplines || [])])];
   const html = groups.map((g) => {

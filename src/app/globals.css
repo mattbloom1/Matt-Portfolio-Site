@@ -359,3 +359,28 @@ body:has(#stage[data-state='page']) .draw-hint { opacity: 0; pointer-events: non
   .stage[data-state='page'] .home:hover { color: var(--paper); }
   .detail-close { right: 14px; top: 14px; }
 }
+
+/* project detail extras (figures, stats, notes) and the random-icon pointer */
+.detail-gallery:not(:last-child) { padding-bottom: clamp(48px, 7vw, 96px); }
+.detail-extra { max-width: 1400px; margin: 0 auto; padding: 0 clamp(20px, 4vw, 64px) 160px; display: grid; gap: clamp(40px, 6vw, 88px); }
+.xfigs { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(16px, 2vw, 28px); align-items: start; }
+.xfig { margin: 0; }
+.xfig img { width: 100%; height: auto; display: block; }
+.xfig figcaption { font: 500 12px/1.5 var(--mono); letter-spacing: .06em; margin-top: 10px; opacity: .75; max-width: 52ch; }
+.xstats { display: flex; flex-wrap: wrap; gap: 20px clamp(32px, 6vw, 88px); margin: 0; padding-top: 20px; border-top: 1px solid var(--ink); }
+.xstat { display: flex; flex-direction: column-reverse; gap: 4px; }
+.xstat dd { margin: 0; font: 400 clamp(40px, 6vw, 84px)/1 var(--serif); }
+.xstat dt { font: 500 11px var(--mono); letter-spacing: .14em; text-transform: lowercase; opacity: .65; }
+.xnotes .meta { margin: 0 0 8px; }
+.xnote { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr); gap: clamp(16px, 4vw, 64px); padding: 22px 0; border-top: 1px solid color-mix(in srgb, var(--ink) 18%, transparent); }
+.xnote h3 { font: 500 clamp(22px, 2.4vw, 30px)/1.15 var(--serif); margin: 0; }
+.xnote p { font: 400 18px/1.5 var(--serif); margin: 0; max-width: 62ch; }
+@media (max-width: 760px) { .xfigs { grid-template-columns: minmax(0, 1fr); } .xnote { grid-template-columns: minmax(0, 1fr); gap: 8px; } .xnote p { font-size: 17px; } }
+.icon-cursor { position: fixed; top: 0; left: 0; width: 48px; height: 48px; object-fit: contain; pointer-events: none; z-index: 60; opacity: 0; will-change: transform; }
+.icon-cursor.on { opacity: 1; }
+.icon-cursor.pop { animation: icon-pop .22s ease-out; }
+@keyframes icon-pop { from { scale: .6; rotate: -12deg; } to { scale: 1; rotate: 0deg; } }
+@media (hover: hover) and (pointer: fine) {
+  .detail[data-icon-cursor], .detail[data-icon-cursor] .detail-img { cursor: none; }
+  .detail[data-icon-cursor] a, .detail[data-icon-cursor] button, .detail[data-icon-cursor] summary { cursor: pointer; }
+}

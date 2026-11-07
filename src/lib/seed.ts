@@ -80,6 +80,28 @@ export const SEED_PROJECTS: Project[] = [
     heroImage: asset('/websites/pictorial-symbols/macbook-1.webp'),
     images: ['macbook-2', 'macbook-3', 'macbook-4', 'phones-gray'].map((n) => asset(`/websites/pictorial-symbols/${n}.webp`)),
     stack: { Framework: ['Hand-coded HTML, CSS & JavaScript'], Styling: ['Custom brand tokens', 'DM Sans', 'DM Mono', 'Instrument Serif'], Data: ['SVG files with a CSV index'], Hosting: ['GitHub Pages'] },
+    extras: {
+      figures: [
+        { src: asset('/websites/pictorial-symbols/book-cover.webp'), alt: 'Front cover of Handbook of Pictorial Symbols: orange, yellow and purple squares of icons on olive green', caption: 'The source: Handbook of Pictorial Symbols, Rudolf Modley with William R. Myers, Dover, 1976. Front cover of my copy.' },
+        { src: asset('/posters/04-pictorial-symbols.webp'), alt: 'Poster for Handbook of Pictorial Symbols with a grid of icons', caption: 'A poster I made for the book, also in Posters.' },
+      ],
+      stats: [
+        { value: '3,133', label: 'icons' },
+        { value: '132', label: 'scanned pages' },
+        { value: '13', label: 'categories' },
+        { value: '118', label: 'best-guess names' },
+      ],
+      notes: [
+        { heading: 'Every icon can be traced back to the page', body: 'The book was scanned page by page and each page was cut into cells by row and column. The index records the source page, row and column of every icon, so any one of them can be found again in the printed book.' },
+        { heading: 'Traced, not redrawn', body: 'Each crop was vector traced into polygon paths, so every icon is a small SVG that stays sharp at any size. Icons are black on transparent and sit on a cream plate in the viewer, like the printed page.' },
+        { heading: '3,250 in the book, 3,133 here', body: 'The cover promises 3,250 examples. The library keeps one file per distinct design, so repeats are not stored twice.' },
+        { heading: 'Naming took as long as tracing', body: 'The book gives no file names, so each icon was named by hand. Where a name is a guess, the viewer marks it with an asterisk and says so in the preview. Names that several designs share get a number, and restaurant shows up in seventeen different versions.' },
+        { heading: 'Sorted into thirteen categories', body: 'The icons are grouped from 1,044 general pictorial symbols down to 14 hazard labels and weather symbols. A category filter, name search, random button and starred-only filter make a set that size browsable.' },
+        { heading: 'A site built from design tokens', body: 'Colour, type and shape live in one hand-edited token file. The page stylesheet contains no colours or sizes, only references to tokens, and the fonts are self-hosted.' },
+        { heading: 'Archival, on purpose', body: 'The book’s copyright page permits up to ten illustrations per project. This library holds far more, so it is not openly licensed and is framed as a personal archive. A References page shows both covers and credits the source.' },
+      ],
+      cursorIcons: ['steamroller', 'bellows-camera', 'cable-car', 'inkwell-with-quill', 'bus-side-o68', 'theater-masks', 'bridge', 'plumbing-tools', 'fuel', 'palm-tree', 'table-tennis', 'rowing', 'penguin', 'nails-saw-hammer-scattered', 'house', 'canoeing', 'cattle', 'tram', 'electrical-outlet', 'photographs', 'gymnastics-o68', 'wine-glass-baa-adca', 'javelin-throw', 'leafy-grain', 'beet', 'capitol-with-columns', 'ten-coin', 'prehistoric-monument', 'water-transportation-boat-x67', 'heliport-dfw', 'mining', 'reading-room', 'subway-beneath-tracks', 'recreation', 'electric-transformer-box', 'family-at-table', 'bathing', 'stepped-buildings-cluster', 'historic-building-nova-scotia', 'luggage-scale-dial-port', 'anchor', 'apple', 'agave', 'airplane', 'anvil', 'archery', 'badminton', 'awl', 'abc-book', 'ace-of-clubs'].map((n) => asset(`/websites/pictorial-symbols/icons/${n}.svg`)),
+    },
     href: 'https://mattbloom1.github.io/pictorial-symbols-icons/',
     linkLabel: 'Visit site',
   }),
