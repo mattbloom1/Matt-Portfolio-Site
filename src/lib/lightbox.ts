@@ -34,12 +34,12 @@ export function initLightbox(): () => void {
     i = (n + frames.length) % frames.length;
     const el = frames[i];
     img.classList.remove('in');
-    img.src = el.currentSrc || el.src;
+    img.src = el.src; // always the full-size file, even when the tile loaded the 800px variant
     img.alt = label(el);
     requestAnimationFrame(() => img.classList.add('in'));
     cap.textContent = `${title ? title.toLowerCase() + ' · ' : ''}frame ${i + 1} of ${frames.length}`;
     // neighbours are preloaded so arrows feel instant
-    for (const d of [-1, 1]) { const nx = frames[(i + d + frames.length) % frames.length]; const p = new Image(); p.src = nx.currentSrc || nx.src; }
+    for (const d of [-1, 1]) { const nx = frames[(i + d + frames.length) % frames.length]; const p = new Image(); p.src = nx.src; }
     // filmstrip: five frames centred on the current one
     strip.innerHTML = '';
     for (let k = -2; k <= 2; k++) {
