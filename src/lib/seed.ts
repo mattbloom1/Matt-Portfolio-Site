@@ -86,7 +86,6 @@ export const SEED_PROJECTS: Project[] = [
     href: 'https://livpolani.com',
     linkLabel: 'Visit site',
   }),
-  ...['GVC Workspace', 'Essays In Bloom'].map((t) => p(t, 'Websites')),
   ...([
     ['Variex', '01-type-specimen', 'Poster'],
     ['Improve Your Golf', '02-golfer', 'Poster'],
