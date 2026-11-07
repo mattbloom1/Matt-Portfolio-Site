@@ -179,16 +179,22 @@ function placeNav(id: SectionId) {
   gsap.set(stampEls.get(id)!, { left: sp.x * W - w / 2, top: sp.y * H - h / 2, width: w, rotation: tilt[id], x: offsetOf(id).x, y: offsetOf(id).y, opacity: 1, scale: 1 });
 }
 /** Label font size (px) and the width a slot needs so neighbouring labels never collide. */
-const labelPx = () => (isMobile() ? 9 : 12);
+const labelPx = () => (isMobile() ? (stage.clientWidth < 360 ? 7.5 : 9) : 12);
 function miniSlots() {
-  const hgt = isMobile() ? 46 : 62;
-  const gap = isMobile() ? 6 : 20;
-  const slots = order.map((id) => {
-    const sw = hgt * byId(id).ratio;
-    const lw = byId(id).label.length * labelPx() * 0.78;
-    return { id, sw, w: Math.max(sw, lw) };
-  });
-  const total = slots.reduce((t, x) => t + x.w, 0) + gap * (slots.length - 1);
+  const mob = isMobile();
+  const gap = mob ? (stage.clientWidth < 360 ? 3 : 6) : 20;
+  const build = (hgt: number) => {
+    const slots = order.map((id) => {
+      const sw = hgt * byId(id).ratio;
+      const lw = byId(id).label.length * labelPx() * 0.78;
+      return { id, sw, w: Math.max(sw, lw) };
+    });
+    return { slots, total: slots.reduce((t, x) => t + x.w, 0) + gap * (slots.length - 1) };
+  };
+  let hgt = mob ? 46 : 62;
+  let { slots, total } = build(hgt);
+  // shrink the stamps on narrow screens until the whole row fits
+  for (let i = 0; i < 12 && total > stage.clientWidth - 16 && hgt > 24; i++) { hgt -= 3; ({ slots, total } = build(hgt)); }
   let left = Math.max(8, (stage.clientWidth - total) / 2);
   return slots.map((x) => { const o = { ...x, left: left + (x.w - x.sw) / 2 }; left += x.w + gap; return o; });
 }
@@ -205,9 +211,8 @@ function placeMini(id: SectionId, slot: number) {
     gsap.set(stampEls.get(id)!, { left: pad, top: top + slot * slotH + (slotH - label - h) / 2, width: w, rotation: 0, x: 0, y: 0, scale: 1 });
     return;
   }
-  const hgt = isMobile() ? 46 : 62;
   const sp = miniSlots()[slot];
-  gsap.set(stampEls.get(id)!, { left: sp.left, top: isMobile() ? 14 : 18, width: hgt * byId(id).ratio, rotation: 0, x: 0, y: 0, opacity: 1, scale: 1 });
+  gsap.set(stampEls.get(id)!, { left: sp.left, top: isMobile() ? 14 : 18, width: sp.sw, rotation: 0, x: 0, y: 0, opacity: 1, scale: 1 });
 }
 function layoutNav() { SECTIONS.forEach((s) => placeNav(s.id)); stampsEl.dataset.mode = 'nav'; }
 function layoutMini() {
