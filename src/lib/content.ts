@@ -96,7 +96,7 @@ function extrasHtml(p: Project) {
   const notes = (x.notes || []).map((n) => `<div class="xnote"><h3>${esc(n.heading)}</h3><p>${esc(n.body)}</p></div>`).join('');
   return `<div class="detail-extra">${figs ? `<div class="xfigs">${figs}</div>` : ''}${stats ? `<dl class="xstats">${stats}</dl>` : ''}${notes ? `<div class="xnotes"><p class="meta">Worth a closer look</p>${notes}</div>` : ''}</div>`;
 }
-const GROUPS = ['Websites', 'Posters', 'GearBook Pre-Launch Posters', 'GearBook Post-Launch Posters', 'Branding', 'Projects', 'Ignite Adaptive Sports'];
+const GROUPS = ['Websites', 'Posters', 'GearBook Posters', 'Branding', 'Projects', 'Ignite Adaptive Sports'];
 function projectsHtml(c: SiteContent) {
   const bg = (p: Project, i: number) => `--c:${safeColor(p.accent) || accents[i % accents.length]};${safeUrl(p.heroImage) ? `background-image:url('${encodeURI(safeUrl(p.heroImage))}');background-size:cover;background-position:center` : ''}`;
   const links = (p: Project) => [
