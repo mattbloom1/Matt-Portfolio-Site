@@ -371,6 +371,8 @@ function parseHash(): SectionId | null {
   return id && SECTIONS.some((s) => s.id === id) ? id : null;
 }
 function enterInstant(id: SectionId | null) {
+  delete stage.dataset.detailOpen; // a leftover open project would keep the stamps hidden (blank page)
+  contentEl.querySelectorAll<HTMLElement>('.detail').forEach((d) => { d.hidden = true; });
   stampsEl.inert = false;
   gsap.killTweensOf([...stampEls.values(), contentEl, bgEl]);
   stampEls.forEach((el) => { gsap.set(el, { pointerEvents: 'auto', opacity: 1 }); el.removeAttribute('tabindex'); });
@@ -434,7 +436,7 @@ const onResize = () => {
   });
 };
 const openDetail = () => contentEl.querySelector<HTMLElement>('.detail:not([hidden])');
-const closeDetail = () => {
+const hideDetail = () => {
   const d = openDetail();
   if (!d) return false;
   d.hidden = true;
@@ -443,12 +445,34 @@ const closeDetail = () => {
   opener?.focus({ preventScroll: true });
   return true;
 };
+const showDetail = (d: HTMLElement) => {
+  gsap.set(contentEl, { clearProps: 'transform' });
+  d.hidden = false;
+  stage.dataset.detailOpen = '1';
+  d.scrollTop = 0;
+  gsap.fromTo(d, { opacity: 0 }, { opacity: 1, duration: T(0.35) });
+  d.querySelector<HTMLElement>('h2')?.focus({ preventScroll: true });
+};
+// Each open project is its own history entry, so the browser back button closes it instead of leaving the section.
+const closeDetail = () => {
+  if (!openDetail()) return false;
+  if (history.state && history.state.detail) history.back(); else hideDetail();
+  return true;
+};
+const onPop = (e: PopStateEvent) => {
+  const want = e.state && e.state.detail;
+  const cur = openDetail();
+  if (want) {
+    const d = contentEl.querySelector<HTMLElement>(`#${CSS.escape(want)}`);
+    if (d && d !== cur && state === 'page') { hideDetail(); showDetail(d); }
+  } else if (cur) hideDetail();
+};
 const onContentClick = (e: MouseEvent) => {
   const t = e.target as HTMLElement;
   const card = t.closest<HTMLElement>('[data-detail]');
   if (card) {
-    const d = contentEl.querySelector<HTMLElement>(`#${card.dataset.detail}`);
-    if (d) { gsap.set(contentEl, { clearProps: 'transform' }); d.hidden = false; stage.dataset.detailOpen = '1'; d.scrollTop = 0; gsap.fromTo(d, { opacity: 0 }, { opacity: 1, duration: T(0.35) }); d.querySelector<HTMLElement>('h2')?.focus({ preventScroll: true }); }
+    const d = contentEl.querySelector<HTMLElement>(`#${CSS.escape(card.dataset.detail!)}`);
+    if (d) { history.pushState({ detail: d.id }, '', location.href); showDetail(d); }
     return;
   }
   if (t.closest('[data-close]') || t.classList.contains('detail')) closeDetail();
@@ -457,6 +481,7 @@ const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape' && state === 'page'
 contentEl.addEventListener('click', onContentClick);
 homeBtn.addEventListener('click', onHome);
 window.addEventListener('hashchange', onHash);
+window.addEventListener('popstate', onPop);
 window.addEventListener('resize', onResize);
 document.addEventListener('keydown', onKey);
 
@@ -471,6 +496,7 @@ return () => {
   clearInterval(clockTimer);
   homeBtn.removeEventListener('click', onHome);
   window.removeEventListener('hashchange', onHash);
+  window.removeEventListener('popstate', onPop);
   window.removeEventListener('resize', onResize);
   document.removeEventListener('keydown', onKey);
   contentEl.removeEventListener('click', onContentClick);
