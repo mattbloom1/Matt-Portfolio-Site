@@ -394,3 +394,11 @@ body:has(#stage[data-state='page']) .draw-hint { opacity: 0; pointer-events: non
 .roll-gallery .gimg:not(.ld) { aspect-ratio: 3 / 2; }
 .series-year { font: 500 13px var(--mono); letter-spacing: .12em; margin-left: 8px; opacity: .6; vertical-align: middle; }
 .roll-gallery { align-items: start; }
+
+/* ---------- postmarks (idea branch) ---------- */
+.stamp .postmark { position: absolute; right: -9%; bottom: 8%; width: 74%; color: #1d2433; opacity: .78; mix-blend-mode: multiply; pointer-events: none; transform: rotate(var(--pm-rot, -8deg)); z-index: 3; }
+.stamp .postmark svg { display: block; width: 100%; height: auto; overflow: visible; }
+.stage[data-state='page'] .stamp .postmark { display: none; }
+.stamp .postmark.thump { animation: pm-thump .55s cubic-bezier(.2,1.4,.4,1) both; }
+@keyframes pm-thump { 0% { opacity: 0; transform: rotate(calc(var(--pm-rot, -8deg) - 14deg)) scale(1.9); } 55% { opacity: .95; transform: rotate(var(--pm-rot, -8deg)) scale(.94); } 100% { opacity: .78; transform: rotate(var(--pm-rot, -8deg)) scale(1); } }
+@media (prefers-reduced-motion: reduce) { .stamp .postmark.thump { animation: none; } }
