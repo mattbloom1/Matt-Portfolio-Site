@@ -92,35 +92,60 @@ function buildStamps() {
 /** Pick a stamp up and move it; on release it springs back to its spot. */
 let dragging = false;
 let justDragged = false;
+
+/* Where the visitor has dragged each home-page stamp, as fractions of the stage so it survives resizes. */
+const POS_KEY = 'stampPositions.v1';
+const moved: Partial<Record<SectionId, { fx: number; fy: number }>> = (() => {
+  try { return JSON.parse(localStorage.getItem(POS_KEY) || '{}'); } catch { return {}; }
+})();
+const savePositions = () => { try { localStorage.setItem(POS_KEY, JSON.stringify(moved)); } catch { /* private mode: positions last for the visit only */ } };
+const offsetOf = (id: SectionId) => ({ x: (moved[id]?.fx || 0) * stage.clientWidth, y: (moved[id]?.fy || 0) * stage.clientHeight });
 function enableDrag(el: HTMLButtonElement, id: SectionId) {
-  let pid = -1, sx = 0, sy = 0, ox = 0, oy = 0, moved = false;
+  let pid = -1, sx = 0, sy = 0, ox = 0, oy = 0, drag = false, vx = 0, vy = 0;
   el.addEventListener('pointerdown', (e) => {
     if (e.button !== 0 || busy || pid !== -1) return;
-    pid = e.pointerId; sx = e.clientX; sy = e.clientY; moved = false;
+    pid = e.pointerId; sx = e.clientX; sy = e.clientY; drag = false; vx = 0; vy = 0;
     ox = Number(gsap.getProperty(el, 'x')) || 0; oy = Number(gsap.getProperty(el, 'y')) || 0;
   });
   el.addEventListener('pointermove', (e) => {
     if (e.pointerId !== pid) return;
     const dx = e.clientX - sx, dy = e.clientY - sy;
-    if (!moved) {
+    if (!drag) {
       if (Math.hypot(dx, dy) < 6) return;
-      moved = true; dragging = true;
+      drag = true; dragging = true;
       el.setPointerCapture(pid);
       el.classList.add('held');
       gsap.killTweensOf(el);
       gsap.to(el, { scale: 1.08, duration: 0.2, ease: 'power2.out', overwrite: 'auto' });
     }
+    vx = vx * 0.6 + e.movementX * 0.4; vy = vy * 0.6 + e.movementY * 0.4;
     gsap.set(el, { x: ox + dx, y: oy + dy, rotation: restRotation(id) + Math.max(-8, Math.min(8, e.movementX * 0.6)) });
   });
   const end = (e: PointerEvent) => {
     if (e.pointerId !== pid) return;
     pid = -1;
-    if (!moved) return;
+    if (!drag) return;
     dragging = false;
     justDragged = true;
     setTimeout(() => { justDragged = false; }, 0);
     el.classList.remove('held');
-    gsap.to(el, { x: 0, y: 0, scale: 1, rotation: restRotation(id), duration: reduce ? 0.2 : 0.8, ease: reduce ? 'power2.out' : 'elastic.out(1, 0.55)', overwrite: 'auto' });
+    if (state !== 'nav') {
+      gsap.to(el, { x: 0, y: 0, scale: 1, rotation: restRotation(id), duration: reduce ? 0.2 : 0.8, ease: reduce ? 'power2.out' : 'elastic.out(1, 0.55)', overwrite: 'auto' });
+      return;
+    }
+    // Home page: the stamp stays where it is dropped, with a little throw and an elastic settle.
+    const W = stage.clientWidth, H = stage.clientHeight;
+    const cap = (v: number) => Math.max(-26, Math.min(26, v * 4));
+    let x = Number(gsap.getProperty(el, 'x')) + (reduce ? 0 : cap(vx));
+    let y = Number(gsap.getProperty(el, 'y')) + (reduce ? 0 : cap(vy));
+    // keep the stamp's centre on screen, so it can never be lost
+    const r = el.getBoundingClientRect(), sr = stage.getBoundingClientRect();
+    const cx = r.left + r.width / 2 - sr.left, cy = r.top + r.height / 2 - sr.top;
+    const mx = Math.min(Math.max(cx, W * 0.06), W * 0.94) - cx, my = Math.min(Math.max(cy, H * 0.08), H * 0.92) - cy;
+    x += mx; y += my;
+    moved[id] = { fx: x / W, fy: y / H };
+    savePositions();
+    gsap.to(el, { x, y, scale: 1, rotation: restRotation(id), duration: reduce ? 0.2 : 0.9, ease: reduce ? 'power2.out' : 'elastic.out(1, 0.5)', overwrite: 'auto' });
   };
   el.addEventListener('pointerup', end);
   el.addEventListener('pointercancel', end);
@@ -132,11 +157,13 @@ function nudge(el: HTMLElement, id: SectionId, cx?: number, cy?: number) {
   const dx = cx === undefined ? 0 : cx - (r.left + r.width / 2);
   const dy = cy === undefined ? -1 : cy - (r.top + r.height / 2);
   const k = Math.min(r.width, 200) / 200;
-  gsap.to(el, { x: -dx * 0.12 * k, y: -dy * 0.12 * k - 4, rotation: tilt[id] + dx * 0.03, duration: 0.35, ease: 'power2.out', overwrite: 'auto' });
+  const o = offsetOf(id);
+  gsap.to(el, { x: o.x - dx * 0.12 * k, y: o.y - dy * 0.12 * k - 4, rotation: tilt[id] + dx * 0.03, duration: 0.35, ease: 'power2.out', overwrite: 'auto' });
 }
 function unnudge(el: HTMLElement, id: SectionId) {
   if (state !== 'nav' || busy) return;
-  gsap.to(el, { x: 0, y: 0, rotation: tilt[id], duration: 0.6, ease: 'elastic.out(1, 0.5)', overwrite: 'auto' });
+  const o = offsetOf(id);
+  gsap.to(el, { x: o.x, y: o.y, rotation: tilt[id], duration: 0.6, ease: 'elastic.out(1, 0.5)', overwrite: 'auto' });
 }
 
 function sizeOf(id: SectionId, w: number) {
@@ -148,7 +175,7 @@ function placeNav(id: SectionId) {
   const sp = spots[id];
   const W = stage.clientWidth, H = stage.clientHeight;
   const { w, h } = sizeOf(id, sp.w * W);
-  gsap.set(stampEls.get(id)!, { left: sp.x * W - w / 2, top: sp.y * H - h / 2, width: w, rotation: tilt[id], x: 0, y: 0, opacity: 1, scale: 1 });
+  gsap.set(stampEls.get(id)!, { left: sp.x * W - w / 2, top: sp.y * H - h / 2, width: w, rotation: tilt[id], x: offsetOf(id).x, y: offsetOf(id).y, opacity: 1, scale: 1 });
 }
 /** Label font size (px) and the width a slot needs so neighbouring labels never collide. */
 const labelPx = () => (isMobile() ? 9 : 12);
@@ -233,7 +260,7 @@ const wait = (sec: number) => new Promise<void>((r) => { gsap.delayedCall(sec, r
 async function navToPage(id: SectionId) {
   busy = true;
   gsap.killTweensOf([...stampEls.values()]);
-  gsap.set([...stampEls.values()], { x: 0, y: 0, rotation: (_i: number, t: Element) => tilt[(t as HTMLElement).dataset.id as SectionId] });
+  gsap.set([...stampEls.values()], { x: (_i: number, t: Element) => offsetOf((t as HTMLElement).dataset.id as SectionId).x, y: (_i: number, t: Element) => offsetOf((t as HTMLElement).dataset.id as SectionId).y, rotation: (_i: number, t: Element) => tilt[(t as HTMLElement).dataset.id as SectionId] });
   active = id;
   order = SECTIONS.map((s) => s.id); // all five stamps stay, in fixed slots
   const flipState = Flip.getState([...stampEls.values()]);
@@ -298,7 +325,7 @@ function fanIn() {
     if (reduce) { gsap.fromTo(el, { opacity: 0 }, { opacity: 1, duration: 0.2 }); return; }
     gsap.fromTo(el,
       { x: side * W * 0.9, y: gsap.utils.random(-120, 120), rotation: tilt[s.id] + side * gsap.utils.random(25, 60), opacity: 0 },
-      { x: 0, y: 0, rotation: tilt[s.id], opacity: 1, duration: T(1.4), delay: i * 0.08 * (reduce ? 0 : 1), ease: 'power3.out', overwrite: 'auto' });
+      { x: offsetOf(s.id).x, y: offsetOf(s.id).y, rotation: tilt[s.id], opacity: 1, duration: T(1.4), delay: i * 0.08 * (reduce ? 0 : 1), ease: 'power3.out', overwrite: 'auto' });
   });
 }
 
