@@ -370,7 +370,7 @@ body:has(#stage[data-state='page']) .draw-hint { opacity: 0; pointer-events: non
 @media (max-width: 760px) { .xfigs { grid-template-columns: minmax(0, 1fr); } .xnote { grid-template-columns: minmax(0, 1fr); gap: 8px; } .xnote p { font-size: 17px; } }
 .icon-cursor { position: fixed; top: 0; left: 0; width: 48px; height: 48px; object-fit: contain; pointer-events: none; z-index: 60; opacity: 0; will-change: translate; }
 .icon-cursor.on { opacity: 1; }
-.icon-cursor.pop { animation: icon-pop .22s ease-out; }
+.icon-cursor.pop { animation: icon-pop .32s ease-out; }
 @keyframes icon-pop { from { scale: .6; rotate: -12deg; } to { scale: 1; rotate: 0deg; } }
 @media (hover: hover) and (pointer: fine) {
   .detail[data-icon-cursor], .detail[data-icon-cursor] .detail-img { cursor: none; }
