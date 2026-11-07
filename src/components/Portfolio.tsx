@@ -5,6 +5,7 @@ import { initPortfolio } from '@/lib/engine';
 import { initDrawing } from '@/lib/draw';
 import { initFontSwitcher } from '@/lib/fontSwitcher';
 import { initIconCursor } from '@/lib/iconCursor';
+import { initNightMode } from '@/lib/nightmode';
 import type { SiteContent } from '@/lib/content';
 
 export default function Portfolio({ content }: { content: SiteContent }) {
@@ -14,6 +15,7 @@ export default function Portfolio({ content }: { content: SiteContent }) {
   useEffect(() => initDrawing(canvasRef.current as HTMLCanvasElement, sendRef.current as HTMLButtonElement), []);
   useEffect(() => initFontSwitcher(), []);
   useEffect(() => initIconCursor(), []);
+  useEffect(() => initNightMode(), []);
 
   return (
     <>
