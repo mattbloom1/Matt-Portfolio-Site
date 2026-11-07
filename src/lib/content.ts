@@ -112,7 +112,7 @@ function projectsHtml(c: SiteContent) {
           ${links(p) ? `<p class="meta detail-links">${links(p)}</p>` : ''}
         </div>
       </div>
-      ${(p.images || []).filter((u) => safeUrl(u)).length ? `<div class="detail-gallery">${(p.images || []).filter((u) => safeUrl(u)).map((u) => `<img src="${esc(encodeURI(safeUrl(u)))}" alt="${esc(p.title)} mockup" loading="lazy" decoding="async">`).join('')}</div>` : ''}
+      ${(p.images || []).filter((u) => safeUrl(u)).length ? `<div class="detail-gallery">${(p.images || []).filter((u) => safeUrl(u)).map((u) => `<figure class="gimg"><img src="${esc(encodeURI(safeUrl(u)))}" alt="${esc(p.title)} mockup" loading="lazy" decoding="async"></figure>`).join('')}</div>` : ''}
     </div>`;
   const groups = [...new Set([...GROUPS, ...c.projects.flatMap((p) => p.disciplines || [])])];
   const html = groups.map((g) => {
