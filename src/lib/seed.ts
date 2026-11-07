@@ -83,6 +83,14 @@ export const SEED_PROJECTS: Project[] = [
     href: 'https://mattbloom1.github.io/pictorial-symbols-icons/',
     linkLabel: 'Visit site',
   }),
+  p('Reseller Ledger', 'Websites', {
+    role: 'Design & development',
+    year: 2026,
+    summary: 'A private, single-user tracker for reselling that follows each item from purchase to listing to sale. Buying ten of something creates ten individually traceable items, each with its own cost, and shared charges like tax and shipping are split across them to the penny. A four-column board (Arriving, In hand, Listed, Sold) shows what needs doing next, and an overview compares cash against profit. Amounts that are not known stay unknown instead of being guessed. The login-only app is not public, so every screen shown here uses sample data.',
+    heroImage: asset('/websites/reseller-ledger/macbook-1.webp'),
+    images: ['macbook-2', 'macbook-3', 'macbook-4', 'phones-gray'].map((n) => asset(`/websites/reseller-ledger/${n}.webp`)),
+    stack: { Framework: ['React 19', 'TypeScript', 'Vite'], Data: ['Supabase (Postgres, Auth)'], Hosting: ['Cloudflare Workers Static Assets'], Integrations: ['Vitest', 'Playwright'] },
+  }),
   p('The GVC Team', 'Websites', {
     role: 'Design, development & content',
     year: 2025,
