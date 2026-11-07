@@ -28,10 +28,14 @@ export const SITE = {
 };
 
 /* ---------- CMS content model (mirrors studio/schemaTypes) ---------- */
+/** Tech stack shown the same way on every website card, always in this order. */
+export const STACK_GROUPS = ['Framework', 'Styling', 'Data', 'Hosting', 'Integrations'] as const;
+export type StackGroup = typeof STACK_GROUPS[number];
 export interface Project {
   title: string; slug: string; summary?: string; featured?: boolean; year?: number;
   disciplines?: string[]; role?: string; heroImage?: string; images?: string[]; accent?: string;
   videoUrl?: string; href?: string; linkLabel?: string;
+  stack?: Partial<Record<StackGroup, string[]>>;
 }
 export interface Craft {
   title: string; slug: string; summary?: string; year?: number; image?: string; notes?: string;
@@ -67,6 +71,11 @@ const safeColor = (v = '') => (/^#[0-9a-f]{3,8}$/i.test(v) ? v : '');
 const todo = (t: string) => `<p class="todo">${t}</p>`;
 const dates = (e: Experience) => [e.startDate, e.endDate].filter(Boolean).join(' – ');
 
+function stackHtml(p: Project) {
+  const rows = STACK_GROUPS.filter((g) => (p.stack?.[g] || []).length)
+    .map((g) => `<div class="stack-row"><dt>${esc(g)}</dt><dd>${(p.stack![g] || []).map((t) => `<span class="chip">${esc(t)}</span>`).join('')}</dd></div>`).join('');
+  return rows ? `<dl class="stack" aria-label="Tech stack"><p class="meta">Built with</p>${rows}</dl>` : '';
+}
 const GROUPS = ['Websites', 'Posters', 'Branding', 'Projects', 'Ignite Adaptive Sports'];
 function projectsHtml(c: SiteContent) {
   const bg = (p: Project, i: number) => `--c:${safeColor(p.accent) || accents[i % accents.length]};${safeUrl(p.heroImage) ? `background-image:url('${encodeURI(safeUrl(p.heroImage))}');background-size:cover;background-position:center` : ''}`;
@@ -89,6 +98,7 @@ function projectsHtml(c: SiteContent) {
           <h2 tabindex="-1">${esc(p.title)}</h2>
           <p class="meta">${esc([p.role, p.year].filter(Boolean).join(' · '))}</p>
           ${p.summary ? `<p class="detail-sum">${esc(p.summary)}</p>` : '<p class="todo">The story, images and details for this project are still to come.</p>'}
+          ${stackHtml(p)}
           ${links(p) ? `<p class="meta detail-links">${links(p)}</p>` : ''}
         </div>
       </div>

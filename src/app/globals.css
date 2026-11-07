@@ -263,6 +263,12 @@ body:has(#stage[data-state='page']) .draw-hint { opacity: 0; pointer-events: non
 .detail-img { aspect-ratio: 4 / 5; background: color-mix(in srgb, var(--c, var(--ochre)) 85%, white); }
 .detail-text h2 { font: 500 clamp(36px, 4.5vw, 64px)/1.05 var(--serif); margin: 10px 0 12px; outline: none; }
 .detail-sum { font: 400 22px/1.4 var(--serif); margin: 24px 0; }
+.stack { margin: 28px 0; display: grid; gap: 10px; }
+.stack .meta { margin: 0 0 4px; }
+.stack-row { display: grid; grid-template-columns: 110px 1fr; gap: 12px; align-items: baseline; border-top: 1px solid color-mix(in srgb, var(--ink) 18%, transparent); padding-top: 10px; }
+.stack dt { font: 500 11px var(--mono); letter-spacing: .14em; text-transform: lowercase; opacity: .65; }
+.stack dd { margin: 0; display: flex; flex-wrap: wrap; gap: 6px; }
+.chip { font: 500 12px var(--mono); border: 1px solid var(--ink); border-radius: 999px; padding: 4px 10px; }
 .detail-links a { color: inherit; text-underline-offset: 3px; }
 .detail-gallery { display: grid; gap: clamp(16px, 2vw, 28px); max-width: 1400px; margin: 0 auto; padding: 0 clamp(20px, 4vw, 64px) 96px; }
 .detail-gallery img { width: 100%; height: auto; display: block; }
