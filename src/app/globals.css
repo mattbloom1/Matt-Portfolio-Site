@@ -284,7 +284,6 @@ body:has(#stage[data-state='page']) .draw-hint { opacity: 0; pointer-events: non
 /* cleaner project page */
 .stage[data-state='page'] section + section { margin-top: 56px; }
 .group { display: flex; justify-content: space-between; align-items: baseline; font: 500 12px var(--mono); letter-spacing: .18em; text-transform: lowercase; border-bottom: 1px solid var(--ink); padding-bottom: 12px; margin: 0 0 24px; }
-.group .count { opacity: .55; }
 .stage[data-state='page'] .cards { grid-template-columns: repeat(auto-fill, minmax(min(100%, 230px), 1fr)); gap: 24px; }
 .card .card-img { background-color: color-mix(in srgb, var(--c, var(--ochre)) 70%, var(--paper)); }
 .card.no-img .card-over { opacity: 1; background: none; color: var(--ink); }
@@ -298,3 +297,14 @@ body:has(#stage[data-state='page']) .draw-hint { opacity: 0; pointer-events: non
   .stage[data-state='page'] .stamps[data-mode='mini'] .stamp .tag { left: 100%; top: 50%; right: auto; bottom: auto; transform: translate(18px, -50%); white-space: nowrap; text-align: left; font-size: 12px; }
   .stage[data-state='page'] .stamp[aria-current='page'] .tag { opacity: 1; font-weight: 600; }
 }
+
+/* project cards: the title is always shown, the role and year appear on hover */
+.card .card-over { opacity: 1; background: linear-gradient(to top, rgba(14,14,14,.6), rgba(14,14,14,0) 42%); transition: background .35s ease; }
+.card:hover .card-over, .card:focus-visible .card-over { background: linear-gradient(to top, rgba(14,14,14,.78), rgba(14,14,14,.18) 70%); }
+.card .card-sub { max-height: 0; opacity: 0; overflow: hidden; transition: max-height .35s ease, opacity .35s ease; }
+.card:hover .card-sub, .card:focus-visible .card-sub { max-height: 3.5em; opacity: 1; }
+.card.no-img .card-over { background: none; }
+.card.no-img:hover .card-over, .card.no-img:focus-visible .card-over { background: linear-gradient(to top, rgba(14,14,14,.18), transparent 60%); }
+.card.no-img .card-sub { color: var(--ink); }
+@media (hover: none) { .card .card-sub { max-height: 3.5em; opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { .card .card-over, .card .card-sub { transition: none; } }
