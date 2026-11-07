@@ -8,6 +8,8 @@ import photoManifest from './photography.json';
 export const BIO_SHORT = [
   'Currently, I work with the GVC team at Douglas Elliman as a full-time graphic designer. I am a Creative Technology and Design BS graduate from the University of Colorado Boulder, with a minor in Computer Science that allows me to approach problems with a technical view. Previously, I worked at Trimble designing people-focused solutions for Business Systems and Change Management.',
   'I bring a dynamic approach to my pursuits and am looking to gain industry experience in software, hardware, and infrastructure. I have the passion and experience to create tools, techniques, and technologies that shape how people interact with and relate to the world.',
+  // DRAFT (not yet reviewed by Matt): built only from facts already on the site (bio, Experience, Photography). Edit freely.
+  'Most of my work sits between design and engineering: websites, branding, CAD and fabrication, and the systems that hold them together. Outside the studio, I have taught climbing, volunteered on the slopes with Ignite Adaptive Sports, and shot film.',
 ];
 
 export const BIO_LONG = [
