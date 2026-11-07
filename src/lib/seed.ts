@@ -1,4 +1,5 @@
-import type { Craft, Experience, Project } from './content';
+import type { Craft, Experience, PhotoSeries, Project } from './content';
+import photoManifest from './photography.json';
 
 /**
  * Content supplied by Matt (verbatim). Used until the Sanity dataset has entries.
@@ -146,3 +147,21 @@ export const SEED_PROJECTS: Project[] = [
 ];
 
 export const SEED_CRAFTS: Craft[] = ['Pottery', 'Skate Rings', 'Recycled Climbing Rope Crafts'].map((title) => ({ title, slug: title.toLowerCase().replace(/[^a-z0-9]+/g, '-') }));
+
+/** One 35mm roll per month, newest first. Photos are produced by scripts/process-film.py into public/photography/<slug>/NN.webp. */
+const ROLLS: { slug: string; month: string; year: number }[] = [
+  { slug: 'aug-2026', month: 'August', year: 2026 },
+  { slug: 'jun-2026', month: 'June', year: 2026 },
+  { slug: 'apr-2026', month: 'April', year: 2026 },
+  { slug: 'feb-2026', month: 'February', year: 2026 },
+  { slug: 'jan-2026', month: 'January', year: 2026 },
+  { slug: 'dec-2025', month: 'December', year: 2025 },
+  { slug: 'oct-2025', month: 'October', year: 2025 },
+  { slug: 'aug-2025', month: 'August', year: 2025 },
+];
+const manifest = photoManifest as Record<string, { w: number; h: number }[]>;
+/** Rolls that have photos yet; the rest stay hidden. */
+export const SEED_PHOTOGRAPHY: PhotoSeries[] = ROLLS.filter((r) => (manifest[r.slug] || []).length).map((r) => ({
+  title: r.month, slug: r.slug, year: r.year,
+  frames: manifest[r.slug].map((f, i) => ({ image: asset(`/photography/${r.slug}/${String(i + 1).padStart(2, '0')}.webp`), alt: `${r.month} ${r.year} film roll, frame ${i + 1}`, w: f.w, h: f.h })),
+}));

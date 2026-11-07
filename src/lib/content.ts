@@ -1,5 +1,5 @@
 import { urlFor } from './sanity';
-import { PROFILE_PHOTO, BIO_SHORT, EDUCATION, FUN_NOTE, SEED_CRAFTS, SEED_EXPERIENCE, SEED_PROJECTS } from './seed';
+import { SEED_PHOTOGRAPHY, PROFILE_PHOTO, BIO_SHORT, EDUCATION, FUN_NOTE, SEED_CRAFTS, SEED_EXPERIENCE, SEED_PROJECTS } from './seed';
 
 export type SectionId = 'projects' | 'experience' | 'about' | 'crafts' | 'photography';
 
@@ -56,7 +56,7 @@ export interface Experience {
   organization: string; role: string; startDate?: string; endDate?: string; description?: string;
 }
 export interface PhotoSeries {
-  title: string; slug: string; summary?: string; year?: number; cover?: string; frames?: { image?: string; alt?: string; caption?: string }[];
+  title: string; slug: string; summary?: string; year?: number; cover?: string; frames?: { image?: string; alt?: string; caption?: string; w?: number; h?: number }[];
 }
 export interface SiteContent {
   projects: Project[]; crafts: Craft[]; experience: Experience[]; photography: PhotoSeries[];
@@ -69,11 +69,11 @@ const accents = ['#c4b268', '#c9a0a0', '#8fb3c9', '#7fbf7a', '#a9c0bf'];
 
 /** Matt's supplied content (src/lib/seed.ts); used until Sanity has entries. */
 export const PLACEHOLDER: SiteContent = {
-  placeholder: { projects: false, crafts: false, experience: false, photography: true },
+  placeholder: { projects: false, crafts: false, experience: false, photography: !SEED_PHOTOGRAPHY.length },
   projects: SEED_PROJECTS,
   crafts: SEED_CRAFTS,
   experience: SEED_EXPERIENCE,
-  photography: [{ title: 'Placeholder series', slug: 'placeholder-series', summary: 'Photography content has not been supplied.' }],
+  photography: SEED_PHOTOGRAPHY.length ? SEED_PHOTOGRAPHY : [{ title: 'Placeholder series', slug: 'placeholder-series', summary: 'Photography content has not been supplied.' }],
 };
 
 const esc = (s = '') => s.replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c] as string));
@@ -161,11 +161,10 @@ function craftsHtml(c: SiteContent) {
 }
 function photographyHtml(c: SiteContent) {
   const series = c.photography.map((s) => {
-    const frames = (s.frames?.length ? s.frames : s.cover ? [{ image: s.cover, alt: s.title }] : []);
-    const shots = (frames.length ? frames : [1, 2, 3].map(() => ({}) as { image?: string; alt?: string; caption?: string })).map((f, i) => `
-      <figure class="shot${safeUrl(f.image) ? ' has-img' : ''}" style="--c:${accents[i % accents.length]};${safeUrl(f.image) ? `background-image:url('${encodeURI(safeUrl(f.image))}'),var(--sk-grad);background-size:cover,200% 100%;background-position:center,0 0` : ''}" ${f.alt ? `role="img" aria-label="${esc(f.alt)}"` : ''}>
-        ${f.caption ? `<figcaption>${esc(f.caption)}</figcaption>` : ''}</figure>`).join('');
-    return `<section><h3 class="series">${esc(s.title)}${s.year ? ` · ${s.year}` : ''}</h3>${s.summary ? `<p>${esc(s.summary)}</p>` : ''}<div class="gallery wide">${shots}</div></section>`;
+    const frames = (s.frames || []).filter((f) => safeUrl(f.image));
+    if (!frames.length) return `<section><h3 class="series">${esc(s.title)}</h3><div class="gallery wide"><figure class="shot"></figure></div></section>`;
+    const imgs = frames.map((f) => `<figure class="gimg"><img onload="this.parentNode.classList.add('ld')" onerror="this.parentNode.classList.add('ld')" src="${esc(encodeURI(safeUrl(f.image)))}" alt="${esc(f.alt || `${s.title} film roll`)}"${f.w && f.h ? ` width="${f.w}" height="${f.h}"` : ''} loading="lazy" decoding="async"></figure>`).join('');
+    return `<section class="roll"><h3 class="series">${esc(s.title)}${s.year ? ` <span class="series-year">${s.year}</span>` : ''}</h3>${s.summary ? `<p>${esc(s.summary)}</p>` : ''}<div class="detail-gallery roll-gallery">${imgs}</div></section>`;
   }).join('');
   return `${series}${c.placeholder.photography ? todo('Placeholder. Photography content has not been supplied.') : ''}`;
 }
