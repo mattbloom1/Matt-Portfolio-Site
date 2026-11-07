@@ -264,6 +264,8 @@ body:has(#stage[data-state='page']) .draw-hint,
 .detail-text h2 { font: 500 clamp(36px, 4.5vw, 64px)/1.05 var(--serif); margin: 10px 0 12px; outline: none; }
 .detail-sum { font: 400 22px/1.4 var(--serif); margin: 24px 0; }
 .detail-links a { color: inherit; text-underline-offset: 3px; }
+.detail-gallery { display: grid; gap: clamp(16px, 2vw, 28px); max-width: 1400px; margin: 0 auto; padding: 0 clamp(20px, 4vw, 64px) 96px; }
+.detail-gallery img { width: 100%; height: auto; display: block; }
 @media (max-width: 760px) { .detail-inner { grid-template-columns: minmax(0, 1fr); padding-top: 76px; } }
 .stage[data-detail-open] .stamps, .stage[data-detail-open] .home { visibility: hidden; }
 

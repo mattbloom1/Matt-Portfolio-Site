@@ -30,7 +30,7 @@ export const SITE = {
 /* ---------- CMS content model (mirrors studio/schemaTypes) ---------- */
 export interface Project {
   title: string; slug: string; summary?: string; featured?: boolean; year?: number;
-  disciplines?: string[]; role?: string; heroImage?: string; accent?: string;
+  disciplines?: string[]; role?: string; heroImage?: string; images?: string[]; accent?: string;
   videoUrl?: string; href?: string; linkLabel?: string;
 }
 export interface Craft {
@@ -92,6 +92,7 @@ function projectsHtml(c: SiteContent) {
           ${links(p) ? `<p class="meta detail-links">${links(p)}</p>` : ''}
         </div>
       </div>
+      ${(p.images || []).filter((u) => safeUrl(u)).length ? `<div class="detail-gallery">${(p.images || []).filter((u) => safeUrl(u)).map((u) => `<img src="${esc(encodeURI(safeUrl(u)))}" alt="${esc(p.title)} mockup" loading="lazy" decoding="async">`).join('')}</div>` : ''}
     </div>`;
   const groups = [...new Set([...GROUPS, ...c.projects.flatMap((p) => p.disciplines || [])])];
   const html = groups.map((g) => {

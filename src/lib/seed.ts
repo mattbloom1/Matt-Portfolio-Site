@@ -35,12 +35,22 @@ export const PROFILE_PHOTO = { src: asset('/about/profile.webp'), alt: 'Portrait
 const p = (title: string, group: string, extra: Partial<Project> = {}): Project => ({ title, slug: title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, ''), disciplines: [group], ...extra });
 
 export const SEED_PROJECTS: Project[] = [
-  ...['GearBook', 'Le Reve', 'Casa Avenida', 'The Edge Delray'].map((t) => p(t, 'Websites')),
+  p('GearBook', 'Websites', {
+    role: 'Co-founder & CMO: design, development & marketing',
+    year: 2025,
+    summary: 'GearBook is an affiliate gear catalog for outdoor professionals. Members pick the gear they actually use, GearBook builds the tracked affiliate link behind each product, hosts their catalog page, lists their picks on a public marketplace, and pays their share of every sale each month. It is built for professionals (instructors, athletes, educators and others who work in the field) and for enthusiasts who know their gear, and shoppers buy from people who actually use it. Outdoor professionals rarely have the time or the income to market themselves, so GearBook does that work for them. I am the co-founder and CMO, and I built the site with my co-founder Luke Wong, based in Boulder, CO. It is live, actively maintained, and 15 members have signed up so far.',
+    heroImage: asset('/websites/gearbook/macbook-1.webp'),
+    images: ['macbook-2', 'macbook-3', 'macbook-4', 'phones-white'].map((n) => asset(`/websites/gearbook/${n}.webp`)),
+    href: 'https://www.gearbook.shop/',
+    linkLabel: 'Visit site',
+  }),
+  ...['Le Reve', 'Casa Avenida', 'The Edge Delray'].map((t) => p(t, 'Websites')),
   p('The GVC Team', 'Websites', {
     role: 'Design, development & content',
     year: 2025,
     summary: 'The home of the Gasdaska Verdiglione Conlon Real Estate Team, one of the top real estate teams working across three state markets (NY, NJ & FL). I rebuilt the site in 2025 as a single place where visitors can see what the team can do, learn who they are, and get in touch. I handled the design, development, and content, and I’ve maintained it since.',
     heroImage: asset('/websites/gvc-team-mockup.webp'),
+    images: ['macbook-1', 'macbook-2', 'macbook-3', 'macbook-4', 'phones-white'].map((n) => asset(`/websites/gvc-team/${n}.webp`)),
     href: 'https://gvcrealestateteam.com/',
     linkLabel: 'Visit site',
   }),
