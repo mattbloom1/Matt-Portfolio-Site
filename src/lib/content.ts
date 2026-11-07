@@ -103,11 +103,11 @@ function projectsHtml(c: SiteContent) {
     safeUrl(p.videoUrl) ? `<a href="${esc(safeUrl(p.videoUrl))}" target="_blank" rel="noopener">Watch</a>` : '',
     safeUrl(p.href) ? `<a href="${esc(safeUrl(p.href))}" target="_blank" rel="noopener">${esc(p.linkLabel || 'Visit')}</a>` : '',
   ].filter(Boolean).join(' · ');
-  // Website cards also ship a mirrored render of the same scene (macbook-1-m); see gridLines.ts
-  const mirrored = (p: Project) => (safeUrl(p.heroImage) && /macbook-1\.webp$/.test(p.heroImage || '') ? `--img-m:url('${encodeURI(safeUrl(p.heroImage).replace(/macbook-1\.webp$/, 'macbook-1-m.webp'))}');` : '');
+  // Website cards ship one render per column count (cards/c4, c3, c2) so the box edges meet at the card borders; see gridLines.ts
+  const layouts = (p: Project) => ((p.disciplines || [])[0] === 'Websites' && safeUrl(p.heroImage) ? [4, 3, 2].map((n) => `--img-${n}:url('${encodeURI(safeUrl(p.heroImage).replace(/\/websites\/.*$/, `/websites/cards/c${n}-${p.slug}.webp`))}');`).join('') : '');
   const card = (p: Project, i: number) => `
     <button type="button" class="card${safeUrl(p.heroImage) ? '' : ' no-img'}" data-detail="d-${esc(p.slug)}" aria-label="${esc(p.title)}: view details">
-      <span class="card-img" style="${mirrored(p)}${bg(p, i)}"></span>
+      <span class="card-img" style="${layouts(p)}${bg(p, i)}"></span>
       <span class="card-over"><span class="card-name">${esc(p.title)}</span><span class="card-sub">${esc([p.role, p.year].filter(Boolean).join(' · '))}</span></span>
     </button>`;
   const siblings = (p: Project) => c.projects.filter((q) => (q.disciplines || [])[0] === (p.disciplines || [])[0]);

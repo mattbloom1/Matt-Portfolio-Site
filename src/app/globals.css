@@ -333,8 +333,10 @@ body:has(#stage[data-state='page']) .draw-hint { opacity: 0; pointer-events: non
 @media (hover: none) { .card .card-sub { max-height: 3.5em; opacity: 1; } }
 @media (prefers-reduced-motion: reduce) { .card .card-over, .card .card-sub { transition: none; } }
 
-/* connected pedestal grid (websites cards): odd columns use the mirrored scene so box edges meet at the card borders */
-.card[data-flip='1'] .card-img { background-image: var(--img-m) !important; }
+/* connected pedestal grid (websites cards): one render per column count so box edges meet at the card borders */
+.card[data-cols='4'] .card-img { background-image: var(--img-4) !important; }
+.card[data-cols='3'] .card-img { background-image: var(--img-3) !important; }
+.card[data-cols='2'] .card-img { background-image: var(--img-2) !important; }
 .stage[data-state='page'] .cards.connected { gap: 10px; }
 
 /* mobile pass */
