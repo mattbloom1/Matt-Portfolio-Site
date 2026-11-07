@@ -170,7 +170,13 @@ function photographyHtml(c: SiteContent) {
   const series = c.photography.map((s) => {
     const frames = (s.frames || []).filter((f) => safeUrl(f.image));
     if (!frames.length) return `<section><h3 class="series">${esc(s.title)}</h3><div class="gallery wide"><figure class="shot"></figure></div></section>`;
-    const imgs = frames.map((f) => `<figure class="gimg"><img onload="this.parentNode.classList.add('ld')" onerror="this.parentNode.classList.add('ld')" src="${esc(encodeURI(safeUrl(f.image)))}" alt="${esc(f.alt || `${s.title} film roll`)}"${f.w && f.h ? ` width="${f.w}" height="${f.h}"` : ''} loading="lazy" decoding="async"></figure>`).join('');
+    const imgs = frames.map((f, idx) => {
+      // 800px variant for small slots (pairs, phones); the full file is used when the slot is wide or the screen is dense.
+      const full = encodeURI(safeUrl(f.image));
+      const single = idx % 3 === 2 || (idx === frames.length - 1 && idx % 3 === 0);
+      const srcset = /\/photography\/.+\.webp$/.test(full) ? ` srcset="${esc(full.replace(/\.webp$/, '-800.webp'))} 800w, ${esc(full)} ${f.w || 1600}w" sizes="${single ? '(max-width: 560px) 100vw, 700px' : '(max-width: 560px) 50vw, 400px'}"` : '';
+      return `<figure class="gimg"><img onload="this.parentNode.classList.add('ld')" onerror="this.parentNode.classList.add('ld')" src="${esc(full)}"${srcset} alt="${esc(f.alt || `${s.title} film roll`)}"${f.w && f.h ? ` width="${f.w}" height="${f.h}"` : ''} loading="lazy" decoding="async"></figure>`;
+    }).join('');
     return `<section class="roll"><h3 class="series">${esc(s.title)}${s.year ? ` <span class="series-year">${s.year}</span>` : ''}</h3>${s.summary ? `<p>${esc(s.summary)}</p>` : ''}<div class="detail-gallery roll-gallery">${imgs}</div></section>`;
   }).join('');
   return `${series}${c.placeholder.photography ? todo('Placeholder. Photography content has not been supplied.') : ''}`;
