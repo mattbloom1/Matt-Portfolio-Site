@@ -29,6 +29,9 @@ def main(slug, src):
             print('  skipped blank frame', f.name); continue
         n += 1
         im.save(out / f'{n:02d}.webp', 'WEBP', quality=72, method=6)
+        # 800px variant for small slots; content.ts serves it through srcset
+        sm = im.resize((800, round(im.height * 800 / im.width)), Image.LANCZOS)
+        sm.save(out / f'{n:02d}-800.webp', 'WEBP', quality=70, method=6)
         frames.append({'w': im.width, 'h': im.height})
     data = json.loads(MANIFEST.read_text()) if MANIFEST.exists() else {}
     data[slug] = frames
