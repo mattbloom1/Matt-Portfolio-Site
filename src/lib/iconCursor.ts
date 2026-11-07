@@ -41,7 +41,9 @@ export function initIconCursor(): () => void {
   /** A click stamps the current icon onto the page (it scrolls with the content), then the pointer becomes a new icon. */
   const onDown = (e: PointerEvent) => {
     if (!shown || e.pointerType !== 'mouse' || e.button !== 0) return;
-    const d = (e.target as HTMLElement).closest('.detail[data-icon-cursor]') as HTMLElement | null;
+    const t = e.target as HTMLElement;
+    if (t.closest('a, button, summary, input, select, textarea')) return hide(); // never stamp on a control
+    const d = t.closest('.detail[data-icon-cursor]') as HTMLElement | null;
     if (!d) return;
     const st = document.createElement('img');
     st.className = 'icon-stamp';
