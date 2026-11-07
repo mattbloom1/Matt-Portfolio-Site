@@ -122,8 +122,12 @@ function projectsHtml(c: SiteContent) {
   return `${html}${c.projects.map(detail).join('')}${todo('Titles are from Matt’s list. Images, descriptions and links are still to come.')}`;
 }
 function experienceHtml(c: SiteContent) {
-  const items = c.experience.map((e) => `
-    <li><span class="meta">${esc(dates(e))}</span><h3>${esc(e.role)}, ${esc(e.organization)}</h3>${e.description ? `<p>${esc(e.description)}</p>` : ''}</li>`).join('');
+  const items = c.experience.map((e) => {
+    const head = `<span class="meta">${esc(dates(e))}</span><h3>${esc(e.role)}, ${esc(e.organization)}</h3>`;
+    return e.description
+      ? `<li><details class="job"><summary>${head}<span class="job-toggle" aria-hidden="true"></span></summary><p>${esc(e.description)}</p></details></li>`
+      : `<li>${head}</li>`;
+  }).join('');
   const edu = `<p class="meta">Education</p><p><strong>${esc(EDUCATION.school)}</strong>, ${esc(EDUCATION.year)}<br>${esc(EDUCATION.detail)}</p>`;
   return `<ol class="timeline">${items}</ol>${edu}${c.placeholder.experience ? todo('Placeholder timeline. Experience content has not been supplied.') : ''}`;
 }

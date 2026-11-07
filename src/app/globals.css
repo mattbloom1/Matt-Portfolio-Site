@@ -103,6 +103,19 @@ body {
 .timeline { list-style: none; margin: 0; padding: 0 0 0 20px; border-left: 1px solid var(--ink); }
 .timeline li { padding: 0 0 26px 20px; position: relative; }
 .timeline li::before { content: ''; position: absolute; left: -26px; top: 6px; width: 11px; height: 11px; background: var(--paper); border: 1px solid var(--ink); border-radius: 50%; }
+.job summary { list-style: none; cursor: pointer; position: relative; padding-right: 44px; min-height: 44px; }
+.job summary::-webkit-details-marker { display: none; }
+.job summary h3 { margin: 4px 0 0; }
+.job-toggle { position: absolute; right: 0; top: 2px; width: 28px; height: 28px; border: 1px solid var(--ink); border-radius: 50%; transition: background .25s, transform .35s; }
+.job-toggle::before, .job-toggle::after { content: ''; position: absolute; left: 50%; top: 50%; width: 12px; height: 1px; background: var(--ink); transform: translate(-50%, -50%); transition: transform .35s; }
+.job-toggle::after { transform: translate(-50%, -50%) rotate(90deg); }
+.job summary:hover .job-toggle, .job summary:focus-visible .job-toggle { background: var(--ochre); }
+.job summary:focus-visible { outline: 1px dashed var(--ink); outline-offset: 4px; }
+.job[open] .job-toggle { transform: rotate(180deg); }
+.job[open] .job-toggle::after { transform: translate(-50%, -50%) rotate(0deg); }
+.job p { margin: 10px 0 0; max-width: 60ch; animation: jobIn .35s ease; }
+@keyframes jobIn { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) { .job-toggle, .job-toggle::before, .job-toggle::after { transition: none; } .job p { animation: none; } }
 .gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 16px; }
 .gallery.wide { grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); }
 .gallery.wide .shot { aspect-ratio: 3 / 2; }
