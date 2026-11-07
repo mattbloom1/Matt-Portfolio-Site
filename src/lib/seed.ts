@@ -19,11 +19,11 @@ export const EDUCATION = { year: '’25', school: 'University of Colorado Boulde
 export const FUN_NOTE = 'Owner of a 2003 Eurovan!';
 
 export const SEED_EXPERIENCE: Experience[] = [
-  { organization: 'GVC', role: 'Graphic Design, 3D Modelling, Web Design', startDate: 'August 2025', endDate: 'Present' },
-  { organization: 'Trimble', role: 'Business Systems Management & Design', startDate: 'May 2025', endDate: 'August 2025' },
-  { organization: 'Environmental Center, University of Colorado Boulder', role: 'Graphic Designer', startDate: 'August 2023', endDate: 'May 2025' },
-  { organization: 'millerBlaker, Bronx, NY', role: 'Associate Project Manager & Intern on Engineering Team', startDate: 'May 2024', endDate: 'August 2024' },
-  { organization: 'Free Float Media LLC, Boulder, CO', role: 'Web Developer', startDate: 'May 2023', endDate: 'October 2023' },
+  { organization: 'GVC', role: 'Graphic Design, 3D Modelling, Web Design', startDate: 'August 2025', endDate: 'Present', description: 'Full-time graphic designer on the Gasdaska Verdiglione Conlon Team at Douglas Elliman. I design and build marketing websites for new developments, including Le Rêve and Casa Avenida,, alongside graphic design and 3D modelling for the team.' },
+  { organization: 'Trimble', role: 'Business Systems Management & Design', startDate: 'May 2025', endDate: 'August 2025', description: 'Created intranet pages for the DevOps, Change Management and Business Systems teams, and wrote posts that kept stakeholders up to date on Trimble’s software development cycle. Designed a brand identity for the Business Systems team, including a logo, marketing assets and a voice.' },
+  { organization: 'Environmental Center, University of Colorado Boulder', role: 'Graphic Designer', startDate: 'August 2023', endDate: 'May 2025', description: 'Designed social posts promoting sustainability and an eco-conscious mindset across the campus community. Grew engagement by 10% and helped build the largest audience the account has had in its ten years, reaching 52,886 people in a single month.' },
+  { organization: 'millerBlaker, Bronx, NY', role: 'Associate Project Manager & Intern on Engineering Team', startDate: 'May 2024', endDate: 'August 2024', description: 'Worked through the full architectural millwork workflow: client relations, drafting, engineering, estimating and in-house fabrication. Contributed to high-profile projects including Google team pods, Morgan Stanley and L’Oréal.' },
+  { organization: 'Free Float Media LLC, Boulder, CO', role: 'Web Developer', startDate: 'May 2023', endDate: 'October 2023', description: 'Strengthened brand recognition and cohesion for Free Float Media across several websites and social channels, and reviewed and improved digital design and layout.' },
   { organization: 'Gravity Vault Indoor Rock Climbing, Upper Saddle River, NJ', role: 'Instructor', startDate: 'May 2022', endDate: 'August 2023' },
   { organization: 'Woodward Camps, Woodward, PA', role: 'Recreational Staff', startDate: 'May 2021', endDate: 'August 2022' },
   { organization: 'Ignite Adaptive Sports', role: 'Volunteer: Graphic Design and On the Slopes' },
