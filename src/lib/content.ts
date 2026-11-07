@@ -144,11 +144,11 @@ function aboutHtml() {
 
 export function buildSections(c: SiteContent): Section[] {
   return [
-    { id: 'projects', no: '01', label: 'Projects', stampName: 'Web & Graphic Design', orientation: 'portrait', ratio: 1130 / 1657, alt: 'Stamp 01, Web and Graphic Design, a vintage computer', html: projectsHtml(c) },
+    { id: 'projects', no: '01', label: 'Projects', stampName: 'Web & Graphic Design', orientation: 'landscape', ratio: 1658 / 1130, alt: 'Stamp 01, Web and Graphic Design, a vintage computer', html: projectsHtml(c) },
     { id: 'experience', no: '02', label: 'Experience', stampName: 'Work History', orientation: 'landscape', ratio: 1658 / 1130, alt: 'Stamp 02, Work History, a vintage suitcase', html: experienceHtml(c) },
-    { id: 'crafts', no: '03', label: 'Crafts', stampName: 'Crafts', orientation: 'portrait', ratio: 1130 / 1657, alt: 'Stamp 03, Crafts, six pieces of pottery', html: craftsHtml(c) },
+    { id: 'crafts', no: '03', label: 'Crafts', stampName: 'Crafts', orientation: 'landscape', ratio: 1658 / 1130, alt: 'Stamp 03, Crafts, six pieces of pottery', html: craftsHtml(c) },
     { id: 'photography', no: '04', label: 'Photography', stampName: 'Photography', orientation: 'landscape', ratio: 1658 / 1130, alt: 'Stamp 04, Photography, a Minolta X-700 film camera', html: photographyHtml(c) },
-    { id: 'about', no: '05', label: 'About', stampName: 'About', orientation: 'portrait', ratio: 1130 / 1657, alt: 'Stamp 05, About, a halftone portrait of Matt', html: aboutHtml() },
+    { id: 'about', no: '05', label: 'About', stampName: 'About', orientation: 'landscape', ratio: 1658 / 1130, alt: 'Stamp 05, About, a halftone portrait of Matt', html: aboutHtml() },
   ];
 }
 

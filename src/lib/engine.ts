@@ -42,20 +42,6 @@ const isSplit = () => window.innerWidth >= 900;
 const colWidth = () => Math.max(300, stage.clientWidth * 0.32);
 const restRotation = (id: SectionId) => (state === 'nav' ? tilt[id] : 0);
 const img = (id: SectionId) => `${process.env.NEXT_PUBLIC_BASE_PATH || ''}/stamps/${id}.webp`;
-/** The horizontal artwork used in the section-page column (Experience and Photography are already horizontal). */
-const HRATIO = 1000 / 682;
-const imgH = (id: SectionId) => (byId(id).ratio >= 1 ? img(id) : `${process.env.NEXT_PUBLIC_BASE_PATH || ''}/stamps/${id}-h.webp`);
-/** Swap a stamp between its home-page artwork and its horizontal column artwork. */
-function setArt(id: SectionId, horizontal: boolean) {
-  const im = stampEls.get(id)?.querySelector('img');
-  if (!im) return;
-  const src = horizontal ? imgH(id) : img(id);
-  if (!im.src.endsWith(src)) im.src = src;
-  const landscape = horizontal || byId(id).ratio >= 1;
-  im.width = landscape ? 1000 : 682;
-  im.height = landscape ? 682 : 1000;
-}
-
 /* ---------- close button (home): a hand-drawn-style X, matching the footer tool icons ---------- */
 function mountLogo() {
   homeBtn.innerHTML = '<svg class="x-icon" viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" aria-hidden="true"><path d="M5 5l14 14M19 5L5 19"/></svg>';
@@ -70,22 +56,21 @@ const tilt: Record<SectionId, number> = { projects: -4, experience: 3, about: -2
 
 interface NavSpot { x: number; y: number; w: number }
 const navDesktop: Record<SectionId, NavSpot> = {
-  projects: { x: 0.2, y: 0.5, w: 0.15 },
-  experience: { x: 0.37, y: 0.4, w: 0.19 },
-  crafts: { x: 0.54, y: 0.57, w: 0.155 },
-  photography: { x: 0.7, y: 0.42, w: 0.19 },
-  about: { x: 0.86, y: 0.58, w: 0.14 },
+  projects: { x: 0.2, y: 0.34, w: 0.21 },
+  experience: { x: 0.5, y: 0.29, w: 0.21 },
+  crafts: { x: 0.8, y: 0.36, w: 0.21 },
+  photography: { x: 0.36, y: 0.67, w: 0.21 },
+  about: { x: 0.66, y: 0.7, w: 0.21 },
 };
 const navMobile: Record<SectionId, NavSpot> = {
-  projects: { x: 0.3, y: 0.2, w: 0.38 },
-  experience: { x: 0.68, y: 0.33, w: 0.5 },
-  crafts: { x: 0.3, y: 0.5, w: 0.38 },
-  photography: { x: 0.64, y: 0.66, w: 0.5 },
-  about: { x: 0.3, y: 0.85, w: 0.34 },
+  projects: { x: 0.4, y: 0.11, w: 0.56 },
+  experience: { x: 0.6, y: 0.29, w: 0.56 },
+  crafts: { x: 0.4, y: 0.47, w: 0.56 },
+  photography: { x: 0.6, y: 0.65, w: 0.56 },
+  about: { x: 0.4, y: 0.83, w: 0.56 },
 };
 
 function buildStamps() {
-  for (const s of SECTIONS) new Image().src = imgH(s.id); // warm the horizontal art so the column never pops
   for (const s of SECTIONS) {
     const b = document.createElement('button');
     b.type = 'button';
@@ -163,7 +148,6 @@ function placeNav(id: SectionId) {
   const sp = spots[id];
   const W = stage.clientWidth, H = stage.clientHeight;
   const { w, h } = sizeOf(id, sp.w * W);
-  setArt(id, false);
   gsap.set(stampEls.get(id)!, { left: sp.x * W - w / 2, top: sp.y * H - h / 2, width: w, rotation: tilt[id], x: 0, y: 0, opacity: 1, scale: 1 });
 }
 /** Label font size (px) and the width a slot needs so neighbouring labels never collide. */
@@ -187,14 +171,12 @@ function placeMini(id: SectionId, slot: number) {
     const pad = Math.min(44, Math.max(24, stage.clientWidth * 0.03));
     const top = 48, bottom = 210, label = 14;
     const slotH = Math.max(70, (H - top - bottom) / order.length);
-    const r = HRATIO;
-    setArt(id, true);
+    const r = byId(id).ratio;
     const w = Math.min((cw - pad * 2) * 0.55, (slotH - label) * r);
     const h = w / r;
     gsap.set(stampEls.get(id)!, { left: pad, top: top + slot * slotH + (slotH - label - h) / 2, width: w, rotation: 0, x: 0, y: 0, scale: 1 });
     return;
   }
-  setArt(id, false);
   const hgt = isMobile() ? 46 : 62;
   const sp = miniSlots()[slot];
   gsap.set(stampEls.get(id)!, { left: sp.left, top: isMobile() ? 14 : 18, width: hgt * byId(id).ratio, rotation: 0, x: 0, y: 0, opacity: 1, scale: 1 });
