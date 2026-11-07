@@ -98,7 +98,7 @@ function extrasHtml(p: Project) {
 }
 const GROUPS = ['Websites', 'Posters', 'GearBook Posters', 'Branding', 'Projects', 'Ignite Adaptive Sports'];
 function projectsHtml(c: SiteContent) {
-  const bg = (p: Project, i: number) => `--c:${safeColor(p.accent) || accents[i % accents.length]};${safeUrl(p.heroImage) ? `background-image:url('${encodeURI(safeUrl(p.heroImage))}');background-size:cover;background-position:center` : ''}`;
+  const bg = (p: Project, i: number) => `--c:${safeColor(p.accent) || accents[i % accents.length]};${safeUrl(p.heroImage) ? `background-image:url('${encodeURI(safeUrl(p.heroImage))}'),var(--sk-grad);background-size:cover,200% 100%;background-position:center,0 0` : ''}`;
   const links = (p: Project) => [
     safeUrl(p.videoUrl) ? `<a href="${esc(safeUrl(p.videoUrl))}" target="_blank" rel="noopener">Watch</a>` : '',
     safeUrl(p.href) ? `<a href="${esc(safeUrl(p.href))}" target="_blank" rel="noopener">${esc(p.linkLabel || 'Visit')}</a>` : '',
@@ -107,7 +107,7 @@ function projectsHtml(c: SiteContent) {
   const layouts = (p: Project) => ((p.disciplines || [])[0] === 'Websites' && safeUrl(p.heroImage) ? [4, 3, 2].map((n) => `--img-${n}:url('${encodeURI(safeUrl(p.heroImage).replace(/\/websites\/.*$/, `/websites/cards/c${n}-${p.slug}.webp`))}');`).join('') : '');
   const card = (p: Project, i: number) => `
     <button type="button" class="card${safeUrl(p.heroImage) ? '' : ' no-img'}" data-detail="d-${esc(p.slug)}" aria-label="${esc(p.title)}: view details">
-      <span class="card-img" style="${layouts(p)}${bg(p, i)}"></span>
+      <span class="card-img${safeUrl(p.heroImage) ? ' has-img' : ''}" style="${layouts(p)}${bg(p, i)}"></span>
       <span class="card-over"><span class="card-name">${esc(p.title)}</span><span class="card-sub">${esc([p.role, p.year].filter(Boolean).join(' · '))}</span></span>
     </button>`;
   const siblings = (p: Project) => c.projects.filter((q) => (q.disciplines || [])[0] === (p.disciplines || [])[0]);
@@ -123,7 +123,7 @@ function projectsHtml(c: SiteContent) {
       <button type="button" class="detail-close" data-close aria-label="Close details">Close ×</button>
       ${stepper(p)}
       <div class="detail-inner">
-        <div class="detail-img" style="${bg(p, i)}"></div>
+        <div class="detail-img${safeUrl(p.heroImage) ? ' has-img' : ''}" style="${bg(p, i)}"></div>
         <div class="detail-text">
           <p class="meta">${esc((p.disciplines || [])[0] || 'Project')}</p>
           <h2 tabindex="-1">${esc(p.title)}</h2>
@@ -133,7 +133,7 @@ function projectsHtml(c: SiteContent) {
           ${links(p) ? `<p class="meta detail-links">${links(p)}</p>` : ''}
         </div>
       </div>
-      ${(p.images || []).filter((u) => safeUrl(u)).length ? `<div class="detail-gallery">${(p.images || []).filter((u) => safeUrl(u)).map((u) => `<figure class="gimg"><img src="${esc(encodeURI(safeUrl(u)))}" alt="${esc(p.title)} mockup" loading="lazy" decoding="async"></figure>`).join('')}</div>` : ''}
+      ${(p.images || []).filter((u) => safeUrl(u)).length ? `<div class="detail-gallery">${(p.images || []).filter((u) => safeUrl(u)).map((u) => `<figure class="gimg"><img onload="this.parentNode.classList.add('ld')" onerror="this.parentNode.classList.add('ld')" src="${esc(encodeURI(safeUrl(u)))}" alt="${esc(p.title)} mockup" loading="lazy" decoding="async"></figure>`).join('')}</div>` : ''}
       ${extrasHtml(p)}
     </div>`;
   const groups = [...new Set([...GROUPS, ...c.projects.flatMap((p) => p.disciplines || [])])];
@@ -155,7 +155,7 @@ function experienceHtml(c: SiteContent) {
 }
 function craftsHtml(c: SiteContent) {
   const shots = c.crafts.map((k, i) => `
-    <figure class="shot" style="--c:${accents[i % accents.length]};${safeUrl(k.image) ? `background-image:url('${encodeURI(safeUrl(k.image))}');background-size:cover` : ''}">
+    <figure class="shot${safeUrl(k.image) ? ' has-img' : ''}" style="--c:${accents[i % accents.length]};${safeUrl(k.image) ? `background-image:url('${encodeURI(safeUrl(k.image))}'),var(--sk-grad);background-size:cover,200% 100%;background-position:center,0 0` : ''}">
       <figcaption>${esc(k.title)}${k.year ? ` · ${k.year}` : ''}</figcaption></figure>`).join('');
   return `<div class="gallery">${shots}</div>${todo('Titles are from Matt’s list; photos and notes are still to come.')}`;
 }
@@ -163,7 +163,7 @@ function photographyHtml(c: SiteContent) {
   const series = c.photography.map((s) => {
     const frames = (s.frames?.length ? s.frames : s.cover ? [{ image: s.cover, alt: s.title }] : []);
     const shots = (frames.length ? frames : [1, 2, 3].map(() => ({}) as { image?: string; alt?: string; caption?: string })).map((f, i) => `
-      <figure class="shot" style="--c:${accents[i % accents.length]};${safeUrl(f.image) ? `background-image:url('${encodeURI(safeUrl(f.image))}');background-size:cover` : ''}" ${f.alt ? `role="img" aria-label="${esc(f.alt)}"` : ''}>
+      <figure class="shot${safeUrl(f.image) ? ' has-img' : ''}" style="--c:${accents[i % accents.length]};${safeUrl(f.image) ? `background-image:url('${encodeURI(safeUrl(f.image))}'),var(--sk-grad);background-size:cover,200% 100%;background-position:center,0 0` : ''}" ${f.alt ? `role="img" aria-label="${esc(f.alt)}"` : ''}>
         ${f.caption ? `<figcaption>${esc(f.caption)}</figcaption>` : ''}</figure>`).join('');
     return `<section><h3 class="series">${esc(s.title)}${s.year ? ` · ${s.year}` : ''}</h3>${s.summary ? `<p>${esc(s.summary)}</p>` : ''}<div class="gallery wide">${shots}</div></section>`;
   }).join('');

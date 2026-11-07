@@ -334,9 +334,11 @@ body:has(#stage[data-state='page']) .draw-hint { opacity: 0; pointer-events: non
 @media (prefers-reduced-motion: reduce) { .card .card-over, .card .card-sub { transition: none; } }
 
 /* connected pedestal grid (websites cards): one render per column count so box edges meet at the card borders */
-.card[data-cols='4'] .card-img { background-image: var(--img-4) !important; }
-.card[data-cols='3'] .card-img { background-image: var(--img-3) !important; }
-.card[data-cols='2'] .card-img { background-image: var(--img-2) !important; }
+.card[data-cols='4'] .card-img { background-image: var(--img-4), var(--img-3), var(--img-2), var(--sk-grad) !important; }
+.card[data-cols='3'] .card-img { background-image: var(--img-3), var(--img-4), var(--img-2), var(--sk-grad) !important; }
+.card[data-cols='2'] .card-img { background-image: var(--img-2), var(--img-3), var(--img-4), var(--sk-grad) !important; }
+/* the other column renders trail behind as fallbacks, so a resize never exposes the placeholder */
+.card .card-img[style*='--img-'] { background-size: cover, cover, cover, 200% 100% !important; animation-name: sk-shimmer-4; }
 .stage[data-state='page'] .cards.connected { gap: 10px; }
 
 /* mobile pass */
@@ -380,3 +382,16 @@ body:has(#stage[data-state='page']) .draw-hint { opacity: 0; pointer-events: non
 }
 
 .icon-stamp { position: absolute; width: 48px; height: 48px; object-fit: contain; pointer-events: none; z-index: 5; opacity: .88; mix-blend-mode: multiply; }
+
+/* skeleton loaders: neutral paper/gray with a soft shimmer while an image is on its way.
+   Background images sit above a shimmer gradient layer, so the shimmer is simply covered once the image paints. */
+:root { --sk-base: #dedad1; --sk-hi: #ebe8e1; --sk-grad: linear-gradient(100deg, transparent 20%, var(--sk-hi) 50%, transparent 80%); }
+.card .card-img.has-img, .detail-img.has-img, .shot.has-img { background-color: var(--sk-base); background-repeat: no-repeat; animation: sk-shimmer 1.6s ease-in-out infinite; }
+.detail-gallery .gimg:not(.ld) { background-color: var(--sk-base); position: relative; overflow: hidden; aspect-ratio: 3 / 2; }
+.detail-gallery .gimg:not(.ld)::before { content: ''; position: absolute; inset: 0; background: var(--sk-grad); background-size: 200% 100%; animation: sk-shimmer-1 1.6s ease-in-out infinite; }
+.detail-gallery .gimg:not(.ld) img { position: absolute; inset: 0; height: 100%; opacity: 0; }
+.detail-gallery .gimg img { transition: opacity .35s ease; }
+@keyframes sk-shimmer { from { background-position: center, 100% 0; } to { background-position: center, -100% 0; } }
+@keyframes sk-shimmer-1 { from { background-position: 100% 0; } to { background-position: -100% 0; } }
+@media (prefers-reduced-motion: reduce) { .card .card-img.has-img, .detail-img.has-img, .shot.has-img, .detail-gallery .gimg:not(.ld)::before { animation: none; } }
+@keyframes sk-shimmer-4 { from { background-position: center, center, center, 100% 0; } to { background-position: center, center, center, -100% 0; } }
