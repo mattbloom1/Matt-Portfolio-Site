@@ -65,7 +65,14 @@ export const SEED_PROJECTS: Project[] = [
     href: 'https://casaavenidadelray.com/',
     linkLabel: 'Visit site',
   }),
-  ...['The Edge Delray'].map((t) => p(t, 'Websites')),
+  p('The Edge Delray', 'Websites', {
+    role: 'Design, development & content',
+    year: 2026,
+    summary: 'The Edge is the marketing site for seven luxury townhomes in two four-story buildings in Delray Beach, built for the Gasdaska Verdiglione Conlon Team at Douglas Elliman, with Advanced Development Group as developer and Netta Architects as architect. It presents the floor plans, the location and the teams behind the project, and captures inquiries ahead of launch. The site is built but not live yet. I handled the design, development and content.',
+    heroImage: asset('/websites/the-edge-delray-macbook-1.webp'),
+    images: ['macbook-2', 'macbook-3', 'macbook-4', 'phones'].map((n) => asset(`/websites/the-edge-delray-${n}.webp`)),
+    stack: { Framework: ['Framer'] },
+  }),
   p('Pictorial Symbols Library', 'Websites', {
     role: 'Design & development',
     year: 2026,
