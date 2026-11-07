@@ -6,7 +6,7 @@ import './globals.css';
 
 export const metadata: Metadata = {
   title: 'Matthew Bloomfield',
-  description: 'Portfolio of Matthew Bloomfield, Creative Technologist & Director: projects, experience, crafts and photography.',
+  description: 'Portfolio of Matthew Bloomfield, Creative Technologist & Designer: projects, experience, crafts and photography.',
 };
 export const viewport: Viewport = { width: 'device-width', initialScale: 1, themeColor: '#ece9e2' };
 

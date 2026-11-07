@@ -26,7 +26,7 @@ export default function Portfolio({ content }: { content: SiteContent }) {
       <div className="grain" aria-hidden="true" />
       <div className="bg" id="bg" aria-hidden="true" />
       <canvas ref={canvasRef} className="drawing" aria-hidden="true" />
-      <h1 className="sr-only">Matthew Bloomfield, Creative Technologist &amp; Director</h1>
+      <h1 className="sr-only">Matthew Bloomfield, Creative Technologist &amp; Designer</h1>
       <main id="stage" className="stage" data-state="nav">
         <nav id="stamps" className="stamps" aria-label="Sections" />
         <button className="home" id="home" type="button" aria-label="Home" hidden />
@@ -64,7 +64,7 @@ export default function Portfolio({ content }: { content: SiteContent }) {
         </div>
       </footer>
       <noscript>
-        <p style={{ padding: 24 }}>Matthew Bloomfield, Creative Technologist &amp; Director. This site needs JavaScript to show its stamps.</p>
+        <p style={{ padding: 24 }}>Matthew Bloomfield, Creative Technologist &amp; Designer. This site needs JavaScript to show its stamps.</p>
       </noscript>
     </>
   );

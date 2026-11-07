@@ -17,7 +17,7 @@ export interface Section {
 
 export const SITE = {
   name: 'Matthew Bloomfield',
-  role: 'Creative Technologist & Director',
+  role: 'Creative Technologist & Designer',
   email: 'matthewb3333@gmail.com',
   openerDate: 'OCT 2026',
   links: [
