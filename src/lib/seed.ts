@@ -90,9 +90,6 @@ export const SEED_PROJECTS: Project[] = [
         { value: '132', label: 'scanned pages' },
         { value: '13', label: 'categories' },
       ],
-      notes: [
-        { heading: 'Traced, not redrawn', body: 'Each crop was vector traced into polygon paths, so every icon is a small SVG that stays sharp at any size. Icons are black on transparent and sit on a cream plate in the viewer, like the printed page.' },
-      ],
       cursorIcons: ['steamroller', 'bellows-camera', 'cable-car', 'inkwell-with-quill', 'bus-side-o68', 'theater-masks', 'bridge', 'plumbing-tools', 'fuel', 'palm-tree', 'table-tennis', 'rowing', 'penguin', 'nails-saw-hammer-scattered', 'house', 'canoeing', 'cattle', 'tram', 'electrical-outlet', 'photographs', 'gymnastics-o68', 'wine-glass-baa-adca', 'javelin-throw', 'leafy-grain', 'beet', 'capitol-with-columns', 'ten-coin', 'prehistoric-monument', 'water-transportation-boat-x67', 'heliport-dfw', 'mining', 'reading-room', 'subway-beneath-tracks', 'recreation', 'electric-transformer-box', 'family-at-table', 'bathing', 'stepped-buildings-cluster', 'historic-building-nova-scotia', 'luggage-scale-dial-port', 'anchor', 'apple', 'agave', 'airplane', 'anvil', 'archery', 'badminton', 'awl', 'abc-book', 'ace-of-clubs'].map((n) => asset(`/websites/pictorial-symbols/icons/${n}.svg`)),
     },
     href: 'https://mattbloom1.github.io/pictorial-symbols-icons/',
