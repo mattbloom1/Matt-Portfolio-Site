@@ -376,3 +376,5 @@ body:has(#stage[data-state='page']) .draw-hint { opacity: 0; pointer-events: non
   .detail[data-icon-cursor], .detail[data-icon-cursor] .detail-img { cursor: none; }
   .detail[data-icon-cursor] a, .detail[data-icon-cursor] button, .detail[data-icon-cursor] summary { cursor: pointer; }
 }
+
+.icon-stamp { position: absolute; width: 48px; height: 48px; object-fit: contain; pointer-events: none; z-index: 5; opacity: .88; mix-blend-mode: multiply; }

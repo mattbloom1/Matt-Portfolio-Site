@@ -1,10 +1,9 @@
 /**
- * Swaps the mouse pointer for a random image while it is over a project detail page that sets
+ * Swaps the mouse pointer for a random image (it only changes when you click, which stamps it) while it is over a project detail page that sets
  * data-icon-cursor (a JSON list of image URLs). Fine pointers only: nothing happens on touch.
  * Real controls (links, buttons) keep the normal pointer so they stay obviously clickable.
  */
 const SIZE = 48;
-const STEP = 170; // px of travel before the icon changes by itself
 
 export function initIconCursor(): () => void {
   if (typeof window === 'undefined' || !window.matchMedia('(hover: hover) and (pointer: fine)').matches) return () => {};
@@ -17,7 +16,7 @@ export function initIconCursor(): () => void {
 
   let bag: string[] = [];
   let list: string[] = [];
-  let travelled = 0, lx = 0, ly = 0, shown = false;
+  let shown = false;
   const shuffle = (a: string[]) => { for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
   const pick = () => {
     if (!bag.length) bag = shuffle([...list]).filter((u) => u !== el.getAttribute('src'));
@@ -35,14 +34,28 @@ export function initIconCursor(): () => void {
       el.dataset.set = d.dataset.iconCursor; bag = []; list.slice(0, 6).forEach((u) => { new Image().src = u; });
     }
     if (!list.length) return hide();
-    if (!shown) { shown = true; travelled = 0; pick(); el.classList.add('on'); }
-    travelled += Math.hypot(e.clientX - lx, e.clientY - ly);
-    lx = e.clientX; ly = e.clientY;
-    if (travelled > STEP) { travelled = 0; pick(); }
+    if (!shown) { shown = true; if (!el.getAttribute('src')) pick(); el.classList.add('on'); }
     // `translate` (not `transform`): the pop animation's scale/rotate are applied after it, so they pivot on the icon instead of scaling the offset
     el.style.translate = `${e.clientX - SIZE / 2}px ${e.clientY - SIZE / 2}px`;
   };
-  const onDown = (e: PointerEvent) => { if (shown && e.pointerType === 'mouse') { travelled = 0; pick(); } };
+  /** A click stamps the current icon onto the page (it scrolls with the content), then the pointer becomes a new icon. */
+  const onDown = (e: PointerEvent) => {
+    if (!shown || e.pointerType !== 'mouse' || e.button !== 0) return;
+    const d = (e.target as HTMLElement).closest('.detail[data-icon-cursor]') as HTMLElement | null;
+    if (!d) return;
+    const st = document.createElement('img');
+    st.className = 'icon-stamp';
+    st.alt = '';
+    st.setAttribute('aria-hidden', 'true');
+    st.src = el.src;
+    st.style.left = `${e.clientX - SIZE / 2}px`;
+    st.style.top = `${e.clientY - SIZE / 2 + d.scrollTop}px`;
+    st.style.rotate = `${(Math.random() * 16 - 8).toFixed(1)}deg`;
+    d.appendChild(st);
+    const stamps = d.querySelectorAll('.icon-stamp');
+    if (stamps.length > 400) stamps[0].remove();
+    pick();
+  };
   document.addEventListener('pointermove', onMove);
   document.addEventListener('pointerdown', onDown);
   document.documentElement.addEventListener('pointerleave', hide);
