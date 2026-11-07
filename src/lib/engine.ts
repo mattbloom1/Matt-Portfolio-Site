@@ -56,55 +56,11 @@ function setArt(id: SectionId, horizontal: boolean) {
   im.height = landscape ? 682 : 1000;
 }
 
-/* ---------- logo explosion (home button) ---------- */
-interface LogoSprite { width: number; height: number; frames: string[] }
-let logoSprite: LogoSprite | null = null;
-let logoPromise: Promise<LogoSprite> | null = null;
-const loadLogo = () => (logoPromise ??= fetch(`${process.env.NEXT_PUBLIC_BASE_PATH || ''}/logo/sprite.json`).then((r) => r.json() as Promise<LogoSprite>));
+/* ---------- close button (home): a hand-drawn-style X, matching the footer tool icons ---------- */
 function mountLogo() {
-  const svgNS = 'http://www.w3.org/2000/svg';
-  homeBtn.textContent = '';
-  const svg = document.createElementNS(svgNS, 'svg');
-  svg.setAttribute('class', 'logo');
-  svg.setAttribute('aria-hidden', 'true');
-  homeBtn.appendChild(svg);
-  const frame = { i: 0, target: 0, last: 0, raf: 0 };
-  const draw = () => { if (logoSprite) svg.innerHTML = logoSprite.frames[frame.i]; };
-  const tick = (now: number) => {
-    frame.raf = 0;
-    if (!logoSprite) return;
-    frame.target = Math.min(frame.target, logoSprite.frames.length - 1);
-    if (now - frame.last >= 25) {
-      frame.last = now;
-      frame.i += Math.sign(frame.target - frame.i);
-      draw();
-    }
-    if (frame.i !== frame.target) frame.raf = requestAnimationFrame(tick);
-  };
-  const go = (t: number) => {
-    if (reduce) return; // static logo for reduced motion
-    frame.target = t;
-    if (!frame.raf) frame.raf = requestAnimationFrame(tick);
-  };
-  loadLogo().then((s) => {
-    logoSprite = s;
-    svg.setAttribute('viewBox', `0 0 ${s.width} ${s.height}`);
-    draw();
-    if (frame.i !== frame.target && !frame.raf) frame.raf = requestAnimationFrame(tick); // hover happened while loading
-  }).catch(() => { homeBtn.textContent = '\u2302'; });
-  const over = () => go((logoSprite?.frames.length ?? 49) - 1);
-  const out = () => go(0);
-  homeBtn.addEventListener('pointerenter', over);
-  homeBtn.addEventListener('pointerleave', out);
-  homeBtn.addEventListener('focus', over);
-  homeBtn.addEventListener('blur', out);
-  logoCleanup = () => {
-    cancelAnimationFrame(frame.raf);
-    homeBtn.removeEventListener('pointerenter', over);
-    homeBtn.removeEventListener('pointerleave', out);
-    homeBtn.removeEventListener('focus', over);
-    homeBtn.removeEventListener('blur', out);
-  };
+  homeBtn.innerHTML = '<svg class="x-icon" viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" aria-hidden="true"><path d="M5 5l14 14M19 5L5 19"/></svg>';
+  homeBtn.setAttribute('aria-label', 'Close');
+  logoCleanup = () => {};
 }
 let logoCleanup = () => {};
 
