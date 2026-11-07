@@ -94,7 +94,7 @@ function extrasHtml(p: Project) {
   const figs = (x.figures || []).filter((f) => safeUrl(f.src)).map((f) => `<figure class="xfig"><img src="${esc(encodeURI(safeUrl(f.src)))}" alt="${esc(f.alt)}" loading="lazy" decoding="async">${f.caption ? `<figcaption>${esc(f.caption)}</figcaption>` : ''}</figure>`).join('');
   const stats = (x.stats || []).map((s) => `<div class="xstat"><dt>${esc(s.label)}</dt><dd>${esc(s.value)}</dd></div>`).join('');
   const notes = (x.notes || []).map((n) => `<div class="xnote"><h3>${esc(n.heading)}</h3><p>${esc(n.body)}</p></div>`).join('');
-  return `<div class="detail-extra">${figs ? `<div class="xfigs">${figs}</div>` : ''}${stats ? `<dl class="xstats">${stats}</dl>` : ''}${notes ? `<div class="xnotes"><p class="meta">Worth a closer look</p>${notes}</div>` : ''}</div>`;
+  return `<div class="detail-extra">${figs ? `<div class="xfigs">${figs}</div>` : ''}${stats ? `<dl class="xstats">${stats}</dl>` : ''}${notes ? `<div class="xnotes">${notes}</div>` : ''}</div>`;
 }
 const GROUPS = ['Websites', 'Posters', 'GearBook Posters', 'Branding', 'Projects', 'Ignite Adaptive Sports'];
 function projectsHtml(c: SiteContent) {
