@@ -1,3 +1,4 @@
+import { connectCards } from './gridLines';
 import { gsap } from 'gsap';
 import { Flip } from 'gsap/Flip';
 import { SITE, buildSections, type Section, type SectionId, type SiteContent } from './content';
@@ -224,11 +225,14 @@ function swapBackground(id: SectionId) {
 }
 
 /* ---------- content ---------- */
+let stopGrid: (() => void) | undefined;
 function renderContent(id: SectionId) {
   const s = byId(id);
   contentEl.hidden = false;
   contentEl.innerHTML = `<div class="panel"><header class="panel-head"><div class="no">${s.no} · ${s.stampName}</div><h1 tabindex="-1">${s.label}</h1></header><div class="panel-body">${s.html}</div></div>`;
   contentEl.scrollTop = 0;
+  stopGrid?.();
+  stopGrid = connectCards(contentEl);
   document.title = `${s.label} · ${SITE.name}`;
 }
 function showContent(focus: boolean, swap = false) {
