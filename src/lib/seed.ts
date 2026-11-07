@@ -156,7 +156,25 @@ export const SEED_PROJECTS: Project[] = [
   ...['CU Skate Forge', 'Bloom Coffee Table', 'Bloc CNC', 'Topomaps'].map((t) => p(t, 'Projects')),
 ];
 
-export const SEED_CRAFTS: Craft[] = ['Pottery', 'Skate Rings', 'Recycled Climbing Rope Crafts'].map((title) => ({ title, slug: title.toLowerCase().replace(/[^a-z0-9]+/g, '-') }));
+const craftSlug = (t: string) => t.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+const SKATE_RING_FRAMES: { w: number; h: number; alt: string }[] = [
+  { w: 1263, h: 1800, alt: 'Stripped skateboard decks and cut yellow and teal plywood pieces on a workbench' },
+  { w: 1800, h: 1200, alt: 'Close-up of the colored plywood layers in a sanded skateboard deck' },
+  { w: 1800, h: 1200, alt: 'Three finished skate rings and a pendant on a striped teal display block' },
+  { w: 1800, h: 1200, alt: 'A skate ring worn by a small cream-colored duck figure' },
+  { w: 1800, h: 1200, alt: 'A skate ring on a plaster hand' },
+  { w: 1800, h: 1335, alt: 'Pencil sketches of ring shapes on grid paper' },
+];
+export const SEED_CRAFTS: Craft[] = [
+  { title: 'Pottery', slug: 'pottery' },
+  {
+    title: 'Skate Rings', slug: 'skate-rings', year: 2025,
+    summary: 'Old skateboard decks turned into rings, inspired by Bauhaus and De Stijl: geometric shapes, sharp lines and bold color contrast. Each deck was stripped of grip tape, paint and stickers, then sanded to 300 grit to reveal its layers of colored veneer.',
+    notes: 'Made for Aesthetics in Design, in the BTU lab at ATLAS. Sketching and fabrication.',
+    images: SKATE_RING_FRAMES.map((f, i) => ({ src: asset(`/crafts/skate-rings/${String(i + 1).padStart(2, '0')}.webp`), ...f })),
+  },
+  { title: 'Recycled Climbing Rope Crafts', slug: craftSlug('Recycled Climbing Rope Crafts') },
+];
 
 /** One 35mm roll per month, newest first. Photos are produced by scripts/process-film.py into public/photography/<slug>/NN.webp. */
 const ROLLS: { slug: string; month: string; year: number }[] = [

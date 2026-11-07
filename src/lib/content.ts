@@ -51,6 +51,7 @@ export interface ProjectExtras {
 }
 export interface Craft {
   title: string; slug: string; summary?: string; year?: number; image?: string; notes?: string;
+  images?: { src: string; alt: string; w?: number; h?: number }[];
 }
 export interface Experience {
   organization: string; role: string; startDate?: string; endDate?: string; description?: string;
@@ -152,10 +153,16 @@ function experienceHtml(c: SiteContent) {
   return `<ol class="timeline">${items}</ol>${edu}${c.placeholder.experience ? todo('Placeholder timeline. Experience content has not been supplied.') : ''}`;
 }
 function craftsHtml(c: SiteContent) {
-  const shots = c.crafts.map((k, i) => `
+  const done = c.crafts.filter((k) => k.images?.length);
+  const rest = c.crafts.filter((k) => !k.images?.length);
+  const sections = done.map((k) => {
+    const imgs = (k.images || []).filter((f) => safeUrl(f.src)).map((f) => `<figure class="gimg"><img onload="this.parentNode.classList.add('ld')" onerror="this.parentNode.classList.add('ld')" src="${esc(encodeURI(safeUrl(f.src)))}" alt="${esc(f.alt)}"${f.w && f.h ? ` width="${f.w}" height="${f.h}"` : ''} loading="lazy" decoding="async"></figure>`).join('');
+    return `<section class="roll"><h3 class="series">${esc(k.title)}${k.year ? ` <span class="series-year">${k.year}</span>` : ''}</h3>${k.summary ? `<p>${esc(k.summary)}</p>` : ''}${k.notes ? `<p class="meta">${esc(k.notes)}</p>` : ''}<div class="detail-gallery roll-gallery">${imgs}</div></section>`;
+  }).join('');
+  const tiles = rest.map((k, i) => `
     <figure class="shot${safeUrl(k.image) ? ' has-img' : ''}" style="--c:${accents[i % accents.length]};${safeUrl(k.image) ? `background-image:url('${encodeURI(safeUrl(k.image))}'),var(--sk-grad);background-size:cover,200% 100%;background-position:center,0 0` : ''}">
       <figcaption>${esc(k.title)}${k.year ? ` · ${k.year}` : ''}</figcaption></figure>`).join('');
-  return `<div class="gallery">${shots}</div>${todo('Titles are from Matt’s list; photos and notes are still to come.')}`;
+  return `${sections}${tiles ? `<div class="gallery">${tiles}</div>` : ''}${rest.length ? todo('More crafts are coming. Photos and notes for the rest are still to come.') : ''}`;
 }
 function photographyHtml(c: SiteContent) {
   const series = c.photography.map((s) => {
