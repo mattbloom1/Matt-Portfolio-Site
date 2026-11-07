@@ -341,14 +341,9 @@ body:has(#stage[data-state='page']) .draw-hint { opacity: 0; pointer-events: non
 @media (hover: none) { .card .card-sub { max-height: 3.5em; opacity: 1; } }
 @media (prefers-reduced-motion: reduce) { .card .card-over, .card .card-sub { transition: none; } }
 
-/* connected pedestal grid (websites cards): lines run behind the cards and show in the gaps */
-.cards.connected { position: relative; }
-.cards.connected .card { z-index: 1; }
-.grid-lines { position: absolute; left: 0; top: 0; z-index: 0; pointer-events: none; overflow: visible; }
-.grid-lines path { fill: none; stroke: var(--ink); stroke-opacity: .6; stroke-width: 1.25; vector-effect: non-scaling-stroke; stroke-dasharray: 1; stroke-dashoffset: 0; animation: gl-draw 1.6s cubic-bezier(.4,0,.2,1) .5s backwards; }
-.grid-lines .gl-stub { stroke-opacity: .4; }
-@keyframes gl-draw { from { stroke-dashoffset: 1; } }
-@media (prefers-reduced-motion: reduce) { .grid-lines path { animation: none; } }
+/* connected pedestal grid (websites cards): odd columns use the mirrored scene so box edges meet at the card borders */
+.card[data-flip='1'] .card-img { background-image: var(--img-m) !important; }
+.stage[data-state='page'] .cards.connected { gap: 10px; }
 
 /* mobile pass */
 @media (max-width: 899px) { .foot-tools { display: none; } }

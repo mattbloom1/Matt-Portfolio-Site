@@ -95,7 +95,7 @@ export const SEED_PROJECTS: Project[] = [
     role: 'Design, development & content',
     year: 2025,
     summary: 'The home of the Gasdaska Verdiglione Conlon Real Estate Team, one of the top real estate teams working across three state markets (NY, NJ & FL). I rebuilt the site in 2025 as a single place where visitors can see what the team can do, learn who they are, and get in touch. I handled the design, development, and content, and I’ve maintained it since.',
-    heroImage: asset('/websites/gvc-team-mockup.webp'),
+    heroImage: asset('/websites/gvc-team/hero-macbook-1.webp'),
     images: ['macbook-1', 'macbook-2', 'macbook-3', 'macbook-4', 'phones-navy'].map((n) => asset(`/websites/gvc-team/${n}.webp`)),
     stack: { Framework: ['Framer'], Data: ['Framer CMS'] },
     href: 'https://gvcrealestateteam.com/',

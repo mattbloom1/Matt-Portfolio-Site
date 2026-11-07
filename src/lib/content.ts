@@ -83,9 +83,11 @@ function projectsHtml(c: SiteContent) {
     safeUrl(p.videoUrl) ? `<a href="${esc(safeUrl(p.videoUrl))}" target="_blank" rel="noopener">Watch</a>` : '',
     safeUrl(p.href) ? `<a href="${esc(safeUrl(p.href))}" target="_blank" rel="noopener">${esc(p.linkLabel || 'Visit')}</a>` : '',
   ].filter(Boolean).join(' · ');
+  // Website cards also ship a mirrored render of the same scene (macbook-1-m); see gridLines.ts
+  const mirrored = (p: Project) => (safeUrl(p.heroImage) && /macbook-1\.webp$/.test(p.heroImage || '') ? `--img-m:url('${encodeURI(safeUrl(p.heroImage).replace(/macbook-1\.webp$/, 'macbook-1-m.webp'))}');` : '');
   const card = (p: Project, i: number) => `
     <button type="button" class="card${safeUrl(p.heroImage) ? '' : ' no-img'}" data-detail="d-${esc(p.slug)}" aria-label="${esc(p.title)}: view details">
-      <span class="card-img" style="${bg(p, i)}"></span>
+      <span class="card-img" style="${mirrored(p)}${bg(p, i)}"></span>
       <span class="card-over"><span class="card-name">${esc(p.title)}</span><span class="card-sub">${esc([p.role, p.year].filter(Boolean).join(' · '))}</span></span>
     </button>`;
   const lineArrow = (back: boolean) => `<svg class="step-arrow" viewBox="0 0 48 24" width="48" height="24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="${back ? 'M45 13C35 11 21 14 5 12M13 5c-2 3-5 5-8 7 3 2 6 4 8 7' : 'M3 13c10-2 24 1 40-1M35 5c2 3 5 5 8 7-3 2-6 4-8 7'}"/></svg>`;
