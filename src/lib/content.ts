@@ -33,7 +33,7 @@ export const STACK_GROUPS = ['Framework', 'Styling', 'Data', 'Hosting', 'Integra
 export type StackGroup = typeof STACK_GROUPS[number];
 export interface Project {
   title: string; slug: string; summary?: string; featured?: boolean; year?: number;
-  disciplines?: string[]; role?: string; heroImage?: string; images?: string[]; accent?: string;
+  disciplines?: string[]; role?: string; heroImage?: string; /** Card cover; falls back to heroImage */ cover?: string; images?: string[]; accent?: string;
   videoUrl?: string; href?: string; linkLabel?: string;
   stack?: Partial<Record<StackGroup, string[]>>;
   /** Optional case-study extras, rendered the same way on any project detail page. */
@@ -103,11 +103,9 @@ function projectsHtml(c: SiteContent) {
     safeUrl(p.videoUrl) ? `<a href="${esc(safeUrl(p.videoUrl))}" target="_blank" rel="noopener">Watch</a>` : '',
     safeUrl(p.href) ? `<a href="${esc(safeUrl(p.href))}" target="_blank" rel="noopener">${esc(p.linkLabel || 'Visit')}</a>` : '',
   ].filter(Boolean).join(' · ');
-  // Website cards ship one render per column count (cards/c4, c3, c2) so the box edges meet at the card borders; see gridLines.ts
-  const layouts = (p: Project) => ((p.disciplines || [])[0] === 'Websites' && safeUrl(p.heroImage) ? [4, 3, 2].map((n) => `--img-${n}:url('${encodeURI(safeUrl(p.heroImage).replace(/\/websites\/.*$/, `/websites/cards/c${n}-${p.slug}.webp`))}');`).join('') : '');
   const card = (p: Project, i: number) => `
-    <button type="button" class="card${safeUrl(p.heroImage) ? '' : ' no-img'}" data-detail="d-${esc(p.slug)}" aria-label="${esc(p.title)}: view details">
-      <span class="card-img${safeUrl(p.heroImage) ? ' has-img' : ''}" style="${layouts(p)}${bg(p, i)}"></span>
+    <button type="button" class="card${safeUrl(p.cover || p.heroImage) ? '' : ' no-img'}" data-detail="d-${esc(p.slug)}" aria-label="${esc(p.title)}: view details">
+      <span class="card-img${safeUrl(p.cover || p.heroImage) ? ' has-img' : ''}" style="${bg({ ...p, heroImage: p.cover || p.heroImage }, i)}"></span>
       <span class="card-over"><span class="card-name">${esc(p.title)}</span><span class="card-sub">${esc([p.role, p.year].filter(Boolean).join(' · '))}</span></span>
     </button>`;
   const siblings = (p: Project) => c.projects.filter((q) => (q.disciplines || [])[0] === (p.disciplines || [])[0]);

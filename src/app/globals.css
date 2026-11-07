@@ -333,13 +333,6 @@ body:has(#stage[data-state='page']) .draw-hint { opacity: 0; pointer-events: non
 @media (hover: none) { .card .card-sub { max-height: 3.5em; opacity: 1; } }
 @media (prefers-reduced-motion: reduce) { .card .card-over, .card .card-sub { transition: none; } }
 
-/* connected pedestal grid (websites cards): one render per column count so box edges meet at the card borders */
-.card[data-cols='4'] .card-img { background-image: var(--img-4), var(--img-3), var(--img-2), var(--sk-grad) !important; }
-.card[data-cols='3'] .card-img { background-image: var(--img-3), var(--img-4), var(--img-2), var(--sk-grad) !important; }
-.card[data-cols='2'] .card-img { background-image: var(--img-2), var(--img-3), var(--img-4), var(--sk-grad) !important; }
-/* the other column renders trail behind as fallbacks, so a resize never exposes the placeholder */
-.card .card-img[style*='--img-'] { background-size: cover, cover, cover, 200% 100% !important; animation-name: sk-shimmer-4; }
-.stage[data-state='page'] .cards.connected { gap: 10px; }
 
 /* mobile pass */
 @media (max-width: 899px) { .foot-tools { display: none; } }
