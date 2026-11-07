@@ -101,7 +101,7 @@ export const SEED_PROJECTS: Project[] = [
     href: 'https://gvcrealestateteam.com/',
     linkLabel: 'Visit site',
   }),
-  p('Liv Portfolio Site', 'Websites', {
+  p('Client Portfolio Site', 'Websites', {
     role: 'Design & development',
     year: 2026,
     summary: 'A fashion portfolio for Liv Polani, built to feel like a designer’s desk rather than a template. The home page is a paper collage of scanned scraps, lace and tape, with an ink-bleed hover effect, and the work lives in a ledger-style project register. Each project page carries a full case study (Endure, Distorted Bloom, Desert Wildflower, The Sweat Set and more) exported from Canva, and the résumé on the About page is embedded live from Canva so it never goes out of date. I handled the design and development.',
