@@ -1,7 +1,7 @@
 import { urlFor } from './sanity';
-import { SEED_PHOTOGRAPHY, PROFILE_PHOTO, BIO_SHORT, EDUCATION, FUN_NOTE, SEED_CRAFTS, SEED_EXPERIENCE, SEED_PROJECTS } from './seed';
+import { SEED_PHOTOGRAPHY, PROFILE_PHOTO, BIO_SHORT, EDUCATION, FUN_NOTE, SEED_CRAFTS, SEED_EXPERIENCE, SEED_POSTERS, SEED_PROJECTS } from './seed';
 
-export type SectionId = 'projects' | 'experience' | 'about' | 'crafts' | 'photography';
+export type SectionId = 'projects' | 'posters' | 'experience' | 'about' | 'crafts' | 'photography';
 
 export interface Section {
   id: SectionId;
@@ -59,8 +59,9 @@ export interface Experience {
 export interface PhotoSeries {
   title: string; slug: string; summary?: string; year?: number; cover?: string; frames?: { image?: string; alt?: string; caption?: string; w?: number; h?: number }[];
 }
+export interface PosterSet { title: string; items: { title: string; src: string; alt: string; w: number; h: number }[] }
 export interface SiteContent {
-  projects: Project[]; crafts: Craft[]; experience: Experience[]; photography: PhotoSeries[];
+  projects: Project[]; posters: PosterSet[]; crafts: Craft[]; experience: Experience[]; photography: PhotoSeries[];
   /** Which sections still show placeholder entries. */
   placeholder: { projects: boolean; crafts: boolean; experience: boolean; photography: boolean };
 }
@@ -72,6 +73,7 @@ const accents = ['#c4b268', '#c9a0a0', '#8fb3c9', '#7fbf7a', '#a9c0bf'];
 export const PLACEHOLDER: SiteContent = {
   placeholder: { projects: false, crafts: false, experience: false, photography: !SEED_PHOTOGRAPHY.length },
   projects: SEED_PROJECTS,
+  posters: SEED_POSTERS,
   crafts: SEED_CRAFTS,
   experience: SEED_EXPERIENCE,
   photography: SEED_PHOTOGRAPHY.length ? SEED_PHOTOGRAPHY : [{ title: 'Placeholder series', slug: 'placeholder-series', summary: 'Photography content has not been supplied.' }],
@@ -97,7 +99,7 @@ function extrasHtml(p: Project) {
   const notes = (x.notes || []).map((n) => `<div class="xnote"><h3>${esc(n.heading)}</h3><p>${esc(n.body)}</p></div>`).join('');
   return `<div class="detail-extra">${figs ? `<div class="xfigs">${figs}</div>` : ''}${stats ? `<dl class="xstats">${stats}</dl>` : ''}${notes ? `<div class="xnotes">${notes}</div>` : ''}</div>`;
 }
-const GROUPS = ['Websites', 'Posters', 'GearBook Posters', 'Branding', 'Projects', 'Ignite Adaptive Sports'];
+const GROUPS = ['Websites', 'Branding', 'Projects', 'Ignite Adaptive Sports'];
 function projectsHtml(c: SiteContent) {
   const bg = (p: Project, i: number) => `--c:${safeColor(p.accent) || accents[i % accents.length]};${safeUrl(p.heroImage) ? `background-image:url('${encodeURI(safeUrl(p.heroImage))}'),var(--sk-grad);background-size:cover,200% 100%;background-position:center,0 0` : ''}`;
   const links = (p: Project) => [
@@ -173,6 +175,9 @@ function photographyHtml(c: SiteContent) {
   }).join('');
   return `${series}${c.placeholder.photography ? todo('Placeholder. Photography content has not been supplied.') : ''}`;
 }
+function postersHtml(c: SiteContent) {
+  return c.posters.map((set) => `<section class="roll"><h3 class="series">${esc(set.title)}</h3><div class="detail-gallery poster-gallery">${set.items.filter((i) => safeUrl(i.src)).map((i) => `<figure class="gimg"><img onload="this.parentNode.classList.add('ld')" onerror="this.parentNode.classList.add('ld')" src="${esc(encodeURI(safeUrl(i.src)))}" alt="${esc(i.alt)}" width="${i.w}" height="${i.h}" loading="lazy" decoding="async"></figure>`).join('')}</div></section>`).join('');
+}
 function aboutHtml() {
   const links = SITE.links.map((l) => `<li><a href="${l.href}" target="_blank" rel="noopener">${l.label}</a></li>`).join('');
   const paras = (a: string[]) => a.map((t) => `<p>${esc(t)}</p>`).join('');
@@ -183,12 +188,14 @@ function aboutHtml() {
 }
 
 export function buildSections(c: SiteContent): Section[] {
+  const L = (id: SectionId, no: string, label: string, stampName: string, art: string, html: string): Section => ({ id, no, label, stampName, orientation: 'landscape', ratio: 1658 / 1130, alt: `Stamp ${no}, ${stampName}, ${art}`, html });
   return [
-    { id: 'projects', no: '01', label: 'Projects', stampName: 'Web & Graphic Design', orientation: 'landscape', ratio: 1658 / 1130, alt: 'Stamp 01, Web and Graphic Design, a vintage computer', html: projectsHtml(c) },
-    { id: 'experience', no: '02', label: 'Experience', stampName: 'Work History', orientation: 'landscape', ratio: 1658 / 1130, alt: 'Stamp 02, Work History, a vintage suitcase', html: experienceHtml(c) },
-    { id: 'crafts', no: '03', label: 'Crafts', stampName: 'Crafts', orientation: 'landscape', ratio: 1658 / 1130, alt: 'Stamp 03, Crafts, six pieces of pottery', html: craftsHtml(c) },
-    { id: 'photography', no: '04', label: 'Photography', stampName: 'Photography', orientation: 'landscape', ratio: 1658 / 1130, alt: 'Stamp 04, Photography, a Minolta X-700 film camera', html: photographyHtml(c) },
-    { id: 'about', no: '05', label: 'About', stampName: 'About', orientation: 'landscape', ratio: 1658 / 1130, alt: 'Stamp 05, About, a halftone portrait of Matt', html: aboutHtml() },
+    L('projects', '01', 'Projects', 'Web & Graphic Design', 'a vintage computer', projectsHtml(c)),
+    L('posters', '02', 'Posters', 'Posters', 'two printed posters', postersHtml(c)),
+    L('experience', '03', 'Experience', 'Work History', 'a vintage suitcase', experienceHtml(c)),
+    L('crafts', '04', 'Crafts', 'Crafts', 'six pieces of pottery', craftsHtml(c)),
+    L('photography', '05', 'Photography', 'Photography', 'a Minolta X-700 film camera', photographyHtml(c)),
+    L('about', '06', 'About', 'About', 'a halftone portrait of Matt', aboutHtml()),
   ];
 }
 

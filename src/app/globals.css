@@ -389,6 +389,14 @@ body:has(#stage[data-state='page']) .draw-hint { opacity: 0; pointer-events: non
 @media (prefers-reduced-motion: reduce) { .card .card-img.has-img, .detail-img.has-img, .shot.has-img, .detail-gallery .gimg:not(.ld)::before { animation: none; } }
 @keyframes sk-shimmer-4 { from { background-position: center, center, center, 100% 0; } to { background-position: center, center, center, -100% 0; } }
 
+/* Posters: portraits, 2 / 2 / 1 rhythm, never cropped */
+.poster-gallery .gimg:not(.ld) { aspect-ratio: 4 / 5; }
+.poster-gallery .gimg:nth-child(3n), .poster-gallery .gimg:last-child:nth-child(3n + 1) { display: flex; justify-content: center; }
+.poster-gallery .gimg:nth-child(3n) img, .poster-gallery .gimg:last-child:nth-child(3n + 1) img { width: auto; max-width: 100%; max-height: 90vh; }
+@media (max-width: 560px) {
+  .poster-gallery .gimg:not(:nth-child(3n)):not(:last-child:nth-child(3n + 1)) { aspect-ratio: auto; overflow: visible; }
+  .poster-gallery .gimg:not(:nth-child(3n)):not(:last-child:nth-child(3n + 1)) img { height: auto; object-fit: fill; transform: none; }
+}
 /* Photography: one film roll per month, same 2 / 2 / 1 rhythm as project galleries */
 .roll-gallery { padding: 8px 0 clamp(48px, 7vw, 96px); max-width: none; }
 .roll-gallery .gimg:not(.ld) { aspect-ratio: 3 / 2; }

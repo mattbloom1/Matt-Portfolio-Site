@@ -14,6 +14,7 @@ export async function getContent(): Promise<SiteContent> {
     return {
       // Each section falls back to its own placeholders until it has CMS entries.
       placeholder: { projects: !projects.length, crafts: !crafts.length, experience: !experience.length, photography: !photography.length },
+      posters: PLACEHOLDER.posters,
       projects: projects.length ? projects.map((p: any) => ({ ...p, heroImage: urlFor(p.heroMedia) })) : PLACEHOLDER.projects,
       crafts: crafts.length ? crafts.map((k: any) => ({ ...k, image: urlFor(k.media) })) : PLACEHOLDER.crafts,
       experience: experience.length ? experience : PLACEHOLDER.experience,

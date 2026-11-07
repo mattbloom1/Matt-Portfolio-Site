@@ -4,7 +4,7 @@ import { SpeedInsights } from '@vercel/speed-insights/next';
 import { display, body, mono, footer } from './fonts';
 import './globals.css';
 
-const DESCRIPTION = 'Portfolio of Matthew Bloomfield, Creative Technologist & Designer: projects, experience, crafts and photography.';
+const DESCRIPTION = 'Portfolio of Matthew Bloomfield, Creative Technologist & Designer: projects, posters, experience, crafts and photography.';
 export const metadata: Metadata = {
   metadataBase: new URL('https://www.matthewsbloomfield.com'),
   title: 'Matthew Bloomfield',

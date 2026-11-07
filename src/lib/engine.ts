@@ -52,22 +52,24 @@ let logoCleanup = () => {};
 
 /* ---------- stamps ---------- */
 const stampEls = new Map<SectionId, HTMLButtonElement>();
-const tilt: Record<SectionId, number> = { projects: -4, experience: 3, about: -2, crafts: 4, photography: -3 };
+const tilt: Record<SectionId, number> = { projects: -4, posters: 2, experience: 3, about: -2, crafts: 4, photography: -3 };
 
 interface NavSpot { x: number; y: number; w: number }
 const navDesktop: Record<SectionId, NavSpot> = {
-  projects: { x: 0.2, y: 0.34, w: 0.21 },
-  experience: { x: 0.5, y: 0.29, w: 0.21 },
-  crafts: { x: 0.8, y: 0.36, w: 0.21 },
-  photography: { x: 0.36, y: 0.67, w: 0.21 },
-  about: { x: 0.66, y: 0.7, w: 0.21 },
+  projects: { x: 0.2, y: 0.32, w: 0.21 },
+  posters: { x: 0.5, y: 0.27, w: 0.21 },
+  experience: { x: 0.8, y: 0.34, w: 0.21 },
+  crafts: { x: 0.22, y: 0.7, w: 0.21 },
+  photography: { x: 0.5, y: 0.72, w: 0.21 },
+  about: { x: 0.79, y: 0.68, w: 0.21 },
 };
 const navMobile: Record<SectionId, NavSpot> = {
-  projects: { x: 0.4, y: 0.11, w: 0.56 },
-  experience: { x: 0.6, y: 0.29, w: 0.56 },
-  crafts: { x: 0.4, y: 0.47, w: 0.56 },
-  photography: { x: 0.6, y: 0.65, w: 0.56 },
-  about: { x: 0.4, y: 0.83, w: 0.56 },
+  projects: { x: 0.36, y: 0.085, w: 0.5 },
+  posters: { x: 0.64, y: 0.25, w: 0.5 },
+  experience: { x: 0.36, y: 0.415, w: 0.5 },
+  crafts: { x: 0.64, y: 0.58, w: 0.5 },
+  photography: { x: 0.36, y: 0.745, w: 0.5 },
+  about: { x: 0.64, y: 0.91, w: 0.5 },
 };
 
 function buildStamps() {
@@ -199,7 +201,7 @@ function miniSlots() {
 }
 function placeMini(id: SectionId, slot: number) {
   if (isSplit()) {
-    // One column down the left of the dark panel, all five stamps in fixed slots, above the heading.
+    // One column down the left of the dark panel, all six stamps in fixed slots, above the heading.
     const cw = colWidth(), H = stage.clientHeight;
     const pad = Math.min(44, Math.max(24, stage.clientWidth * 0.03));
     const top = 48, bottom = 210, label = 14;
@@ -267,7 +269,7 @@ async function navToPage(id: SectionId) {
   gsap.killTweensOf([...stampEls.values()]);
   gsap.set([...stampEls.values()], { x: (_i: number, t: Element) => offsetOf((t as HTMLElement).dataset.id as SectionId).x, y: (_i: number, t: Element) => offsetOf((t as HTMLElement).dataset.id as SectionId).y, rotation: (_i: number, t: Element) => tilt[(t as HTMLElement).dataset.id as SectionId] });
   active = id;
-  order = SECTIONS.map((s) => s.id); // all five stamps stay, in fixed slots
+  order = SECTIONS.map((s) => s.id); // all six stamps stay, in fixed slots
   const flipState = Flip.getState([...stampEls.values()]);
   state = 'page';
   stage.dataset.state = 'page'; // the footer leaves and the stage fills the screen before the column is laid out

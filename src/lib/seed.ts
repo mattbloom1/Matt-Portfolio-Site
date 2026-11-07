@@ -1,4 +1,4 @@
-import type { Craft, Experience, PhotoSeries, Project } from './content';
+import type { Craft, Experience, PhotoSeries, PosterSet, Project } from './content';
 import photoManifest from './photography.json';
 
 /**
@@ -134,22 +134,6 @@ export const SEED_PROJECTS: Project[] = [
     href: 'https://livpolani.com',
     linkLabel: 'Visit site',
   }),
-  ...([
-    ['Variex', '01-type-specimen', 'Poster'],
-    ['Improve Your Golf', '02-golfer', 'Poster'],
-    ['The Frog', '03-frog', 'Poster'],
-    ['Handbook of Pictorial Symbols', '04-pictorial-symbols', 'Poster'],
-    ['I’m Going to the Mountains', '05-mountain-helicopter', 'Poster'],
-  ] as const).map(([t, f, d]) => p(t, 'Posters', { summary: d, heroImage: asset(`/posters/${f}.webp`) })),
-  ...([
-    ['Bookmark Cutout', 'bookmark-cutout'],
-    ['Evan Text', 'evan-text'],
-    ['Item Grid', 'item-grid'],
-    ['Luke', 'luke'],
-    ['Skier Bookmark', 'skier-bookmark'],
-    ['Skiers Walking', 'skiers-walking'],
-  ] as const).map(([t, f]) => p(t, 'GearBook Posters', { summary: 'GearBook poster', heroImage: asset(`/posters/gearbook/${f}.webp`) })),
-  p('Signup Deal', 'GearBook Posters', { summary: 'GearBook poster', heroImage: asset('/posters/gearbook/posters-signupdeal.webp') }),
   ...['Le Reve', 'Casa Avenida', 'Trimble Business Systems'].map((t) => p(t, 'Branding')),
   p('Opus', 'Branding', { summary: 'In progress.' }),
   p('Essays In Bloom', 'Branding', { summary: 'In progress.' }),
@@ -193,3 +177,19 @@ export const SEED_PHOTOGRAPHY: PhotoSeries[] = ROLLS.filter((r) => (manifest[r.s
   title: r.month, slug: r.slug, year: r.year,
   frames: manifest[r.slug].map((f, i) => ({ image: asset(`/photography/${r.slug}/${String(i + 1).padStart(2, '0')}.webp`), alt: `${r.month} ${r.year} film roll, frame ${i + 1}`, w: f.w, h: f.h })),
 }));
+
+/** Posters get their own stamp and page: personal pieces first, then the GearBook set. */
+const poster = (title: string, file: string, w: number, h: number) => ({ title, src: asset(`/posters/${file}.webp`), alt: `${title} poster`, w, h });
+export const SEED_POSTERS: PosterSet[] = [
+  { title: 'Personal', items: [
+    poster('Variex', '01-type-specimen', 1035, 1600),
+    poster('Improve Your Golf', '02-golfer', 1224, 1584),
+    poster('The Frog', '03-frog', 1224, 1584),
+    poster('Handbook of Pictorial Symbols', '04-pictorial-symbols', 1236, 1600),
+    poster('I’m Going to the Mountains', '05-mountain-helicopter', 1236, 1600),
+  ] },
+  { title: 'GearBook', items: [
+    ['Sign-up Deal', 'posters-signupdeal'], ['Skier Bookmark', 'skier-bookmark'], ['Skiers Walking', 'skiers-walking'], ['Luke', 'luke'],
+    ['Evan Text', 'evan-text'], ['Item Grid', 'item-grid'], ['Bookmark Cutout', 'bookmark-cutout'],
+  ].map(([t, f]) => poster(`GearBook ${t}`, `gearbook/${f}`, 1167, 1500)) },
+];
