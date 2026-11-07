@@ -66,6 +66,16 @@ export const SEED_PROJECTS: Project[] = [
     linkLabel: 'Visit site',
   }),
   ...['The Edge Delray'].map((t) => p(t, 'Websites')),
+  p('Pictorial Symbols Library', 'Websites', {
+    role: 'Design & development',
+    year: 2026,
+    summary: 'A searchable library of 3,133 pictogram icons that I digitized from the 1976 Dover book Handbook of Pictorial Symbols. Each icon went through the same pipeline: scan, crop, vector trace, then name. The site lets you search by name, filter by category, sort, jump to a random icon, star favorites and download any icon as an SVG. A References page credits the source book. It is an archival personal project, not an openly licensed icon set.',
+    heroImage: asset('/websites/pictorial-symbols/macbook-1.webp'),
+    images: ['macbook-2', 'macbook-3', 'macbook-4', 'phones-gray'].map((n) => asset(`/websites/pictorial-symbols/${n}.webp`)),
+    stack: { Framework: ['Hand-coded HTML, CSS & JavaScript'], Styling: ['Custom brand tokens', 'DM Sans', 'DM Mono', 'Instrument Serif'], Data: ['SVG files with a CSV index'], Hosting: ['GitHub Pages'] },
+    href: 'https://mattbloom1.github.io/pictorial-symbols-icons/',
+    linkLabel: 'Visit site',
+  }),
   p('The GVC Team', 'Websites', {
     role: 'Design, development & content',
     year: 2025,
