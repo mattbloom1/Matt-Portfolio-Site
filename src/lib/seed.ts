@@ -38,7 +38,7 @@ export const SEED_PROJECTS: Project[] = [
   p('GearBook', 'Websites', {
     role: 'Co-founder & CMO: design, development & marketing',
     year: 2025,
-    summary: 'GearBook is an affiliate gear catalog for outdoor professionals. Members pick the gear they actually use, GearBook builds the tracked affiliate link behind each product, hosts their catalog page, lists their picks on a public marketplace, and pays their share of every sale each month. It is built for professionals (instructors, athletes, educators and others who work in the field) and for enthusiasts who know their gear, and shoppers buy from people who actually use it. Outdoor professionals rarely have the time or the income to market themselves, so GearBook does that work for them. Co-founded with Luke Wong in Boulder, CO, with design, development and marketing (CMO) on the GearBook side. It is live, actively maintained, and 15 members have signed up so far.',
+    summary: 'GearBook is an affiliate gear catalog for outdoor professionals. Members pick the gear they actually use, GearBook builds the tracked affiliate link behind each product, hosts their catalog page, lists their picks on a public marketplace, and pays their share of every sale each month. It is built for professionals (instructors, athletes, educators and others who work in the field) and for enthusiasts who know their gear, and shoppers buy from people who actually use it. Outdoor professionals rarely have the time or the income to market themselves, so GearBook does that work for them. I am the co-founder and CMO, and I built the site with my co-founder Luke Wong, based in Boulder, CO. It is live, actively maintained, and 15 members have signed up so far.',
     heroImage: asset('/websites/gearbook/macbook-1.webp'),
     images: ['macbook-2', 'macbook-3', 'macbook-4', 'phones-gray'].map((n) => asset(`/websites/gearbook/${n}.webp`)),
     stack: { Framework: ['Next.js 16', 'React'], Styling: ['Tailwind CSS'], Data: ['Supabase (auth, Postgres, storage)'], Hosting: ['Cloudflare (OpenNext)'], Integrations: ['Impact', 'Partnerize', 'Resend'] },
@@ -48,7 +48,7 @@ export const SEED_PROJECTS: Project[] = [
   p('Le Reve', 'Websites', {
     role: 'Design, development & content',
     year: 2025,
-    summary: 'Le Rêve is the marketing site for five luxury townhomes in downtown Boca Raton, built for the Gasdaska Verdiglione Conlon Team at Douglas Elliman. It needed to capture leads and inquiries while showing off the finishes, the available residences, and the teams behind the development: Advanced Development Group, Netta Architects and EAJ Services. Details came from several parties, so the hardest part was keeping every spec and claim accurate. Leads go straight to the MLS, and the site has brought in 23 leads so far on roughly $5 million residences. Design, development and content, including the homepage hero video and the on-brand stylized elements, plus photography editing.',
+    summary: 'Le Rêve is the marketing site for five luxury townhomes in downtown Boca Raton, built for the Gasdaska Verdiglione Conlon Team at Douglas Elliman. It needed to capture leads and inquiries while showing off the finishes, the available residences, and the teams behind the development: Advanced Development Group, Netta Architects and EAJ Services. Details came from several parties, so the hardest part was keeping every spec and claim accurate. Leads go straight to the MLS, and the site has brought in 23 leads so far on roughly $5 million residences. I handled the design, development and content, including the homepage hero video and the on-brand stylized elements, and edited the photography.',
     heroImage: asset('/websites/le-reve-macbook-1.webp'),
     images: ['macbook-2', 'macbook-3', 'macbook-4', 'phones'].map((n) => asset(`/websites/le-reve-${n}.webp`)),
     stack: { Framework: ['Next.js', 'React'], Hosting: ['Vercel'], Integrations: ['MLS lead capture', 'Vercel Analytics', 'Vercel Speed Insights'] },
@@ -58,7 +58,7 @@ export const SEED_PROJECTS: Project[] = [
   p('Casa Avenida', 'Websites', {
     role: 'Design, development & content',
     year: 2025,
-    summary: 'Casa Avenida is the marketing site for eight luxury townhome-style condominiums one block from Atlantic Avenue in downtown Delray Beach. Built in early 2025 for the Gasdaska Verdiglione Conlon Team at Douglas Elliman, with the developers Kastelo Development and 4TRO Development and Capital and RWB/Linares Architecture. The site captures inquiries and leads while presenting the residences, finishes, renderings and a 360 virtual tour. It was the first real client website, built while learning on the fly. Design, development and content, with assistance on the renderings. Three of the eight residences have sold so far. It is public and still maintained.',
+    summary: 'Casa Avenida is the marketing site for eight luxury townhome-style condominiums one block from Atlantic Avenue in downtown Delray Beach. I built it in early 2025 for the Gasdaska Verdiglione Conlon Team at Douglas Elliman, with the developers Kastelo Development and 4TRO Development and Capital and RWB/Linares Architecture. The site captures inquiries and leads while presenting the residences, finishes, renderings and a 360 virtual tour. It was my first real client website, so I learned a lot on the fly. I handled the design, development and content, and assisted on the renderings. Three of the eight residences have sold so far. It is public and still maintained.',
     heroImage: asset('/websites/casa-avenida-macbook-1.webp'),
     images: ['macbook-2', 'macbook-3', 'macbook-4', 'phones'].map((n) => asset(`/websites/casa-avenida-${n}.webp`)),
     stack: { Framework: ['Next.js 14', 'React'], Styling: ['Tailwind CSS', 'Motion'], Data: ['JSON content files'], Hosting: ['Vercel'], Integrations: ['Resend', 'Google Sheets', 'MailerLite', 'Google Maps', 'reCAPTCHA', 'Vercel Analytics'] },
@@ -68,7 +68,7 @@ export const SEED_PROJECTS: Project[] = [
   p('The Edge Delray', 'Websites', {
     role: 'Design, development & content',
     year: 2026,
-    summary: 'The Edge is the marketing site for seven luxury townhomes in two four-story buildings in Delray Beach, built for the Gasdaska Verdiglione Conlon Team at Douglas Elliman, with Advanced Development Group as developer and Netta Architects as architect. It presents the floor plans, the location and the teams behind the project, and captures inquiries ahead of launch. The site is built but not live yet. Design, development and content.',
+    summary: 'The Edge is the marketing site for seven luxury townhomes in two four-story buildings in Delray Beach, built for the Gasdaska Verdiglione Conlon Team at Douglas Elliman, with Advanced Development Group as developer and Netta Architects as architect. It presents the floor plans, the location and the teams behind the project, and captures inquiries ahead of launch. The site is built but not live yet. I handled the design, development and content.',
     heroImage: asset('/websites/the-edge-delray-macbook-1.webp'),
     images: ['macbook-2', 'macbook-3', 'macbook-4', 'phones'].map((n) => asset(`/websites/the-edge-delray-${n}.webp`)),
     stack: { Framework: ['Framer'] },
@@ -76,7 +76,7 @@ export const SEED_PROJECTS: Project[] = [
   p('Pictorial Symbols Library', 'Websites', {
     role: 'Design & development',
     year: 2026,
-    summary: 'A searchable library of 3,133 pictogram icons digitized from the 1976 Dover book Handbook of Pictorial Symbols. Each icon went through the same pipeline: scan, crop, vector trace, then name. The site lets you search by name, filter by category, sort, jump to a random icon, star favorites and download any icon as an SVG. A References page credits the source book. It is an archival personal project, not an openly licensed icon set.',
+    summary: 'A searchable library of 3,133 pictogram icons that I digitized from the 1976 Dover book Handbook of Pictorial Symbols. Each icon went through the same pipeline: scan, crop, vector trace, then name. The site lets you search by name, filter by category, sort, jump to a random icon, star favorites and download any icon as an SVG. A References page credits the source book. It is an archival personal project, not an openly licensed icon set.',
     heroImage: asset('/websites/pictorial-symbols/macbook-1.webp'),
     images: ['macbook-2', 'macbook-3', 'macbook-4', 'phones-gray'].map((n) => asset(`/websites/pictorial-symbols/${n}.webp`)),
     stack: { Framework: ['Hand-coded HTML, CSS & JavaScript'], Styling: ['Custom brand tokens', 'DM Sans', 'DM Mono', 'Instrument Serif'], Data: ['SVG files with a CSV index'], Hosting: ['GitHub Pages'] },
@@ -94,7 +94,7 @@ export const SEED_PROJECTS: Project[] = [
   p('The GVC Team', 'Websites', {
     role: 'Design, development & content',
     year: 2025,
-    summary: 'The home of the Gasdaska Verdiglione Conlon Real Estate Team, one of the top real estate teams working across three state markets (NY, NJ & FL). The site was rebuilt in 2025 as a single place where visitors can see what the team can do, learn who they are, and get in touch. Design, development and content, with ongoing maintenance since.',
+    summary: 'The home of the Gasdaska Verdiglione Conlon Real Estate Team, one of the top real estate teams working across three state markets (NY, NJ & FL). I rebuilt the site in 2025 as a single place where visitors can see what the team can do, learn who they are, and get in touch. I handled the design, development, and content, and I’ve maintained it since.',
     heroImage: asset('/websites/gvc-team-mockup.webp'),
     images: ['macbook-1', 'macbook-2', 'macbook-3', 'macbook-4', 'phones-navy'].map((n) => asset(`/websites/gvc-team/${n}.webp`)),
     stack: { Framework: ['Framer'], Data: ['Framer CMS'] },
@@ -104,7 +104,7 @@ export const SEED_PROJECTS: Project[] = [
   p('Client Portfolio Site', 'Websites', {
     role: 'Design & development',
     year: 2026,
-    summary: 'A fashion portfolio for Liv Polani, built to feel like a designer’s desk rather than a template. The home page is a paper collage of scanned scraps, lace and tape, with an ink-bleed hover effect, and the work lives in a ledger-style project register. Each project page carries a full case study (Endure, Distorted Bloom, Desert Wildflower, The Sweat Set and more) exported from Canva, and the résumé on the About page is embedded live from Canva so it never goes out of date. Design and development.',
+    summary: 'A fashion portfolio for Liv Polani, built to feel like a designer’s desk rather than a template. The home page is a paper collage of scanned scraps, lace and tape, with an ink-bleed hover effect, and the work lives in a ledger-style project register. Each project page carries a full case study (Endure, Distorted Bloom, Desert Wildflower, The Sweat Set and more) exported from Canva, and the résumé on the About page is embedded live from Canva so it never goes out of date. I handled the design and development.',
     heroImage: asset('/websites/liv-portfolio/macbook-1.webp'),
     images: ['macbook-2', 'macbook-3', 'macbook-4', 'phones-gray'].map((n) => asset(`/websites/liv-portfolio/${n}.webp`)),
     stack: { Framework: ['Next.js 15', 'React 19', 'TypeScript'], Styling: ['Custom CSS', 'SVG filters', 'Google Fonts'], Hosting: ['GitHub Pages (static export)'], Integrations: ['Canva embeds'] },
