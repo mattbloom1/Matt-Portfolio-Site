@@ -39,7 +39,8 @@ export function initIconCursor(): () => void {
     travelled += Math.hypot(e.clientX - lx, e.clientY - ly);
     lx = e.clientX; ly = e.clientY;
     if (travelled > STEP) { travelled = 0; pick(); }
-    el.style.transform = `translate3d(${e.clientX - SIZE / 2}px, ${e.clientY - SIZE / 2}px, 0)`;
+    // `translate` (not `transform`): the pop animation's scale/rotate are applied after it, so they pivot on the icon instead of scaling the offset
+    el.style.translate = `${e.clientX - SIZE / 2}px ${e.clientY - SIZE / 2}px`;
   };
   const onDown = (e: PointerEvent) => { if (shown && e.pointerType === 'mouse') { travelled = 0; pick(); } };
   document.addEventListener('pointermove', onMove);
