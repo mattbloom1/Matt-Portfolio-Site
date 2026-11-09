@@ -79,6 +79,7 @@ export interface Craft {
   /** Card cover: one animated image (gif or animated webp). */
   cover?: string; /** Large image on the detail page. */ heroImage?: string; image?: string; notes?: string;
   images?: string[]; imageAlts?: string[];
+  extras?: ProjectExtras;
 }
 export interface Experience {
   organization: string; role: string; startDate?: string; endDate?: string; description?: string;
@@ -137,7 +138,7 @@ function extrasHtml(p: Project) {
   if (!x) return '';
   const figs = (x.figures || []).filter((f) => safeUrl(f.src)).map((f) => `<figure class="xfig"><img src="${esc(encodeURI(safeUrl(f.src)))}" alt="${esc(f.alt)}" loading="lazy" decoding="async">${f.caption ? `<figcaption>${esc(f.caption)}</figcaption>` : ''}</figure>`).join('');
   const stats = (x.stats || []).map((s) => `<div class="xstat"><dt>${esc(s.label)}</dt><dd>${esc(s.value)}</dd></div>`).join('');
-  const notes = (x.notes || []).map((n) => `<div class="xnote"><h3>${esc(n.heading)}</h3><p>${esc(n.body)}</p></div>`).join('');
+  const notes = (x.notes || []).map((n) => `<div class="xnote"><h3>${esc(n.heading)}</h3>${n.body.split('\n\n').map((t) => `<p>${esc(t)}</p>`).join('')}</div>`).join('');
   return `<div class="detail-extra">${figs ? `<div class="xfigs">${figs}</div>` : ''}${stats ? `<dl class="xstats">${stats}</dl>` : ''}${notes ? `<div class="xnotes">${notes}</div>` : ''}</div>`;
 }
 /** Cards plus full-screen detail pages, shared by Projects and Crafts. */
@@ -185,10 +186,10 @@ function workViews(items: Project[], noun: string, defaultMeta: string) {
   return { card, detail };
 }
 /** Everything on the Work page: projects, websites and crafts as one list, ordered by filter tag. */
-const TAG_ORDER = ['Developments', 'Websites', 'Branding', 'Hardware', 'Community', 'Crafts'];
+const TAG_ORDER = ['Developments', 'Websites', 'Branding', 'Hardware', 'Apps', 'Community', 'Crafts'];
 export const tagOf = (p: Project) => p.tag || (p.disciplines || [])[0] || 'Work';
 export function workItems(c: SiteContent): Project[] {
-  const crafts: Project[] = c.crafts.map((k) => ({ title: k.title, slug: k.slug, summary: k.summary, year: k.year, role: k.role, cover: k.cover, heroImage: k.heroImage || k.image, images: k.images, imageAlts: k.imageAlts, disciplines: ['Crafts'], tag: 'Crafts' }));
+  const crafts: Project[] = c.crafts.map((k) => ({ title: k.title, slug: k.slug, summary: k.summary, year: k.year, role: k.role, cover: k.cover, heroImage: k.heroImage || k.image, images: k.images, imageAlts: k.imageAlts, extras: k.extras, disciplines: ['Crafts'], tag: 'Crafts' }));
   const rank = (p: Project) => { const i = TAG_ORDER.indexOf(tagOf(p)); return i < 0 ? TAG_ORDER.length : i; };
   return [...c.projects, ...crafts].map((p, i) => ({ p, i })).sort((x, y) => rank(x.p) - rank(y.p) || x.i - y.i).map(({ p }) => p);
 }

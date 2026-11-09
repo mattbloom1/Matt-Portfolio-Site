@@ -284,6 +284,22 @@ export const SEED_PROJECTS: Project[] = [
     images: ['03', '02', '04', '05', '06', '07'].map((n) => asset(`/projects/topomaps/${n}.webp`)),
     imageAlts: ['A color-coded elevation map of Boulder, CO turned into a red 3D terrain model', 'Nine steps showing a flat red surface becoming a Boulder terrain mesh in Grasshopper', 'A grey Rhino render of the Boulder terrain model', 'A laser-engraved bear coaster in a wood and plywood frame', 'A wood coaster engraved with a bottle, glass and bread', 'Three finished coasters stacked on a table'],
   }),
+  p('ClimbSmart Hangboard', 'Projects', {
+    tag: 'Hardware',
+    year: 2024,
+    summary: 'The ClimbSmart Hangboard is an interactive, rock climbing training tool with capacitive sensing, featuring a “Simon” game that enhances climbers’ grip training through illuminated holds.',
+    heroImage: asset('/projects/climbsmart-hangboard/01.webp'),
+    images: ['02', '03', '04'].map((n) => asset(`/projects/climbsmart-hangboard/${n}.webp`)),
+    imageAlts: ['An Arduino and hand-soldered wiring inside the routed-out back of the wooden hangboard', 'The wooden hangboard from the front, with copper-lined holds', 'A close-up of the board’s corner with a clear acrylic cover held by a screw'],
+  }),
+  p('DocuEase', 'Projects', {
+    tag: 'Apps',
+    year: 2024,
+    summary: 'DocuEase introduces an innovative approach to project documentation for small to medium-scale projects. Harnessing the Experience Sampling Method (ESM), DocuEase prompts users at set intervals to provide quick updates. These updates can include taking a photo and narrating or typing a brief description of their current task. Using AI, DocuEase organizes and condenses user inputs into concise bullet points, compiling them alongside collected images into a comprehensive “Working Process Document.” As of December 1st, 2024, DocuEase was pending approval for the iOS App Store.',
+    heroImage: asset('/projects/docuease/01.webp'),
+    images: ['02', '03', '04'].map((n) => asset(`/projects/docuease/${n}.webp`)),
+    imageAlts: ['The DocuEase home screen with a project entry', 'Choosing a reminder interval for a project update', 'A running update timer with a project note', 'A saved timestamped update for a project'],
+  }),
 ];
 
 const craftSlug = (t: string) => t.toLowerCase().replace(/[^a-z0-9]+/g, '-');
@@ -304,6 +320,17 @@ export const SEED_CRAFTS: Craft[] = [
     heroImage: craftImg('skate-rings', '04'),
     images: ['01', '02', '03', '05', '06'].map((n) => craftImg('skate-rings', n)),
     imageAlts: ['Stripped skateboard decks and cut yellow and teal plywood pieces on a workbench', 'Close-up of the colored plywood layers in a sanded skateboard deck', 'Three finished skate rings and a pendant on a striped teal display block', 'A skate ring on a plaster hand', 'Pencil sketches of ring shapes on grid paper'],
+  },
+  {
+    title: 'Warped Cube', slug: 'warped-cube', year: 2024,
+    summary: 'The Warped Cube project explores 3D textile structures using the warp-pulling method on a cricket loom. Through a series of swatches, different warp-pulling techniques were tested to create features such as ridges, loops, and foldable forms. The project utilized multicolored blue warp yarn and thin, sturdy pink and black weft yarn at an 8 ends-per-inch density. Key discoveries included refining the tension of the warp and weft to facilitate smoother shape formation and experimenting with edge finishes for cleaner results. The final design featured a foldable cube structure achieved by precise warp manipulation, demonstrating the potential of warp-pulling for creating dynamic and functional 3D textiles.',
+    heroImage: craftImg('warped-cube', '01'),
+    images: ['05', '02', '03', '04'].map((n) => craftImg('warped-cube', n)),
+    imageAlts: ['The weaving pattern for the cube’s six squares, with the pulled warps marked in magenta', 'A flat cross of six squares, the cube unfolded', 'The cross folding up into a cube', 'The folded cube with an arrow showing the final warp tuck'],
+    extras: { notes: [
+      { heading: 'Recreation instructions', body: 'To recreate this swatch, begin by selecting two thin weft yarns of varying color, make sure they are decently strong, and cannot be broken with a tug.\n\nStart by picking the size of the box, I chose to use 1/3 of my available warp minus 4 warps for pulling, or 12 warps per square. I then used a marker to indicate the ends of each of the sides of my first square on the warp, this helped to figure out which warp to go around especially when doing three side by side.\n\nTake your center group of warps, for me 12, and take one more from the furthest side of the other two squares. For instance, the 1st and 38th warp on my cricket loom, and do two passes of the weft. After this remove those two furthest warps and glue them taught directly onto the header left from previously. Continue to weave the rest of the square, measuring the width by the length to determine when it is even, for me it took ~50 picks for each square.\n\nWhen you finish this, take the first color, pass it to the left third of your selected size, take a new color, pass it through the 2/3 or middle of the size, and the same color as the first but on a different shuttle, pass it through the last third. Make sure those glued down warps from earlier are the two furthest warps on the left and right. Weave until you have three more squares, continue the same process for the fifth, and on the last 2 picks, pass the furthest side warps from earlier back through to be used as warps in the sixth and final square.\n\nGlue or serge all of the edges before removing from the loom, but ensure the warps that are being pulled are left unstuck. Follow the diagrams from above for pulling your cube. To finish it off, tuck the top warps into the bottom squares wefts, pulling it all together and forming a clean cube.' },
+      { heading: 'Tips', body: 'Tuck some paper or yarn inside the cube to keep a firm shape.\n\nAdd drops of glue or balls of tape to the end of the warps to be pulled, they can slip out and be lost!' },
+    ] },
   },
   { title: 'Pottery', slug: 'pottery', hidden: true },
   { title: 'Recycled Climbing Rope Crafts', slug: craftSlug('Recycled Climbing Rope Crafts'), hidden: true },
