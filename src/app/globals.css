@@ -409,3 +409,11 @@ body:has(#stage[data-state='page']) .draw-hint { opacity: 0; pointer-events: non
 @media (hover: none), (pointer: coarse) {
   .stamps[data-mode='nav'] .stamp .tag { opacity: 1; font-size: 10px; letter-spacing: .1em; transform: translate(-50%, 4px); pointer-events: none; }
 }
+
+/* phones: prev/next sit in a solid bottom bar so they never cover the text behind them */
+@media (max-width: 760px) {
+  .detail-steps { padding: 10px 16px calc(10px + env(safe-area-inset-bottom, 0px)); background: var(--paper); border-top: 1px solid color-mix(in srgb, var(--ink) 25%, transparent); pointer-events: auto; }
+  .detail-step { padding: 7px 14px; }
+  .detail-inner { padding-bottom: 96px; }
+  .detail-gallery { padding-bottom: 104px; }
+}
