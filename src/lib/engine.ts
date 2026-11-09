@@ -594,16 +594,17 @@ const onContentClick = (e: MouseEvent) => {
     grid.classList.add('filtering');
     const leaving = cards.filter((c) => !c.hidden && !show(c));
     const entering = cards.filter((c) => c.hidden && show(c));
-    const finish = () => { grid.classList.remove('filtering'); gsap.set(cards, { clearProps: 'opacity,transform' }); };
+    // 'filtering' stays on so the CSS card-rise never replays over the cards.
+    const finish = () => { gsap.set(cards, { clearProps: 'opacity,transform' }); };
     filterTl = gsap.timeline({ onComplete: finish, onInterrupt: finish });
-    filterTl.to(leaving, { opacity: 0, scale: 0.96, duration: 0.25, ease: 'power2.out' });
+    filterTl.to(leaving, { opacity: 0, scale: 0.96, duration: 0.2, ease: 'power2.out' });
     filterTl.add(() => {
       const fs = Flip.getState(cards.filter((c) => !c.hidden && show(c)));
       leaving.forEach((c) => { c.hidden = true; });
       entering.forEach((c) => { c.hidden = false; gsap.set(c, { opacity: 0, y: 16 }); });
       gsap.set(cards, { clearProps: 'scale' });
       Flip.from(fs, { duration: 0.7, ease: 'power3.inOut', absolute: false });
-      gsap.to(entering, { opacity: 1, y: 0, duration: 0.6, delay: 0.3, ease: 'power3.out', stagger: 0.05 });
+      gsap.to(entering, { opacity: 1, y: 0, duration: 0.7, ease: 'power3.out' });
     });
     filterTl.to({}, { duration: 1 });
     return;
