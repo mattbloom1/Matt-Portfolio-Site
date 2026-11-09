@@ -350,13 +350,13 @@ function showContent(focus: boolean, swap = false) {
 }
 
 /* ---------- state transitions ---------- */
-function setHash(h: string) {
-  if (location.hash !== h) history.pushState(null, '', h || location.pathname);
+function setPath(path: string, mode: 'push' | 'replace' = 'push', state: unknown = null) {
+  if (location.pathname + location.hash !== path) history[mode === 'push' ? 'pushState' : 'replaceState'](state, '', path);
 }
 
 async function select(id: SectionId) {
   if (busy || id === active) return;
-  setHash(`#/${id}`);
+  setPath(routePath(id));
   if (state === 'nav') await navToPage(id);
   else await pageSwap(id);
 }
@@ -416,7 +416,7 @@ async function goHome(replay = true) {
   activeEl.focus({ preventScroll: true });
   Flip.from(flipState, { duration: T(0.9), ease: 'power3.inOut', stagger: reduce ? 0 : 0.04, absolute: false });
   document.title = HOME_TITLE;
-  setHash('#/');
+  setPath(routePath(null));
   if (!replay) { /* reserved */ }
   await new Promise((r) => setTimeout(r, T(1) * 1000));
   done();
@@ -440,9 +440,19 @@ function fanIn() {
 }
 
 /* ---------- routing ---------- */
-/** #/projects, or #/projects/gearbook for one open project. */
-function parseRoute(): { id: SectionId | null; slug: string | null } {
+/** Real URLs: /projects/ for a section, /projects/gearbook/ for one open project. */
+const BASE = process.env.NEXT_PUBLIC_BASE_PATH || '';
+const routePath = (id: SectionId | null, slug?: string | null) => `${BASE}/${id ? id + '/' : ''}${id && slug ? slug + '/' : ''}`;
+/** Old links used #/projects/gearbook; rewrite them to the real URL without adding a history entry. */
+function migrateHash() {
   const m = location.hash.match(/^#\/([a-z]+)(?:\/([a-z0-9-]+))?\/?$/);
+  if (m && SECTIONS.some((s) => s.id === m[1])) history.replaceState(history.state, '', routePath(m[1] as SectionId, m[2]));
+  else if (location.hash.startsWith('#/')) history.replaceState(history.state, '', routePath(null));
+}
+function parseRoute(): { id: SectionId | null; slug: string | null } {
+  migrateHash();
+  const path = location.pathname.slice(BASE.length);
+  const m = path.match(/^\/([a-z]+)(?:\/([a-z0-9-]+))?\/?$/);
   const id = m?.[1] as SectionId | undefined;
   return id && SECTIONS.some((s) => s.id === id) ? { id, slug: m![2] || null } : { id: null, slug: null };
 }
@@ -499,7 +509,7 @@ const onHome = () => goHome();
 const onHash = () => {
   if (busy) return; // done() re-syncs when a transition ends
   const { id, slug } = parseRoute();
-  if (location.hash && !id) history.replaceState(null, '', '#/');
+  if (!id && location.pathname.slice(BASE.length).replace(/\/$/, '')) history.replaceState(null, '', routePath(null));
   if (id === active) { if (id) syncDetail(slug); return; }
   enterInstant(id, slug);
 };
@@ -522,7 +532,7 @@ function setModal(on: boolean) {
   behind.forEach((e) => { if (e) e.inert = on; });
 }
 const sectionTitle = () => (active ? `${byId(active).label} · ${SITE.name}` : HOME_TITLE);
-const detailHash = (d: HTMLElement) => `#/${active}/${d.id.slice(2)}`;
+const detailHash = (d: HTMLElement) => routePath(active, d.id.slice(2));
 const hideDetail = () => {
   const d = openDetail();
   if (!d) return false;
@@ -552,11 +562,11 @@ function syncDetail(slug: string | null) {
   if (cur) hideDetail();
   if (d) showDetail(d);
 }
-// Each open project is its own history entry and its own URL (#/projects/gearbook), so back closes it and it can be shared.
+// Each open project is its own history entry and its own URL (/projects/gearbook/), so back closes it and it can be shared.
 const closeDetail = () => {
   if (!openDetail()) return false;
   if (history.state && history.state.detail) history.back();
-  else { hideDetail(); if (active) history.replaceState(null, '', `#/${active}`); }
+  else { hideDetail(); if (active) history.replaceState(null, '', routePath(active)); }
   return true;
 };
 const onPop = () => {
