@@ -13,7 +13,8 @@ export const SECTION_META: Record<SectionId, { label: string; description: strin
 
 export interface RouteInfo { path: string[]; title: string; description: string; image?: string }
 
-export function allRoutes(c: SiteContent): RouteInfo[] {
+export function allRoutes(all: SiteContent): RouteInfo[] {
+  const c = { ...all, projects: all.projects.filter((p) => !p.hidden), crafts: all.crafts.filter((k) => !k.hidden) };
   const out: RouteInfo[] = [{ path: [], title: `${SITE.name} · ${SITE.role}`, description: `Portfolio of ${SITE.name}, ${SITE.role}: projects, experience, crafts and photography.` }];
   (Object.keys(SECTION_META) as SectionId[]).forEach((id) => {
     const m = SECTION_META[id];
