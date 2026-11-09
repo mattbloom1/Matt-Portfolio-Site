@@ -134,10 +134,33 @@ export const SEED_PROJECTS: Project[] = [
     href: 'https://livpolani.com',
     linkLabel: 'Visit site',
   }),
-  ...['Le Reve', 'Casa Avenida', 'Trimble Business Systems'].map((t) => p(t, 'Branding')),
+  ...['Le Reve', 'Casa Avenida'].map((t) => p(t, 'Branding')),
+  p('Trimble Business Systems', 'Branding', {
+    role: 'Brand identity & intranet design',
+    year: 2025,
+    summary: 'The Business Systems team within Trimble’s Digital Transformation group took me on as an intern to rebrand their systems and clean up their intranet pages. The result was a full rebrand for the Business Systems team of 400+ Trimble employees, built in Adobe Illustrator in line with the Trimble brand playbook, plus branded content published through a CMS. Some of the work cannot be shared, so only the public pieces are shown here.',
+    heroImage: asset('/projects/trimble-business-systems/01.webp'),
+    images: ['02', '03', '01'].map((n) => asset(`/projects/trimble-business-systems/${n}.webp`)),
+  }),
   p('Opus', 'Branding', { summary: 'In progress.' }),
   p('Essays In Bloom', 'Branding', { summary: 'In progress.' }),
-  ...['CU Skate Forge', 'Bloom Coffee Table', 'Bloc CNC', 'Topomaps'].map((t) => p(t, 'Projects')),
+  p('CU Skate Forge', 'Projects', {
+    role: 'Founder & President',
+    year: 2023,
+    summary: 'A makers and skaters club at CU Boulder whose mission is to build skateboarding obstacles from sustainable materials and make skateboarding more accessible to students on campus. As founder and president I managed the budget, navigated university approvals and training, pitched the idea to administrators, police and fire officials, handled insurance, led marketing and tabling, and cold-called sponsors. I also ran the social accounts, designed the graphics, recruited members, and built ramps and a full-sized half-pipe. In its first year the club grew to 125+ members, 200+ people attended its campus events, and it gathered 8+ sponsors, including Red Bull, Yerba Mate, 303 Boards, Satellite Boardshop, Square State Skate and Loco Skateshop.',
+    heroImage: asset('/projects/cu-skate-forge/01.webp'),
+    images: ['02', '03', '04', '05', '06'].map((n) => asset(`/projects/cu-skate-forge/${n}.webp`)),
+    href: 'https://www.instagram.com/cuskateforge',
+    linkLabel: 'Instagram',
+  }),
+  p('Bloc CNC', 'Projects', {
+    role: 'Product designer & project manager',
+    year: 2025,
+    summary: 'A compact CNC machine for DIYers and makers, designed with a multidisciplinary team. It pairs gamified joystick controls with a sustainable enclosure. I led the CAD modeling, software integration and UX design, and wrote a user-friendly instructional workbook, the Bloc Innovation Guide.',
+    heroImage: asset('/projects/bloc-cnc/01.webp'),
+    images: ['02', '03', '04'].map((n) => asset(`/projects/bloc-cnc/${n}.webp`)),
+  }),
+  p('Topomaps', 'Projects'),
 ];
 
 const craftSlug = (t: string) => t.toLowerCase().replace(/[^a-z0-9]+/g, '-');
@@ -150,6 +173,17 @@ const SKATE_RING_FRAMES: { w: number; h: number; alt: string }[] = [
   { w: 1800, h: 1335, alt: 'Pencil sketches of ring shapes on grid paper' },
 ];
 export const SEED_CRAFTS: Craft[] = [
+  {
+    title: 'Bloom Coffee Table', slug: 'bloom-coffee-table', year: 2023,
+    summary: 'A modular folding table with a built-in lazy susan, made for everyday use and compact storage. The flower shape was inspired by Tyler, The Creator’s GOLF WANG flower. The tabletop was laser cut and jigsawed, the parts were 3D printed and prototyped, and the main challenge was engineering a stable folding leg mechanism.',
+    notes: 'University of Colorado Boulder. 3D modeling and physical fabrication.',
+    images: [
+      { src: asset('/crafts/bloom-coffee-table/03.webp'), alt: 'The flower tabletop with a black lazy susan tray holding a yellow boot planter', w: 500, h: 282 },
+      { src: asset('/crafts/bloom-coffee-table/04.webp'), alt: 'The table folding and unfolding on its legs', w: 500, h: 282 },
+      { src: asset('/crafts/bloom-coffee-table/01.webp'), alt: 'Three dark wooden legs beside the green flower tabletop, seen from below', w: 1600, h: 1143 },
+      { src: asset('/crafts/bloom-coffee-table/02.webp'), alt: 'The 3D printed leg mount with a yellow flower-shaped knob under the tabletop', w: 1600, h: 1142 },
+    ],
+  },
   { title: 'Pottery', slug: 'pottery' },
   {
     title: 'Skate Rings', slug: 'skate-rings', year: 2025,
