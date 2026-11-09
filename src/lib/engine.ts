@@ -45,6 +45,7 @@ const colWidth = () => Math.max(240, stage.clientWidth * 0.22);
 const restRotation = (id: SectionId) => (state === 'nav' ? tilt[id] : 0);
 const img = (id: SectionId) => `${process.env.NEXT_PUBLIC_BASE_PATH || ''}/stamps/${id}.webp`;
 const imgSmall = (id: SectionId) => `${process.env.NEXT_PUBLIC_BASE_PATH || ''}/stamps/${id}-600.webp`;
+const imgTiny = (id: SectionId) => `${process.env.NEXT_PUBLIC_BASE_PATH || ''}/stamps/${id}-300.webp`;
 /* ---------- close button (home): a hand-drawn-style X, matching the footer tool icons ---------- */
 function mountLogo() {
   homeBtn.innerHTML = '<svg class="x-icon" viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" aria-hidden="true"><path d="M5 5l14 14M19 5L5 19"/></svg>';
@@ -82,7 +83,7 @@ function buildStamps() {
     b.className = 'stamp';
     b.dataset.id = s.id;
     b.setAttribute('aria-label', s.label);
-    b.innerHTML = `<img src="${img(s.id)}" srcset="${imgSmall(s.id)} 600w, ${img(s.id)} 1000w" sizes="(max-width: 640px) 45vw, 24vw" alt="${s.alt}" width="${s.ratio >= 1 ? 1000 : 682}" height="${s.ratio >= 1 ? 682 : 1000}" draggable="false" /><span class="tag">${s.label}</span>`;
+    b.innerHTML = `<img src="${img(s.id)}" srcset="${imgTiny(s.id)} 300w, ${imgSmall(s.id)} 600w, ${img(s.id)} 1000w" sizes="(max-width: 640px) 45vw, 24vw" alt="${s.alt}" width="${s.ratio >= 1 ? 1000 : 682}" height="${s.ratio >= 1 ? 682 : 1000}" draggable="false" /><span class="tag">${s.label}</span>`;
     b.addEventListener('click', () => { if (!justDragged) select(s.id); });
     b.addEventListener('pointermove', (e) => { if (!dragging) nudge(b, s.id, e.clientX, e.clientY); });
     enableDrag(b, s.id);

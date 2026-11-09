@@ -1,4 +1,5 @@
 import { urlFor } from './sanity';
+import variants from './variants.json';
 import { SEED_PHOTOGRAPHY, PROFILE_PHOTO, BIO_SHORT, EDUCATION, FUN_NOTE, SEED_CRAFTS, SEED_EXPERIENCE, SEED_POSTERS, SEED_PROJECTS } from './seed';
 
 export type SectionId = 'work' | 'posters' | 'experience' | 'about' | 'photography';
@@ -95,6 +96,16 @@ export interface SiteContent {
 }
 
 const base = process.env.NEXT_PUBLIC_BASE_PATH || '';
+/** Smaller WebP variants made by scripts/make-variants.mjs (prebuild). Keys are paths without the base path. */
+const VARIANTS = variants as Record<string, { w: number; v: number[] }>;
+/** srcset + sizes for an image that has generated variants; empty when it has none. */
+export function srcsetFor(src: string, sizes: string): string {
+  const key = src.startsWith(base) ? src.slice(base.length) : src;
+  const m = VARIANTS[key];
+  if (!m || !m.v.length) return '';
+  const set = [...m.v.map((w) => `${esc(encodeURI(src.replace(/\.webp$/, `-${w}.webp`)))} ${w}w`), `${esc(encodeURI(src))} ${m.w}w`];
+  return ` srcset="${set.join(', ')}" sizes="${sizes}"`;
+}
 const accents = ['#c4b268', '#c9a0a0', '#8fb3c9', '#7fbf7a', '#a9c0bf'];
 
 /** Matt's supplied content (src/lib/seed.ts); used until Sanity has entries. */
@@ -117,7 +128,7 @@ const dates = (e: Experience) => [e.startDate, e.endDate].filter(Boolean).join('
 function stackHtml(p: Project) {
   const rows = STACK_GROUPS.filter((g) => (p.stack?.[g] || []).length)
     .map((g) => `<div class="stack-row"><dt>${esc(g)}</dt><dd>${(p.stack![g] || []).map((t) => `<span class="chip">${esc(t)}</span>`).join('')}</dd></div>`).join('');
-  return rows ? `<dl class="stack" aria-label="Tech stack"><p class="meta">Built with</p>${rows}</dl>` : '';
+  return rows ? `<div class="stack"><p class="meta">Built with</p><dl aria-label="Tech stack">${rows}</dl></div>` : '';
 }
 /** Black or white text, whichever reads better on a #rrggbb swatch. */
 const inkOn = (hex: string) => { const h = hex.replace('#', ''); const f = h.length === 3 ? h.replace(/./g, '$&$&') : h; const [r, g, b] = [0, 2, 4].map((i) => parseInt(f.slice(i, i + 2), 16) || 0); return (r * 299 + g * 587 + b * 114) / 1000 > 140 ? '#111' : '#fff'; };
@@ -154,7 +165,7 @@ function workViews(items: Project[], noun: string, defaultMeta: string) {
   const cardCover = (p: Project) => safeUrl(p.cover || p.heroImage);
   const card = (p: Project, i: number) => `
     <button type="button" class="card${cardCover(p) ? '' : ' no-img'}" data-detail="d-${esc(p.slug)}" data-tag="${esc(tagOf(p))}" data-tags="${esc(allTags(p).join("|"))}">
-      <span class="card-img${cardCover(p) ? ' has-img' : ''}" style="--c:${safeColor(p.accent) || accents[i % accents.length]}">${cardCover(p) ? `<img class="card-photo" src="${esc(encodeURI(cardCover(p)))}" alt="" loading="lazy" decoding="async">` : ''}</span>
+      <span class="card-img${cardCover(p) ? ' has-img' : ''}" style="--c:${safeColor(p.accent) || accents[i % accents.length]}">${cardCover(p) ? `<img class="card-photo" src="${esc(encodeURI(cardCover(p)))}"${srcsetFor(cardCover(p), '(max-width: 640px) 50vw, (max-width: 899px) 33vw, 26vw')} alt="" loading="lazy" decoding="async">` : ''}</span>
       <span class="card-over"><span class="card-name">${esc(p.title)}</span><span class="card-sub">${esc([p.role, p.year].filter(Boolean).join(' · '))}</span></span>
     </button>`;
   const siblings = (_p: Project) => c.projects;
@@ -228,8 +239,8 @@ function photographyHtml(c: SiteContent) {
       // 800px variant for small slots (pairs, phones); the full file is used when the slot is wide or the screen is dense.
       const full = encodeURI(safeUrl(f.image));
       const single = idx % 3 === 2 || (idx === frames.length - 1 && idx % 3 === 0);
-      const srcset = /\/photography\/.+\.webp$/.test(full) ? ` srcset="${esc(full.replace(/\.webp$/, '-400.webp'))} 400w, ${esc(full.replace(/\.webp$/, '-800.webp'))} 800w, ${esc(full)} ${f.w || 1600}w" sizes="${single ? '(max-width: 560px) 100vw, 700px' : '(max-width: 560px) 50vw, 400px'}"` : '';
-      return `<figure class="gimg"><img src="${esc(full)}"${srcset} alt="${esc(f.alt || `${s.title} film roll`)}"${f.w && f.h ? ` width="${f.w}" height="${f.h}"` : ''} loading="lazy" decoding="async"></figure>`;
+      const srcset = /\/photography\/.+\.webp$/.test(full) ? ` srcset="${esc(full.replace(/\.webp$/, '-400.webp'))} 400w, ${esc(full.replace(/\.webp$/, '-800.webp'))} 800w, ${esc(full)} ${f.w || 1600}w" sizes="${single ? '(max-width: 899px) 100vw, 68vw' : '(max-width: 899px) 48vw, 34vw'}"` : '';
+      return `<figure class="gimg"><img src="${esc(full)}"${srcset} alt="${esc(f.alt || `${s.title} film roll`)}" tabindex="0" role="button"${f.w && f.h ? ` width="${f.w}" height="${f.h}"` : ''} loading="lazy" decoding="async"></figure>`;
     }).join('');
     return `<section class="roll" id="roll-${esc(s.slug)}"><h2 class="series">${esc(s.title)}${s.year ? ` <span class="series-year">${s.year}</span>` : ''}</h2>${s.summary ? `<p>${esc(s.summary)}</p>` : ''}<div class="detail-gallery roll-gallery">${imgs}</div></section>`;
   }).join('');
@@ -243,7 +254,7 @@ function photographyHtml(c: SiteContent) {
   return `${series}${c.placeholder.photography ? todo('Placeholder. Photography content has not been supplied.') : ''}${strip}`;
 }
 function postersHtml(c: SiteContent) {
-  return c.posters.map((set) => `<section class="roll"><h2 class="series">${esc(set.title)}</h2><div class="detail-gallery poster-gallery">${set.items.filter((i) => safeUrl(i.src)).map((i) => `<figure class="gimg"><img src="${esc(encodeURI(safeUrl(i.src)))}" alt="${esc(i.alt)}" width="${i.w}" height="${i.h}" loading="lazy" decoding="async"></figure>`).join('')}</div></section>`).join('');
+  return c.posters.map((set) => `<section class="roll"><h2 class="series">${esc(set.title)}</h2><div class="detail-gallery poster-gallery">${set.items.filter((i) => safeUrl(i.src)).map((i) => `<figure class="gimg"><img src="${esc(encodeURI(safeUrl(i.src)))}" alt="${esc(i.alt)}" width="${i.w}" height="${i.h}" tabindex="0" role="button" loading="lazy" decoding="async"></figure>`).join('')}</div></section>`).join('');
 }
 function aboutHtml() {
   const links = SITE.links.map((l) => `<li><a href="${l.href}" target="_blank" rel="noopener">${l.label}</a></li>`).join('');
@@ -252,7 +263,7 @@ function aboutHtml() {
     ${paras(BIO_SHORT)}</div></div>
     <p class="fun">${esc(FUN_NOTE)}</p>
     <section class="contact"><p class="meta letter-label">Write me a letter</p>
-    <div class="letter"><form class="letter-form"><div class="sheet">
+    <div class="letter"><form class="letter-form" novalidate><div class="sheet">
       <label>Your name<input name="name" type="text" required maxlength="100" autocomplete="name"></label>
       <label>Your email<input name="email" type="email" required maxlength="200" autocomplete="email"></label>
       <label>Message<textarea name="message" required minlength="2" maxlength="5000" rows="6"></textarea></label>

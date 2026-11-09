@@ -35,8 +35,9 @@ export default function Portfolio({ content }: { content: SiteContent }) {
       <div className="grain" aria-hidden="true" />
       <div className="bg" id="bg" aria-hidden="true" />
       <canvas ref={canvasRef} className="drawing" aria-hidden="true" />
-      <h1 className="sr-only">Matthew Bloomfield, Creative Technologist &amp; Designer</h1>
       <main id="stage" className="stage" data-state="nav">
+        {/* Home has no visible heading; sections bring their own h1, so this one hides there (CSS). */}
+        <h1 className="sr-only site-h1">Matthew Bloomfield, Creative Technologist &amp; Designer</h1>
         <p className="tagline">I design and build things people use,<br /><span>in software, hardware and infrastructure.</span></p>
         <nav id="stamps" className="stamps" aria-label="Sections" />
         <button className="home" id="home" type="button" aria-label="Home" hidden />

@@ -86,7 +86,13 @@ export function initLetter(root: HTMLElement): () => void {
     e.preventDefault();
     if (busy) return;
     if (Date.now() < cool) { say('Give it a minute before sending another.'); return; }
-    if (!form.reportValidity()) return;
+    if (!form.checkValidity()) {
+      const bad = form.querySelector<HTMLInputElement | HTMLTextAreaElement>(':invalid');
+      const field = bad?.closest('label')?.firstChild?.textContent?.trim().toLowerCase() || 'a field';
+      say(bad?.validity.valueMissing ? `Please fill in ${field}.` : bad?.validity.typeMismatch ? 'That email address does not look right.' : `Please check ${field}.`);
+      bad?.focus();
+      return;
+    }
     const fd = new FormData(form); // read before the fields are disabled
     busy = true; say('');
     form.querySelectorAll<HTMLElement>('input,textarea,button').forEach((el) => ((el as HTMLInputElement).disabled = true));

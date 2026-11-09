@@ -63,7 +63,12 @@ export function initLightbox(): () => void {
     if (root.hidden && t instanceof HTMLImageElement && t.closest('#content .roll-gallery, #content .poster-gallery')) open(t);
   };
   const onKey = (e: KeyboardEvent) => {
-    if (root.hidden) return;
+    if (root.hidden) {
+      // Enter or Space on a focused gallery image opens it, like a button.
+      const t = document.activeElement;
+      if ((e.key === 'Enter' || e.key === ' ') && t instanceof HTMLImageElement && t.closest('#content .roll-gallery, #content .poster-gallery')) { e.preventDefault(); open(t); }
+      return;
+    }
     if (e.key === 'Escape') { e.preventDefault(); e.stopImmediatePropagation(); close(); }
     else if (e.key === 'ArrowRight') { e.preventDefault(); show(i + 1); }
     else if (e.key === 'ArrowLeft') { e.preventDefault(); show(i - 1); }

@@ -42,7 +42,7 @@
       ]
     },
     {
-      "source": "/(stamps|photography|projects|crafts|websites|posters|about|ignite|logo)/(.*)\\.(webp|jpg|jpeg|png|gif|svg|mp4|json|woff2)",
+      "source": "/(stamps|photography|projects|crafts|websites|posters|about|ignite|logo|resume)/(.*)\\.(webp|jpg|jpeg|png|gif|svg|mp4|json|woff2|pdf)",
       "headers": [
         {
           "key": "Cache-Control",

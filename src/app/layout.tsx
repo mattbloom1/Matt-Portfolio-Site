@@ -3,6 +3,7 @@ import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import { display, body, mono, footer } from './fonts';
 import './globals.css';
+import { OG_IMAGE } from '@/lib/og';
 
 const DESCRIPTION = 'Portfolio of Matthew Bloomfield, Creative Technologist & Designer: websites, projects, posters, experience, crafts and photography.';
 export const metadata: Metadata = {
@@ -10,8 +11,8 @@ export const metadata: Metadata = {
   title: 'Matthew Bloomfield · Creative Technologist & Designer',
   description: DESCRIPTION,
   alternates: { canonical: '/' },
-  openGraph: { title: 'Matthew Bloomfield · Creative Technologist & Designer', description: DESCRIPTION, url: '/', siteName: 'Matthew Bloomfield', type: 'website' },
-  twitter: { card: 'summary_large_image', title: 'Matthew Bloomfield · Creative Technologist & Designer', description: DESCRIPTION },
+  openGraph: { title: 'Matthew Bloomfield · Creative Technologist & Designer', description: DESCRIPTION, url: '/', siteName: 'Matthew Bloomfield', type: 'website', images: [OG_IMAGE] },
+  twitter: { card: 'summary_large_image', title: 'Matthew Bloomfield · Creative Technologist & Designer', description: DESCRIPTION, images: [OG_IMAGE] },
 };
 export const viewport: Viewport = { width: 'device-width', initialScale: 1, themeColor: '#ece9e2' };
 

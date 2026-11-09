@@ -3,6 +3,7 @@ import Portfolio from '@/components/Portfolio';
 import { getContent } from '@/lib/getContent';
 import { allRoutes } from '@/lib/routes';
 import { outlineHtml } from '@/lib/content';
+import { OG_IMAGE } from '@/lib/og';
 
 export const dynamicParams = false;
 
@@ -19,8 +20,8 @@ export async function generateMetadata({ params }: { params: { route?: string[] 
     title: r.title,
     description: r.description,
     alternates: { canonical: url },
-    openGraph: { title: r.title, description: r.description, url, type: 'website' },
-    twitter: { title: r.title, description: r.description },
+    openGraph: { title: r.title, description: r.description, url, type: 'website', images: [OG_IMAGE] },
+    twitter: { card: 'summary_large_image', title: r.title, description: r.description, images: [OG_IMAGE] },
   };
 }
 

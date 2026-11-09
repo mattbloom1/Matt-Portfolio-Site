@@ -129,7 +129,7 @@ body {
 .bubble #send-bubble::after { content: '\258f'; opacity: .6; animation: blink .8s steps(1) infinite; }
 @keyframes blink { 50% { opacity: 0; } }
 .send-wrap:hover .bubble, .send-wrap:focus-within .bubble, .send-wrap.show .bubble, .bubble.show { opacity: 1; transform: translate(-50%, 0); }
-.footer a { color: inherit; text-underline-offset: 3px; }
+.footer a { color: inherit; text-underline-offset: 3px; display: inline-flex; align-items: center; min-height: 28px; }
 .foot-left, .foot-right { display: flex; align-items: center; gap: 14px; min-width: 0; }
 .micro { display: inline-flex; align-items: center; gap: 8px; }
 .micro svg { height: 22px; width: auto; display: block; }
@@ -227,8 +227,8 @@ body:has(#stage[data-state='page']) .draw-hint { opacity: 0; pointer-events: non
 @media (min-width: 900px) {
   .stage[data-state='page'] .content { inset: 0; }
   .stage[data-state='page'] .panel { display: grid; grid-template-columns: minmax(240px, 22%) minmax(0, 1fr); }
-  .stage[data-state='page'] .panel-head { position: sticky; top: 0; align-self: start; height: 100vh; height: 100dvh; background: var(--ink); color: var(--paper); padding: clamp(24px, 2.4vw, 44px); display: flex; flex-direction: column; justify-content: flex-end; }
-  .stage[data-state='page'] .panel h1 { font-size: clamp(36px, 4vw, 72px); margin: 12px 0 0; overflow-wrap: break-word; }
+  .stage[data-state='page'] .panel-head { container-type: inline-size; position: sticky; top: 0; align-self: start; height: 100vh; height: 100dvh; background: var(--ink); color: var(--paper); padding: clamp(24px, 2.4vw, 44px); display: flex; flex-direction: column; justify-content: flex-end; }
+  .stage[data-state='page'] .panel h1 { font-size: clamp(30px, 17cqi, 72px); margin: 12px 0 0; overflow-wrap: normal; }
   .stage[data-state='page'] .panel-body { padding: clamp(28px, 4vw, 64px) clamp(24px, 5vw, 88px) 72px; }
   .stage[data-state='page'] .home { top: 20px; right: 28px; }
   .stage[data-state='page'] .stamp .tag { color: var(--paper); }
@@ -270,12 +270,13 @@ body:has(#stage[data-state='page']) .draw-hint { opacity: 0; pointer-events: non
 .detail-text h2 { font: 500 clamp(36px, 4.5vw, 64px)/1.05 var(--serif); margin: 10px 0 12px; outline: none; }
 .detail-sum { font: 400 22px/1.4 var(--serif); margin: 24px 0; }
 .stack { margin: 28px 0; display: grid; gap: 10px; }
+.stack dl { margin: 0; display: grid; gap: 10px; }
 .stack .meta { margin: 0 0 4px; }
 .stack-row { display: grid; grid-template-columns: 110px 1fr; gap: 12px; align-items: baseline; border-top: 1px solid color-mix(in srgb, var(--ink) 18%, transparent); padding-top: 10px; }
 .stack dt { font: 500 14px var(--mono); letter-spacing: .14em; text-transform: lowercase; opacity: .65; }
 .stack dd { margin: 0; display: flex; flex-wrap: wrap; gap: 6px; }
 .chip { font: 500 16px var(--mono); border: 1px solid var(--ink); border-radius: 999px; padding: 4px 10px; }
-.detail-links a { color: inherit; text-underline-offset: 3px; }
+.detail-links a { color: inherit; text-underline-offset: 3px; display: inline-block; padding-block: 8px; margin-block: -8px; }
 .detail-gallery { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(16px, 2vw, 28px); max-width: 1400px; margin: 0 auto; padding: 0 clamp(20px, 4vw, 64px) 160px; }
 .detail-gallery .gimg { margin: 0; }
 .detail-gallery img { width: 100%; height: auto; display: block; }
@@ -578,7 +579,7 @@ html, body, .panel, .footer { transition: background-color .5s ease, color .5s e
 /* Letter contact form (About) */
 .contact { margin-top: 44px; max-width: 560px; }
 .letter { position: relative; perspective: 1400px; }
-.sheet { background-color: #f3f0e9; border: 1px solid var(--ink); padding: 22px 22px 24px; box-shadow: 3px 4px 0 rgba(20,20,20,.12);
+.sheet { --ink: #15171c; --paper: #f3f0e9; color: var(--ink); background-color: #f3f0e9; border: 1px solid var(--ink); padding: 22px 22px 24px; box-shadow: 3px 4px 0 rgba(20,20,20,.12);
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='p'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.045 .6' numOctaves='3' seed='3'/%3E%3CfeColorMatrix values='0 0 0 0 .45 0 0 0 0 .4 0 0 0 0 .33 0 0 0 .1 0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23p)'/%3E%3C/svg%3E"), url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='f'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .3 0 0 0 0 .28 0 0 0 0 .25 0 0 0 .22 0'/%3E%3C/filter%3E%3Crect width='220' height='220' filter='url(%23f)'/%3E%3C/svg%3E"); }
 .sheet label { display: block; font: 500 16px var(--mono); letter-spacing: .12em; text-transform: lowercase; margin-bottom: 14px; }
 .sheet input:not(.hp), .sheet textarea { display: block; width: 100%; margin-top: 4px; font: 400 18px/1.5 var(--body); color: var(--ink); background: transparent; border: 0; border-bottom: 1px solid var(--ink); padding: 6px 2px; border-radius: 0; resize: vertical; }
@@ -654,3 +655,16 @@ html, body, .panel, .footer { transition: background-color .5s ease, color .5s e
 .stage:not([data-state='nav']) .tagline { opacity: 0; }
 @media (max-width: 640px) { .tagline { top: 16px; font-size: 16px; line-height: 1.4; } }
 .cards.filtering .card { animation: none !important; }
+
+/* Section pages bring their own h1, so the site-wide one steps out of the way (display: none also hides it from readers). */
+.stage[data-state='page'] .site-h1 { display: none; }
+/* Gallery images open a viewer: they are focusable and act like buttons. */
+.roll-gallery img, .poster-gallery img { cursor: zoom-in; }
+.roll-gallery img:focus-visible, .poster-gallery img:focus-visible { outline: 3px solid var(--ink); outline-offset: 3px; }
+/* Links on phones get a taller tap area without moving the layout. */
+@media (max-width: 899px) { .detail-links a { padding-block: 12px; margin-block: -12px; } }
+/* 404 page */
+.nf { min-height: 100dvh; display: grid; align-content: center; justify-items: start; gap: 14px; padding: 40px clamp(24px, 6vw, 96px); max-width: 720px; }
+.nf h1 { font: 400 clamp(34px, 5vw, 64px)/1.05 var(--serif); margin: 0; }
+.nf p { margin: 0; }
+.nf a { color: inherit; text-underline-offset: 4px; display: inline-flex; align-items: center; min-height: 44px; }
