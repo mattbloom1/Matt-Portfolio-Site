@@ -1,6 +1,26 @@
 {
   "redirects": [
     {
+      "source": "/:sec(work|projects|websites|crafts)/the-gvc-team(/)?",
+      "destination": "/work/gvc-team/",
+      "permanent": true
+    },
+    {
+      "source": "/:sec(work|projects|websites|crafts)/trimble-business-systems(/)?",
+      "destination": "/work/trimble/",
+      "permanent": true
+    },
+    {
+      "source": "/:sec(work|projects|websites|crafts)/pictorial-symbols-library(/)?",
+      "destination": "/work/pictorial-symbols/",
+      "permanent": true
+    },
+    {
+      "source": "/:sec(work|projects|websites|crafts)/client-portfolio-site(/)?",
+      "destination": "/work/client-portfolio/",
+      "permanent": true
+    },
+    {
       "source": "/:sec(projects|websites|crafts)(/)?",
       "destination": "/work/",
       "permanent": true
