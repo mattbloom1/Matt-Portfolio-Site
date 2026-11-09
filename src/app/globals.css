@@ -574,7 +574,12 @@ html, body, .panel, .footer { transition: background-color .5s ease, color .5s e
 .resume-head { display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 8px 20px; }
 .resume-head span { display: flex; gap: 20px; flex-wrap: wrap; }
 .resume-head a { color: inherit; text-underline-offset: 3px; min-height: 44px; display: inline-flex; align-items: center; }
-.resume-frame { display: block; width: 100%; height: min(82vh, 1000px); border: 1px solid var(--ink); background: #fff; margin-top: 8px; }
+/* The two resume pages sit on the desk like sheets of paper; each one opens the PDF. */
+.resume-pages { display: grid; gap: clamp(20px, 3vw, 36px); max-width: 820px; margin-top: 16px; }
+.resume-page { display: block; }
+.resume-page img { display: block; width: 100%; height: auto; background: #fff; border: 1px solid color-mix(in srgb, var(--ink) 30%, transparent); box-shadow: 3px 4px 0 rgba(20,20,20,.12); transition: transform .4s cubic-bezier(.2,.7,.2,1), box-shadow .4s; }
+.resume-page:hover img, .resume-page:focus-visible img { transform: translate(-1px, -2px); box-shadow: 5px 7px 0 rgba(20,20,20,.14); }
+.resume-page:focus-visible { outline: 3px solid var(--ink); outline-offset: 4px; }
 
 /* Letter contact form (About) */
 .contact { margin-top: 44px; max-width: 560px; }

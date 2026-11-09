@@ -17,7 +17,9 @@ export interface Section {
 }
 
 /** Resume PDF, generated from scripts/resume/resume.html (see README there). */
-export const RESUME_PDF = `${process.env.NEXT_PUBLIC_BASE_PATH || ''}/resume/Matthew-Bloomfield-Resume.pdf`;
+const RESUME_DIR = `${process.env.NEXT_PUBLIC_BASE_PATH || ''}/resume`;
+export const RESUME_PDF = `${RESUME_DIR}/Matthew-Bloomfield-Resume.pdf`;
+/** The two pages are also rendered to WebP (scripts/resume/README.md) so the embed works everywhere, phones included. */
 
 export const SITE = {
   name: 'Matthew Bloomfield',
@@ -228,7 +230,7 @@ function experienceHtml(c: SiteContent) {
       : `<li>${head}</li>`;
   }).join('');
   const edu = `<p class="meta">Education</p><p><strong>${esc(EDUCATION.school)}</strong>, ${esc(EDUCATION.year)}<br>${esc(EDUCATION.detail)}</p>`;
-  const resume = `<section class="resume"><div class="resume-head"><p class="meta">Resume</p><span><a href="${RESUME_PDF}" download>Download PDF</a><a href="${RESUME_PDF}" target="_blank" rel="noopener">Open full size</a></span></div><iframe class="resume-frame" src="${RESUME_PDF}#toolbar=0&navpanes=0&view=FitH" title="Matthew Bloomfield resume (PDF)" loading="lazy"></iframe></section>`;
+  const resume = `<section class="resume"><div class="resume-head"><p class="meta">Resume</p><span><a href="${RESUME_PDF}" download>Download PDF</a><a href="${RESUME_PDF}" target="_blank" rel="noopener">Open full size</a></span></div><div class="resume-pages">${[1, 2].map((n) => `<a class="resume-page" href="${RESUME_PDF}#page=${n}" target="_blank" rel="noopener"><img src="${RESUME_DIR}/page-${n}.webp" srcset="${RESUME_DIR}/page-${n}-900.webp 900w, ${RESUME_DIR}/page-${n}.webp 1700w" sizes="(max-width: 899px) 100vw, min(60vw, 820px)" width="1700" height="2200" alt="Resume page ${n} of 2, opens the PDF" loading="lazy" decoding="async"></a>`).join('')}</div></section>`;
   return `<ol class="timeline">${items}</ol>${edu}${resume}${c.placeholder.experience ? todo('Placeholder timeline. Experience content has not been supplied.') : ''}`;
 }
 function photographyHtml(c: SiteContent) {
