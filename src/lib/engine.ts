@@ -343,11 +343,11 @@ function showContent(focus: boolean, swap = false) {
   if (swap) {
     // Section to section: the page frame stays put, only the body fades in, so the background never shows through.
     const body = contentEl.querySelector('.panel-body');
-    if (body) gsap.fromTo(body, { opacity: 0 }, { opacity: 1, duration: T(0.4), ease: 'power1.out' });
+    if (body) gsap.fromTo(body, { opacity: 0, y: 12 }, { opacity: 1, y: 0, duration: T(0.6), ease: 'power3.out', clearProps: 'transform' });
     if (focus) (contentEl.querySelector('h1') as HTMLElement | null)?.focus({ preventScroll: true });
     return;
   }
-  gsap.fromTo(contentEl, { opacity: 0, y: 18 }, { opacity: 1, y: 0, duration: T(0.6), ease: 'power2.out', onComplete: () => { gsap.set(contentEl, { clearProps: 'transform' }); } });
+  gsap.fromTo(contentEl, { opacity: 0, y: 18 }, { opacity: 1, y: 0, duration: T(0.8), ease: 'power3.out', onComplete: () => { gsap.set(contentEl, { clearProps: 'transform' }); } });
   if (focus) (contentEl.querySelector('h1') as HTMLElement | null)?.focus({ preventScroll: true });
 }
 
