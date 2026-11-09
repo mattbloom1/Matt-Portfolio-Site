@@ -51,33 +51,35 @@ export function initLetter(root: HTMLElement): () => void {
     box.appendChild(fold);
     sheet!.style.visibility = 'hidden';
     const o = { duration: 650, easing: EASE, fill: 'forwards' as const };
-    const flip = (i: number, origin: string, from: number) => {
+    const flip = (i: number, origin: string, deg: number) => {
       const { p, c } = panels[i];
       p.style.transformOrigin = origin; p.style.zIndex = '2';
       c.animate([{ opacity: 1 }, { opacity: 1, offset: .49 }, { opacity: 0, offset: .5 }, { opacity: 0 }], o);
-      return p.animate([{ transform: 'rotateX(0)' }, { transform: `rotateX(${from}deg)` }], o).finished;
+      return p.animate([{ transform: 'rotateX(0)' }, { transform: `rotateX(${deg}deg)` }], o).finished;
     };
     await flip(2, 'top', 180);           // bottom third folds up
-    panels[2].p.style.background = 'var(--paper)';
     await flip(0, 'bottom', -180);       // top third folds down over it
-    // folded letter: shrink to envelope size
-    const env = fold.animate([{ transform: 'scale(1)' }, { transform: `scale(${Math.min(1, 300 / W)})` }], { duration: 450, easing: EASE, fill: 'forwards' });
-    await env.finished;
-    // stamp drops on the top right corner
+    // Swap the three panels for one flat folded letter (the middle third) so the stamp can sit on it without 3D stacking or clipping.
+    const env = document.createElement('div');
+    env.className = 'envelope';
+    env.style.cssText = `left:0;top:${t}px;width:${W}px;height:${t}px;`;
+    box.appendChild(env);
+    fold.remove();
+    await env.animate([{ transform: 'scale(1)' }, { transform: `scale(${Math.min(1, 320 / W)})` }], { duration: 450, easing: EASE, fill: 'forwards' }).finished;
+    // stamp drops onto the top right corner of the folded letter
     const stamp = document.createElement('img');
     stamp.className = 'letter-stamp'; stamp.src = STAMP; stamp.alt = ''; stamp.setAttribute('aria-hidden', 'true');
     const mark = document.createElement('div'); mark.className = 'letter-mark'; mark.setAttribute('aria-hidden', 'true');
-    stamp.style.top = `${t + 8}px`; mark.style.top = `${t + 12}px`; // sits on the folded letter (the middle third)
-    fold.appendChild(stamp); fold.appendChild(mark);
-    await stamp.animate([{ transform: 'translateY(-90px) scale(1.7) rotate(-14deg)', opacity: 0 }, { transform: 'translateY(0) scale(1) rotate(4deg)', opacity: 1 }], { duration: 380, easing: 'cubic-bezier(.5,0,1,.6)', fill: 'forwards' }).finished;
-    fold.animate([{ transform: 'scale(.985)' }, { transform: 'scale(1)' }], { duration: 160 }); // thud
-    mark.animate([{ opacity: 0, transform: 'scale(1.6) rotate(-20deg)' }, { opacity: .55, transform: 'scale(1) rotate(-8deg)' }], { duration: 260, fill: 'forwards' });
+    env.appendChild(mark); env.appendChild(stamp);
+    await stamp.animate([{ transform: 'translateY(-60px) scale(1.6) rotate(-12deg)', opacity: 0 }, { transform: 'translateY(0) scale(1) rotate(3deg)', opacity: 1 }], { duration: 340, easing: 'cubic-bezier(.5,0,1,.6)', fill: 'forwards' }).finished;
+    env.animate([{ transform: `scale(${Math.min(1, 320 / W) * .97})` }, { transform: `scale(${Math.min(1, 320 / W)})` }], { duration: 160 }); // thud
+    mark.animate([{ opacity: 0, transform: 'scale(1.5) rotate(-18deg)' }, { opacity: .5, transform: 'scale(1) rotate(-6deg)' }], { duration: 240, fill: 'forwards' });
     await wait(550);
     // off it goes
     const gone = box.animate([{ transform: 'none', opacity: 1 }, { transform: 'translate(40%, -60px) rotate(8deg) scale(.7)', opacity: 0 }], { duration: 650, easing: 'cubic-bezier(.5,0,1,.5)', fill: 'forwards' });
     await gone.finished;
     gone.cancel();
-    fold.remove();
+    env.remove();
   }
 
   const onSubmit = async (e: Event) => {
@@ -96,7 +98,7 @@ export function initLetter(root: HTMLElement): () => void {
       cool = Date.now() + 60000;
       form.reset();
       box.classList.add('sent');
-      say('Sent. Thank you, I will write back soon.');
+      say('');
       const again = root.querySelector<HTMLButtonElement>('.letter-again');
       again?.focus();
     }

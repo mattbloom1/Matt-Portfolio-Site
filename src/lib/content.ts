@@ -248,15 +248,17 @@ function aboutHtml() {
   return `<div class="about-top"><img class="portrait" src="${esc(PROFILE_PHOTO.src)}" srcset="${esc(PROFILE_PHOTO.src.replace(/\.webp$/, '-800.webp'))} 800w, ${esc(PROFILE_PHOTO.src)} 1600w" sizes="(max-width: 760px) 100vw, 45vw" alt="${esc(PROFILE_PHOTO.alt)}" width="1600" height="1061" loading="lazy" decoding="async" /><div><p class="lead">${esc(SITE.role)}.</p>
     ${paras(BIO_SHORT)}</div></div>
     <p class="fun">${esc(FUN_NOTE)}</p>
-    <section class="contact"><p class="meta">Write me a letter</p>
+    <section class="contact"><p class="meta letter-label">Write me a letter</p>
     <div class="letter"><form class="letter-form"><div class="sheet">
       <label>Your name<input name="name" type="text" required maxlength="100" autocomplete="name"></label>
       <label>Your email<input name="email" type="email" required maxlength="200" autocomplete="email"></label>
       <label>Message<textarea name="message" required minlength="2" maxlength="5000" rows="6"></textarea></label>
       <input class="hp" name="website" type="text" tabindex="-1" autocomplete="off" aria-hidden="true">
-      <button type="submit" class="letter-send">Fold, stamp and send</button>
+      <button type="submit" class="letter-send">Send</button>
     </div></form>
-    <div class="letter-done"><p>Your letter is on its way.</p><button type="button" class="letter-again">Write another</button></div></div>
+    <div class="letter-done"><p>Your letter is on its way.</p><button type="button" class="letter-again">Write another</button>
+    <svg class="letter-trail" viewBox="0 0 520 220" aria-hidden="true" focusable="false"><defs><filter id="blot" x="-5%" y="-5%" width="110%" height="110%"><feTurbulence type="fractalNoise" baseFrequency="0.07" numOctaves="2" seed="7" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="2.5"/></filter></defs>
+      <g filter="url(#blot)" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path class="trail" pathLength="100" d="M6 150 C 60 160, 110 120, 150 90 C 190 60, 250 40, 280 80 C 305 115, 262 150, 232 128 C 205 105, 255 62, 330 74 C 400 85, 440 100, 496 70"/><path class="head" d="M470 52 L498 68 L476 92"/></g></svg></div></div>
     <p class="letter-status" role="status" aria-live="polite"></p></section>
     <p class="meta">Elsewhere</p><ul class="links">${links}<li><a href="mailto:${SITE.email}">${SITE.email}</a></li></ul>`;
 }

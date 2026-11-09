@@ -576,25 +576,37 @@ html, body, .panel, .footer { transition: background-color .5s ease, color .5s e
 /* Letter contact form (About) */
 .contact { margin-top: 44px; max-width: 560px; }
 .letter { position: relative; perspective: 1400px; }
-.sheet { background: #f6f3ec; border: 1px solid var(--ink); padding: 22px 22px 24px; box-shadow: 3px 4px 0 rgba(20,20,20,.12); background-image: repeating-linear-gradient(transparent 0 31px, rgba(20,20,20,.07) 31px 32px); }
+.sheet { background-color: #f3f0e9; border: 1px solid var(--ink); padding: 22px 22px 24px; box-shadow: 3px 4px 0 rgba(20,20,20,.12);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='p'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.045 .6' numOctaves='3' seed='3'/%3E%3CfeColorMatrix values='0 0 0 0 .45 0 0 0 0 .4 0 0 0 0 .33 0 0 0 .1 0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23p)'/%3E%3C/svg%3E"), url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='f'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .3 0 0 0 0 .28 0 0 0 0 .25 0 0 0 .22 0'/%3E%3C/filter%3E%3Crect width='220' height='220' filter='url(%23f)'/%3E%3C/svg%3E"); }
 .sheet label { display: block; font: 500 16px var(--mono); letter-spacing: .12em; text-transform: lowercase; margin-bottom: 14px; }
 .sheet input:not(.hp), .sheet textarea { display: block; width: 100%; margin-top: 4px; font: 400 18px/1.5 var(--body); color: var(--ink); background: transparent; border: 0; border-bottom: 1px solid var(--ink); padding: 6px 2px; border-radius: 0; resize: vertical; }
 .sheet textarea { border: 1px solid rgba(20,20,20,.35); padding: 8px; }
-.sheet input:focus-visible, .sheet textarea:focus-visible, .letter-send:focus-visible, .letter-again:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
+.sheet input:focus, .sheet textarea:focus { outline: none; }
+.sheet input:not(.hp):focus, .sheet textarea:focus { border-color: var(--ink); background: rgba(20,20,20,.035); }
+.letter-send:focus-visible, .letter-again:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
 .hp { position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0; }
 .letter-send, .letter-again { font: 500 18px var(--mono); letter-spacing: .12em; text-transform: lowercase; background: var(--ink); color: var(--paper); border: 0; padding: 0 22px; min-height: 44px; cursor: pointer; }
 .letter-send:disabled { opacity: .5; cursor: default; }
 .letter-status { min-height: 1.5em; margin: 10px 0 0; font-style: italic; }
 .letter-done { display: none; }
 .letter.sent .letter-form { display: none; }
-.letter.sent .letter-done { display: block; padding: 18px 0; }
+.letter.sent .letter-done { display: block; padding: 18px 0; position: relative; }
+.contact:has(.letter.sent) .letter-label { display: none; }
+.letter-trail { position: absolute; left: min(300px, 40%); top: -30px; width: min(520px, 62vw); color: var(--ink); overflow: visible; pointer-events: none; }
+.letter-trail .trail { stroke-width: 4.5; stroke-dasharray: 0.1 2.6; }
+.letter-trail .head { stroke-width: 5; stroke-dasharray: 0.1 5; }
+.letter.sent .trail { animation: trail-draw 1.6s ease-out both; }
+.letter.sent .head { animation: trail-head .5s 1.5s ease-out both; }
+@keyframes trail-draw { from { stroke-dashoffset: 100; } to { stroke-dashoffset: 0; } }
+@keyframes trail-head { from { opacity: 0; } to { opacity: 1; } }
 .letter-done p { font: 500 24px/1.2 var(--serif); margin: 0 0 14px; }
-.fold { position: absolute; left: 0; top: 0; transform-style: preserve-3d; transform-origin: center; pointer-events: none; }
-.fold-panel { position: absolute; left: 0; width: 100%; overflow: hidden; background: #f6f3ec; border: 1px solid var(--ink); border-width: 0 1px; transform-style: preserve-3d; box-shadow: 0 1px 0 rgba(20,20,20,.35); }
+.fold { position: absolute; left: 0; top: 0; perspective: 1400px; pointer-events: none; }
+.fold-panel { position: absolute; left: 0; width: 100%; overflow: hidden; background-color: #f3f0e9; border: 1px solid var(--ink); border-width: 0 1px; }
 .fold-panel:first-child { border-top-width: 1px; } .fold-panel:last-child { border-bottom-width: 1px; }
-.letter-stamp { position: absolute; right: 8px; top: 8px; width: 38%; max-width: 150px; height: auto; filter: drop-shadow(1px 2px 2px rgba(0,0,0,.3)); }
-.letter-mark { position: absolute; right: 72px; top: 12px; width: 78px; height: 78px; border: 2px solid rgba(20,20,20,.7); border-radius: 50%; opacity: 0; }
-.letter-mark::before { content: ''; position: absolute; left: 12px; right: -34px; top: 36px; height: 2px; background: rgba(20,20,20,.6); box-shadow: 0 8px rgba(20,20,20,.6), 0 -8px rgba(20,20,20,.6); }
+.envelope { position: absolute; z-index: 3; background-color: #f3f0e9; border: 1px solid var(--ink); box-shadow: 2px 3px 0 rgba(20,20,20,.15); pointer-events: none; }
+.letter-stamp { position: absolute; right: 3%; top: 8%; width: 30%; height: auto; filter: drop-shadow(1px 2px 2px rgba(0,0,0,.3)); }
+.letter-mark { position: absolute; right: 24%; top: 6%; width: 22%; aspect-ratio: 1; border: 2px solid rgba(20,20,20,.7); border-radius: 50%; opacity: 0; }
+.letter-mark::before { content: ''; position: absolute; left: 14%; right: -70%; top: 46%; height: 2px; background: rgba(20,20,20,.6); box-shadow: 0 8px rgba(20,20,20,.6), 0 -8px rgba(20,20,20,.6); }
 @media (prefers-reduced-motion: reduce) { .fold { display: none; } }
 
 .kit-sec { max-width: 1400px; margin: 0 auto; padding: 0 clamp(20px, 4vw, 64px) clamp(24px, 4vw, 56px); }
