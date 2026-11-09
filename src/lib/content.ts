@@ -35,7 +35,7 @@ export const STACK_GROUPS = ['Framework', 'Styling', 'Data', 'Hosting', 'Integra
 export type StackGroup = typeof STACK_GROUPS[number];
 export interface Project {
   title: string; slug: string; summary?: string; featured?: boolean; year?: number;
-  disciplines?: string[]; role?: string; heroImage?: string; /** Card cover; falls back to heroImage */ cover?: string; images?: string[]; imageAlts?: string[]; accent?: string;
+  disciplines?: string[]; /** Extra filter chips this project also appears under (the first discipline or `tag` stays its main one). */ alsoTags?: string[]; role?: string; heroImage?: string; /** Card cover; falls back to heroImage */ cover?: string; images?: string[]; imageAlts?: string[]; accent?: string;
   videoUrl?: string; href?: string; linkLabel?: string;
   /** Kept in the data but not shown anywhere until it has content. */
   hidden?: boolean;
@@ -119,11 +119,13 @@ function stackHtml(p: Project) {
     .map((g) => `<div class="stack-row"><dt>${esc(g)}</dt><dd>${(p.stack![g] || []).map((t) => `<span class="chip">${esc(t)}</span>`).join('')}</dd></div>`).join('');
   return rows ? `<dl class="stack" aria-label="Tech stack"><p class="meta">Built with</p>${rows}</dl>` : '';
 }
+/** Black or white text, whichever reads better on a #rrggbb swatch. */
+const inkOn = (hex: string) => { const h = hex.replace('#', ''); const f = h.length === 3 ? h.replace(/./g, '$&$&') : h; const [r, g, b] = [0, 2, 4].map((i) => parseInt(f.slice(i, i + 2), 16) || 0); return (r * 299 + g * 587 + b * 114) / 1000 > 140 ? '#111' : '#fff'; };
 function kitHtml(p: Project) {
   const b = p.kit?.brand;
   const brand = b ? (() => {
     const logos = b.logos.filter((l) => safeUrl(l.src)).map((l) => `<figure class="kit-logo" style="background:${safeColor(l.bg) || '#fff'}"><img src="${esc(encodeURI(safeUrl(l.src)))}" alt="${esc(l.alt)}" style="max-width:${l.w || 60}%" loading="lazy" decoding="async"></figure>`).join('');
-    const sw = (b.palette || []).map((c) => c.split('|')).filter(([c]) => safeColor(c)).map(([c, n]) => `<li style="--sw:${c}"><span>${n ? `${esc(n)}<br>` : ''}${esc(c.toUpperCase())}</span></li>`).join('');
+    const sw = (b.palette || []).map((c) => c.split('|')).filter(([c]) => safeColor(c)).map(([c, n]) => `<li style="--sw:${c};--sw-ink:${inkOn(c)}"><span>${n ? `${esc(n)}<br>` : ''}${esc(c.toUpperCase())}</span></li>`).join('');
     return `<section class="kit-brand"><div class="kit-head"><p class="meta">Brand identity</p>${b.note ? `<p>${esc(b.note)}</p>` : ''}</div><div class="kit-logos">${logos}</div>${sw ? `<ul class="kit-palette" aria-label="Colour palette">${sw}</ul>` : ''}${(b.fonts || []).length ? `<p class="meta kit-fonts">Type: ${(b.fonts || []).map(esc).join(' · ')}</p>` : ''}</section>`;
   })() : '';
   const secs = (p.kit?.sections || []).map((sec) => {
@@ -151,7 +153,7 @@ function workViews(items: Project[], noun: string, defaultMeta: string) {
   ].filter(Boolean).join(' · ');
   const cardCover = (p: Project) => safeUrl(p.cover || p.heroImage);
   const card = (p: Project, i: number) => `
-    <button type="button" class="card${cardCover(p) ? '' : ' no-img'}" data-detail="d-${esc(p.slug)}" data-tag="${esc(tagOf(p))}">
+    <button type="button" class="card${cardCover(p) ? '' : ' no-img'}" data-detail="d-${esc(p.slug)}" data-tag="${esc(tagOf(p))}" data-tags="${esc(allTags(p).join("|"))}">
       <span class="card-img${cardCover(p) ? ' has-img' : ''}" style="--c:${safeColor(p.accent) || accents[i % accents.length]}">${cardCover(p) ? `<img class="card-photo" src="${esc(encodeURI(cardCover(p)))}" alt="" loading="lazy" decoding="async">` : ''}</span>
       <span class="card-over"><span class="card-name">${esc(p.title)}</span><span class="card-sub">${esc([p.role, p.year].filter(Boolean).join(' · '))}</span></span>
     </button>`;
@@ -187,6 +189,7 @@ function workViews(items: Project[], noun: string, defaultMeta: string) {
 }
 /** Everything on the Work page: projects, websites and crafts as one list, ordered by filter tag. */
 const TAG_ORDER = ['Developments', 'Websites', 'Branding', 'Hardware', 'Apps', 'Community', 'Crafts'];
+export const allTags = (p: Project) => [tagOf(p), ...(p.alsoTags || [])];
 export const tagOf = (p: Project) => p.tag || (p.disciplines || [])[0] || 'Work';
 export function workItems(c: SiteContent): Project[] {
   const crafts: Project[] = c.crafts.map((k) => ({ title: k.title, slug: k.slug, summary: k.summary, year: k.year, role: k.role, cover: k.cover, heroImage: k.heroImage || k.image, images: k.images, imageAlts: k.imageAlts, extras: k.extras, disciplines: ['Crafts'], tag: 'Crafts' }));
@@ -196,7 +199,7 @@ export function workItems(c: SiteContent): Project[] {
 function workHtml(c: SiteContent) {
   const items = workItems(c);
   const { card, detail } = workViews(items, 'project', 'Project');
-  const tags = [...new Set(items.map(tagOf))];
+  const tags = TAG_ORDER.filter((t) => items.some((p) => allTags(p).includes(t))).concat([...new Set(items.flatMap(allTags))].filter((t) => !TAG_ORDER.includes(t)));
   const chips = tags.length > 1 ? `<div class="filters" role="group" aria-label="Filter work by topic">${['All', ...tags].map((t, i) => `<button type="button" class="filter" data-filter="${i ? esc(t) : ''}" aria-pressed="${i ? 'false' : 'true'}">${esc(t)}</button>`).join('')}</div>` : '';
   return `${chips}<section><div class="cards">${items.map(card).join('')}</div></section>${items.map(detail).join('')}${todo('More work is on the way.')}`;
 }

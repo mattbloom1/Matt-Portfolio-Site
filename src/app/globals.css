@@ -563,7 +563,7 @@ html, body, .panel, .footer { transition: background-color .5s ease, color .5s e
 .kit-logo img { height: auto; max-height: 60%; width: auto; object-fit: contain; }
 .kit-palette { list-style: none; margin: clamp(12px, 2vw, 28px) 0 0; padding: 0; display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; gap: 0; }
 .kit-palette li { background: var(--sw); height: clamp(90px, 12vw, 160px); display: flex; align-items: flex-end; padding: 10px 12px; }
-.kit-palette li span { font: 500 14px var(--mono); letter-spacing: .1em; mix-blend-mode: difference; color: #fff; }
+.kit-palette li span { font: 500 14px var(--mono); letter-spacing: .1em; color: var(--sw-ink, #fff); }
 .kit-fonts { margin: 18px 0 0; }
 .kit-web { padding-bottom: 28px; }
 @media (max-width: 760px) { .kit-head { grid-template-columns: minmax(0, 1fr); gap: 8px; } .kit-logos { grid-template-columns: minmax(0, 1fr); } .kit-credits > div { grid-template-columns: 7em minmax(0, 1fr); } }

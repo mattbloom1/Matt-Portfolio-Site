@@ -47,6 +47,41 @@ export const SEED_PROJECTS: Project[] = [
     cover: asset('/websites/covers/gearbook.webp'),
     images: ['macbook-2', 'macbook-3', 'macbook-4', 'phones-gray'].map((n) => asset(`/websites/gearbook/${n}.webp`)),
     stack: { Framework: ['Next.js 16', 'React'], Styling: ['Tailwind CSS'], Data: ['Supabase (auth, Postgres, storage)'], Hosting: ['Cloudflare (OpenNext)'], Integrations: ['Impact', 'Partnerize', 'Resend'] },
+    alsoTags: ['Branding'],
+    kit: {
+      credits: [
+        { label: 'Client', value: 'GearBook, Boulder, CO' },
+        { label: 'Role', value: 'Co-founder & CMO' },
+        { label: 'Scope', value: 'Brand identity, brand guidelines, business cards, merch mockups, website' },
+        { label: 'Team', value: 'With co-founder Luke Wong' },
+      ],
+      brand: {
+        logos: [
+          { src: asset('/projects/gearbook/wordmark.svg'), alt: 'GearBook full-length wordmark', bg: '#f0f7ee', w: 62 },
+          { src: asset('/projects/gearbook/lockup.svg'), alt: 'GearBook gb lockup', bg: '#f0f7ee', w: 40 },
+        ],
+        palette: ['#3d3522|Bark', '#f0f7ee|Cream', '#6a8d73|Sage', '#33658a|Slate', '#f6ae2d|Amber'],
+        fonts: ['Roca Bold (display)', 'Outfit (body)', 'Afacad Flux SemiBold (labels)'],
+        note: 'A serif wordmark that sits on a bookmark, with a contour-map texture and an earthy palette of bark, sage, slate and amber.',
+      },
+      sections: [
+        { title: 'Brand guidelines', cols: 2, images: [
+          { src: asset('/projects/gearbook/kit/logo.webp'), alt: 'GearBook brand package: logo' },
+          { src: asset('/projects/gearbook/kit/variations.webp'), alt: 'GearBook logo variations' },
+          { src: asset('/projects/gearbook/kit/colour.webp'), alt: 'GearBook brand package: colour' },
+          { src: asset('/projects/gearbook/kit/type.webp'), alt: 'GearBook brand package: type' },
+        ] },
+        { title: 'Business cards', cols: 1, images: [
+          { src: asset('/projects/gearbook/kit/business-cards.webp'), alt: 'GearBook business cards for Matthew Bloomfield and Luke Wong' },
+        ] },
+        { title: 'Merch', cols: 2, images: [
+          { src: asset('/projects/gearbook/kit/tote.webp'), alt: 'GearBook tote bag mockup' },
+          { src: asset('/projects/gearbook/kit/mugs.webp'), alt: 'GearBook enamel mug mockup' },
+          { src: asset('/projects/gearbook/kit/mugs-2.webp'), alt: 'GearBook enamel mug mockup, second view' },
+        ] },
+      ],
+      websiteNote: 'The member catalog, marketplace and dashboard, built in the same brand.',
+    },
     href: 'https://www.gearbook.shop/',
     linkLabel: 'Visit site',
   }),

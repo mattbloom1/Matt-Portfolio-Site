@@ -586,7 +586,7 @@ const onContentClick = (e: MouseEvent) => {
   if (chip) {
     const tag = chip.dataset.filter || '';
     contentEl.querySelectorAll<HTMLElement>('.filter').forEach((b) => b.setAttribute('aria-pressed', String(b === chip)));
-    contentEl.querySelectorAll<HTMLElement>('.cards .card').forEach((c) => { c.hidden = !!tag && c.dataset.tag !== tag; });
+    contentEl.querySelectorAll<HTMLElement>('.cards .card').forEach((c) => { c.hidden = !!tag && !(c.dataset.tags || c.dataset.tag || '').split('|').includes(tag); });
     return;
   }
   const card = t.closest<HTMLElement>('[data-detail]');
