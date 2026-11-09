@@ -1,0 +1,120 @@
+{
+ "id": "desk-03",
+ "label": "Dark desk laptop 3",
+ "source_zip": "website-mockup-2026-10-23-03-56-13-utc.zip",
+ "source_psd": "03. Laptop Mockup.psd",
+ "canvas": [
+  2600,
+  1950
+ ],
+ "psd_size": [
+  4000,
+  3000
+ ],
+ "scale": 0.65,
+ "quad_order": "top-left, top-right, bottom-right, bottom-left of the smart-object content (content corner i -> quad[i]); coords are export pixels, origin top-left, y down",
+ "screens": [
+  {
+   "name": "Place Your Design Here (Double Click to Edit)",
+   "role": "screen",
+   "quad": [
+    [
+     677.59,
+     494.5
+    ],
+    [
+     1542.16,
+     148.38
+    ],
+    [
+     1535.95,
+     756.21
+    ],
+    [
+     695.76,
+     1158.04
+    ]
+   ],
+   "content": [
+    3456,
+    2234
+   ],
+   "quad_source": "nonAffineTransform",
+   "blend": "normal",
+   "opacity": 1.0,
+   "layer_path": [
+    2,
+    1
+   ],
+   "has_raster_mask": true,
+   "has_vector_mask": false,
+   "pixel_bbox_in_psd": [
+    1042,
+    228,
+    2373,
+    1782
+   ],
+   "mirrored": false,
+   "clipped": false,
+   "embedded_file": "Screen.psb"
+  }
+ ],
+ "reflections": [
+  {
+   "name": "Duplicate (Don't Edit)",
+   "role": "reflection",
+   "quad": [
+    [
+     716.07,
+     1899.65
+    ],
+    [
+     1528.97,
+     1439.76
+    ],
+    [
+     1535.33,
+     817.25
+    ],
+    [
+     697.58,
+     1224.46
+    ]
+   ],
+   "content": [
+    3456,
+    2234
+   ],
+   "quad_source": "nonAffineTransform",
+   "blend": "linear_dodge",
+   "opacity": 1.0,
+   "layer_path": [
+    2,
+    0,
+    0
+   ],
+   "has_raster_mask": true,
+   "has_vector_mask": false,
+   "pixel_bbox_in_psd": [
+    943,
+    1239,
+    2504,
+    3000
+   ],
+   "mirrored": true,
+   "clipped": false,
+   "embedded_file": "Screen.psb"
+  }
+ ],
+ "linked_effects": [],
+ "over_stats": {
+  "max_alpha": 1.0,
+  "covered_fraction": 0.1078
+ },
+ "notes": [
+  "layer \"Place Your Design Here (Double Click to Edit)\" has a raster mask (screen shape, e.g. rounded corners)",
+  "layer \"Duplicate (Don't Edit)\" has a raster mask",
+  "\"Duplicate (Don't Edit)\" (reflection) uses blend=linear_dodge opacity=1.0",
+  "\"Duplicate (Don't Edit)\" is a reflection/secondary quad; quad order follows content corners (content TL -> quad[0]); mirrored=True"
+ ]
+}

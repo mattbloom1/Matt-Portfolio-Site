@@ -1,0 +1,161 @@
+{
+ "id": "poster-01",
+ "label": "Outdoor 3-poster board 1",
+ "source_zip": "outdoor-mockup-2026-10-23-03-47-54-utc.zip",
+ "source_psd": "01. Outdoor 3 Poster Mockup.psd",
+ "canvas": [
+  2600,
+  1950
+ ],
+ "psd_size": [
+  4000,
+  3000
+ ],
+ "scale": 0.65,
+ "quad_order": "top-left, top-right, bottom-right, bottom-left of the smart-object content (content corner i -> quad[i]); coords are export pixels, origin top-left, y down",
+ "screens": [
+  {
+   "name": "Place Your Design Here (Double Click to Edit)",
+   "role": "screen",
+   "quad": [
+    [
+     447.85,
+     490.75
+    ],
+    [
+     999.05,
+     490.75
+    ],
+    [
+     999.05,
+     1270.1
+    ],
+    [
+     447.85,
+     1270.1
+    ]
+   ],
+   "content": [
+    1017,
+    1439
+   ],
+   "quad_source": "nonAffineTransform",
+   "blend": "normal",
+   "opacity": 1.0,
+   "layer_path": [
+    1,
+    0
+   ],
+   "has_raster_mask": true,
+   "has_vector_mask": false,
+   "pixel_bbox_in_psd": [
+    689,
+    755,
+    1537,
+    1954
+   ],
+   "mirrored": false,
+   "clipped": false,
+   "embedded_file": "Design Here.psb"
+  },
+  {
+   "name": "Place Your Design Here (Double Click to Edit)",
+   "role": "screen",
+   "quad": [
+    [
+     1024.4,
+     490.75
+    ],
+    [
+     1576.25,
+     490.75
+    ],
+    [
+     1576.25,
+     1270.1
+    ],
+    [
+     1024.4,
+     1270.1
+    ]
+   ],
+   "content": [
+    1017,
+    1439
+   ],
+   "quad_source": "nonAffineTransform",
+   "blend": "normal",
+   "opacity": 1.0,
+   "layer_path": [
+    1,
+    1
+   ],
+   "has_raster_mask": true,
+   "has_vector_mask": false,
+   "pixel_bbox_in_psd": [
+    1576,
+    755,
+    2425,
+    1954
+   ],
+   "mirrored": false,
+   "clipped": false,
+   "embedded_file": "Design Here.psb"
+  },
+  {
+   "name": "Place Your Design Here (Double Click to Edit)",
+   "role": "screen",
+   "quad": [
+    [
+     1600.3,
+     490.1
+    ],
+    [
+     2152.8,
+     490.1
+    ],
+    [
+     2152.8,
+     1270.1
+    ],
+    [
+     1600.3,
+     1270.1
+    ]
+   ],
+   "content": [
+    1017,
+    1439
+   ],
+   "quad_source": "nonAffineTransform",
+   "blend": "normal",
+   "opacity": 1.0,
+   "layer_path": [
+    1,
+    2
+   ],
+   "has_raster_mask": true,
+   "has_vector_mask": false,
+   "pixel_bbox_in_psd": [
+    2462,
+    754,
+    3312,
+    1954
+   ],
+   "mirrored": false,
+   "clipped": false,
+   "embedded_file": "Design Here.psb"
+  }
+ ],
+ "reflections": [],
+ "linked_effects": [],
+ "over_stats": {
+  "max_alpha": 0.994,
+  "covered_fraction": 0.2557
+ },
+ "notes": [
+  "layer \"Place Your Design Here (Double Click to Edit)\" has a raster mask (screen shape, e.g. rounded corners)",
+  "layer \"Place Your Design Here (Double Click to Edit)\" has a raster mask (screen shape, e.g. rounded corners)",
+  "layer \"Place Your Design Here (Double Click to Edit)\" has a raster mask (screen shape, e.g. rounded corners)"
+ ]
+}

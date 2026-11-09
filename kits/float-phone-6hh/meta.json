@@ -1,0 +1,74 @@
+{
+ "id": "float-phone-6hh",
+ "label": "Floating smartphone colorful gradient (Phone Mockup_6hh)",
+ "source_zip": "floating-smartphone-mockup-with-colorful-gradient-2026-10-22-23-17-43-utc.zip",
+ "source_psd": "gradient_Phone-Mockup-6hh.psd",
+ "canvas": [
+  2600,
+  1734
+ ],
+ "psd_size": [
+  3000,
+  2001
+ ],
+ "scale": 0.866667,
+ "quad_order": "top-left, top-right, bottom-right, bottom-left of the smart-object content (content corner i -> quad[i]); coords are export pixels, origin top-left, y down",
+ "screens": [
+  {
+   "name": "Your Design",
+   "role": "screen",
+   "quad": [
+    [
+     1329.71,
+     422.89
+    ],
+    [
+     1675.6,
+     538.23
+    ],
+    [
+     1446.82,
+     1275.39
+    ],
+    [
+     1093.74,
+     1159.41
+    ]
+   ],
+   "content": [
+    1858,
+    4022
+   ],
+   "quad_source": "nonAffineTransform",
+   "blend": "multiply",
+   "opacity": 1.0,
+   "layer_path": [
+    2,
+    1,
+    1
+   ],
+   "has_raster_mask": false,
+   "has_vector_mask": false,
+   "pixel_bbox_in_psd": [
+    1261,
+    488,
+    1934,
+    1472
+   ],
+   "mirrored": false,
+   "clipped": true,
+   "embedded_file": "Your Design.psb"
+  }
+ ],
+ "reflections": [],
+ "linked_effects": [],
+ "over_stats": {
+  "max_alpha": 1.0,
+  "covered_fraction": 0.0636
+ },
+ "notes": [
+  "\"Your Design\" (screen) uses blend=multiply opacity=1.0",
+  "also hid layer \"Your Design\" (path [0]) (unused duplicate)",
+  "Screen is a Multiply-blend smart object clipped onto the phone's \"Screen\" pixel layer (design multiplies over that base); selftest applies a plain warp, so colours in the real PSD would be darker on dark base. A second hidden duplicate \"Your Design\" sat at the very bottom of the PSD under an opaque Background and was ignored."
+ ]
+}

@@ -1,0 +1,72 @@
+{
+ "id": "chair-mustard",
+ "label": "Laptop on velvet chair (mustard)",
+ "source_zip": "laptop-mockup-2026-10-23-03-16-55-utc.zip",
+ "source_psd": "02. Laptop Mockup.psd",
+ "canvas": [
+  2600,
+  1950
+ ],
+ "psd_size": [
+  4000,
+  3000
+ ],
+ "scale": 0.65,
+ "quad_order": "top-left, top-right, bottom-right, bottom-left of the smart-object content (content corner i -> quad[i]); coords are export pixels, origin top-left, y down",
+ "screens": [
+  {
+   "name": "Wallpaper Design",
+   "role": "screen",
+   "quad": [
+    [
+     847.26,
+     586.83
+    ],
+    [
+     1621.47,
+     486.43
+    ],
+    [
+     1674.37,
+     1000.6
+    ],
+    [
+     915.5,
+     1115.82
+    ]
+   ],
+   "content": [
+    2560,
+    1600
+   ],
+   "quad_source": "nonAffineTransform",
+   "blend": "normal",
+   "opacity": 1.0,
+   "layer_path": [
+    2,
+    0
+   ],
+   "has_raster_mask": true,
+   "has_vector_mask": false,
+   "pixel_bbox_in_psd": [
+    1303,
+    748,
+    2576,
+    1717
+   ],
+   "mirrored": false,
+   "clipped": false,
+   "embedded_file": "Rectangle 1.psb"
+  }
+ ],
+ "reflections": [],
+ "linked_effects": [],
+ "over_stats": {
+  "max_alpha": 1.0,
+  "covered_fraction": 0.0806
+ },
+ "notes": [
+  "layer \"Wallpaper Design\" has a raster mask (screen shape, e.g. rounded corners)",
+  "also hid layer \"Color\" (path [1]) (solid colour fill under screen)"
+ ]
+}

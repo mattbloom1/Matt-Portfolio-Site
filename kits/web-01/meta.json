@@ -1,0 +1,118 @@
+{
+ "id": "web-01",
+ "label": "Website mockup 01",
+ "source_zip": "website-mockup-2026-10-23-03-57-20-utc.zip",
+ "source_psd": "01. Website Mockup.psd",
+ "canvas": [
+  2600,
+  1950
+ ],
+ "psd_size": [
+  4000,
+  3000
+ ],
+ "scale": 0.65,
+ "quad_order": "top-left, top-right, bottom-right, bottom-left of the smart-object content (content corner i -> quad[i]); coords are export pixels, origin top-left, y down",
+ "screens": [
+  {
+   "name": "Place Your Design Here (Double Click to Edit)",
+   "role": "screen",
+   "quad": [
+    [
+     617.74,
+     378.03
+    ],
+    [
+     1810.7,
+     291.65
+    ],
+    [
+     1868.03,
+     1076.92
+    ],
+    [
+     686.62,
+     1202.13
+    ]
+   ],
+   "content": [
+    2302,
+    1496
+   ],
+   "quad_source": "nonAffineTransform",
+   "blend": "normal",
+   "opacity": 1.0,
+   "layer_path": [
+    2,
+    1
+   ],
+   "has_raster_mask": true,
+   "has_vector_mask": false,
+   "pixel_bbox_in_psd": [
+    950,
+    448,
+    2874,
+    1850
+   ],
+   "mirrored": false,
+   "clipped": false,
+   "embedded_file": "Design Here.psb"
+  }
+ ],
+ "reflections": [
+  {
+   "name": "Place Your Design Here (Double Click to Edit)",
+   "role": "reflection",
+   "quad": [
+    [
+     296.23,
+     1750.05
+    ],
+    [
+     1997.14,
+     1544.59
+    ],
+    [
+     1891.79,
+     1072.3
+    ],
+    [
+     669.77,
+     1202.5
+    ]
+   ],
+   "content": [
+    2302,
+    1496
+   ],
+   "quad_source": "nonAffineTransform",
+   "blend": "normal",
+   "opacity": 1.0,
+   "layer_path": [
+    2,
+    0
+   ],
+   "has_raster_mask": true,
+   "has_vector_mask": false,
+   "pixel_bbox_in_psd": [
+    230,
+    1382,
+    3329,
+    2956
+   ],
+   "mirrored": true,
+   "clipped": false,
+   "embedded_file": "Design Here.psb"
+  }
+ ],
+ "linked_effects": [],
+ "over_stats": {
+  "max_alpha": 1.0,
+  "covered_fraction": 0.0034
+ },
+ "notes": [
+  "layer \"Place Your Design Here (Double Click to Edit)\" has a raster mask (screen shape, e.g. rounded corners)",
+  "layer \"Place Your Design Here (Double Click to Edit)\" has a raster mask",
+  "\"Place Your Design Here (Double Click to Edit)\" is a reflection/secondary quad; quad order follows content corners (content TL -> quad[0]); mirrored=True"
+ ]
+}

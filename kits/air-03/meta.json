@@ -1,0 +1,125 @@
+{
+ "id": "air-03",
+ "label": "MacBook Air sand/rock scene 3",
+ "source_zip": "laptop-mockup-2026-10-22-13-37-42-utc.zip",
+ "source_psd": "03_macbook air mockup.psd",
+ "canvas": [
+  2600,
+  1733
+ ],
+ "psd_size": [
+  4500,
+  3000
+ ],
+ "scale": 0.577778,
+ "quad_order": "top-left, top-right, bottom-right, bottom-left of the smart-object content (content corner i -> quad[i]); coords are export pixels, origin top-left, y down",
+ "screens": [
+  {
+   "name": "Your Design Here",
+   "role": "screen",
+   "quad": [
+    [
+     932.73,
+     828.5
+    ],
+    [
+     1764.53,
+     825.38
+    ],
+    [
+     1764.94,
+     1354.72
+    ],
+    [
+     917.81,
+     1353.95
+    ]
+   ],
+   "content": [
+    2880,
+    1864
+   ],
+   "quad_source": "nonAffineTransform",
+   "blend": "normal",
+   "opacity": 1.0,
+   "layer_path": [
+    1,
+    2
+   ],
+   "has_raster_mask": true,
+   "has_vector_mask": false,
+   "pixel_bbox_in_psd": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "mirrored": false,
+   "clipped": false,
+   "embedded_file": "Layer 6.psb"
+  }
+ ],
+ "reflections": [],
+ "linked_effects": [
+  {
+   "name": "DESIGN",
+   "role": "linked_effect",
+   "quad": [
+    [
+     932.73,
+     828.5
+    ],
+    [
+     1764.53,
+     825.38
+    ],
+    [
+     1764.94,
+     1354.72
+    ],
+    [
+     917.81,
+     1353.95
+    ]
+   ],
+   "content": [
+    2880,
+    1864
+   ],
+   "quad_source": "nonAffineTransform",
+   "blend": "normal",
+   "opacity": 0.0,
+   "layer_path": [
+    3
+   ],
+   "has_raster_mask": false,
+   "has_vector_mask": false,
+   "pixel_bbox_in_psd": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "mirrored": false,
+   "clipped": false,
+   "bbox_expand_px_psd": [
+    1589,
+    1429,
+    -3055,
+    -2345
+   ]
+  }
+ ],
+ "over_stats": {
+  "max_alpha": 0.137,
+  "covered_fraction": 0.0976
+ },
+ "notes": [
+  "\"DESIGN\" is a linked copy at opacity 0 (ignored)",
+  "layer \"Your Design Here\" has a raster mask (screen shape, e.g. rounded corners)",
+  "smart object \"Your Design Here\" has no rasterised pixels in the PSD (empty bbox); screen drawn as black in PSD composites; quad still valid",
+  "smart object \"DESIGN\" has no rasterised pixels in the PSD (empty bbox); screen drawn as black in PSD composites; quad still valid",
+  "\"DESIGN\" (linked_effect) uses blend=normal opacity=0.0",
+  "also hid layer \"DESIGN\" (path [3]) (unused duplicate)"
+ ]
+}

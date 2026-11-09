@@ -1,0 +1,123 @@
+{
+ "id": "m3-1",
+ "label": "MacBook Pro M3 plinth with flowering branch 1",
+ "source_zip": "laptop-mockup-2026-10-23-01-31-35-utc.zip",
+ "source_psd": "Macbook Pro M3 Mockup_1.psd",
+ "canvas": [
+  2600,
+  1950
+ ],
+ "psd_size": [
+  4000,
+  3000
+ ],
+ "scale": 0.65,
+ "quad_order": "top-left, top-right, bottom-right, bottom-left of the smart-object content (content corner i -> quad[i]); coords are export pixels, origin top-left, y down",
+ "screens": [
+  {
+   "name": "Your Design Here",
+   "role": "screen",
+   "quad": [
+    [
+     807.95,
+     667.11
+    ],
+    [
+     1704.72,
+     667.77
+    ],
+    [
+     1705.59,
+     1266.89
+    ],
+    [
+     808.16,
+     1267.33
+    ]
+   ],
+   "content": [
+    2343,
+    1566
+   ],
+   "quad_source": "nonAffineTransform",
+   "blend": "normal",
+   "opacity": 1.0,
+   "layer_path": [
+    2,
+    0,
+    1
+   ],
+   "has_raster_mask": true,
+   "has_vector_mask": false,
+   "pixel_bbox_in_psd": [
+    1243,
+    1026,
+    2624,
+    1949
+   ],
+   "mirrored": false,
+   "clipped": false,
+   "embedded_file": "Rectangle 1.psb"
+  }
+ ],
+ "reflections": [
+  {
+   "name": "Your Design Here",
+   "role": "reflection",
+   "quad": [
+    [
+     670.2,
+     1439.12
+    ],
+    [
+     1861.67,
+     1439.29
+    ],
+    [
+     1705.59,
+     1267.29
+    ],
+    [
+     816.0,
+     1266.85
+    ]
+   ],
+   "content": [
+    2343,
+    1566
+   ],
+   "quad_source": "nonAffineTransform",
+   "blend": "multiply",
+   "opacity": 0.169,
+   "layer_path": [
+    2,
+    0,
+    0
+   ],
+   "has_raster_mask": true,
+   "has_vector_mask": false,
+   "pixel_bbox_in_psd": [
+    1014,
+    1926,
+    2881,
+    2237
+   ],
+   "mirrored": true,
+   "clipped": false,
+   "embedded_file": "Rectangle 1.psb"
+  }
+ ],
+ "linked_effects": [],
+ "over_stats": {
+  "max_alpha": 1.0,
+  "covered_fraction": 0.1067
+ },
+ "notes": [
+  "layer \"Your Design Here\" has a raster mask (screen shape, e.g. rounded corners)",
+  "layer \"Your Design Here\" has a raster mask",
+  "\"Your Design Here\" (reflection) uses blend=multiply opacity=0.169",
+  "\"Your Design Here\" is a reflection/secondary quad; quad order follows content corners (content TL -> quad[0]); mirrored=True",
+  "also hid layer \"DELETE THIS LAYER\" (path [4]) (unused duplicate)",
+  "Top-level pixel layer \"DELETE THIS LAYER\" (white card saying it is for size optimisation) was hidden everywhere, including preview.jpg; the embedded Photoshop preview shows only that card."
+ ]
+}

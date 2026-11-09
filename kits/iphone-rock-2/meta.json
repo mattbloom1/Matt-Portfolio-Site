@@ -1,0 +1,71 @@
+{
+ "id": "iphone-rock-2",
+ "label": "iPhone 14 Pro Max outdoor on rock 2",
+ "source_zip": "outdoor-iphone-pro-max-mockup-2026-10-22-08-31-23-utc.zip",
+ "source_psd": "Realistic Outdoor iPhone 14 Pro Max Mockup 2.psd",
+ "canvas": [
+  2600,
+  1733
+ ],
+ "psd_size": [
+  4000,
+  2666
+ ],
+ "scale": 0.65,
+ "quad_order": "top-left, top-right, bottom-right, bottom-left of the smart-object content (content corner i -> quad[i]); coords are export pixels, origin top-left, y down",
+ "screens": [
+  {
+   "name": "iPhone 14 Pro Max",
+   "role": "screen",
+   "quad": [
+    [
+     837.06,
+     267.16
+    ],
+    [
+     1458.43,
+     105.3
+    ],
+    [
+     1807.4,
+     1445.0
+    ],
+    [
+     1186.02,
+     1606.85
+    ]
+   ],
+   "content": [
+    987,
+    2128
+   ],
+   "quad_source": "nonAffineTransform",
+   "blend": "normal",
+   "opacity": 1.0,
+   "layer_path": [
+    1,
+    0
+   ],
+   "has_raster_mask": true,
+   "has_vector_mask": false,
+   "pixel_bbox_in_psd": [
+    1288,
+    162,
+    2781,
+    2473
+   ],
+   "mirrored": false,
+   "clipped": false,
+   "embedded_file": "iPhone 14 Pro Max.psb"
+  }
+ ],
+ "reflections": [],
+ "linked_effects": [],
+ "over_stats": {
+  "max_alpha": 1.0,
+  "covered_fraction": 0.0059
+ },
+ "notes": [
+  "layer \"iPhone 14 Pro Max\" has a raster mask (screen shape, e.g. rounded corners)"
+ ]
+}

@@ -1,0 +1,177 @@
+{
+ "id": "f-2a",
+ "label": "Florida MacBook on boulder with palms (F.2a)",
+ "source_zip": "laptop-mockup-2026-10-22-10-11-27-utc.zip",
+ "source_psd": "Macbook Mockup F.2a.psd",
+ "canvas": [
+  2600,
+  1733
+ ],
+ "psd_size": [
+  3840,
+  2560
+ ],
+ "scale": 0.677083,
+ "quad_order": "top-left, top-right, bottom-right, bottom-left of the smart-object content (content corner i -> quad[i]); coords are export pixels, origin top-left, y down",
+ "screens": [
+  {
+   "name": "Design Place (Do Not Modify)",
+   "role": "screen",
+   "quad": [
+    [
+     850.59,
+     362.4
+    ],
+    [
+     1776.1,
+     362.37
+    ],
+    [
+     1772.57,
+     963.65
+    ],
+    [
+     853.8,
+     962.28
+    ]
+   ],
+   "content": [
+    3456,
+    2234
+   ],
+   "quad_source": "nonAffineTransform",
+   "blend": "normal",
+   "opacity": 1.0,
+   "layer_path": [
+    0,
+    1
+   ],
+   "has_raster_mask": true,
+   "has_vector_mask": false,
+   "pixel_bbox_in_psd": [
+    1256,
+    535,
+    2623,
+    1423
+   ],
+   "mirrored": false,
+   "clipped": false,
+   "embedded_file": "Color Fill 2.psb"
+  }
+ ],
+ "reflections": [],
+ "linked_effects": [
+  {
+   "name": "Screen Glow",
+   "role": "linked_effect",
+   "quad": [
+    [
+     850.59,
+     362.4
+    ],
+    [
+     1776.1,
+     362.37
+    ],
+    [
+     1772.57,
+     963.65
+    ],
+    [
+     853.8,
+     962.28
+    ]
+   ],
+   "content": [
+    3456,
+    2234
+   ],
+   "quad_source": "nonAffineTransform",
+   "blend": "screen",
+   "opacity": 0.2,
+   "layer_path": [
+    0,
+    2
+   ],
+   "has_raster_mask": true,
+   "has_vector_mask": false,
+   "pixel_bbox_in_psd": [
+    855,
+    132,
+    3025,
+    1826
+   ],
+   "mirrored": false,
+   "clipped": false,
+   "bbox_expand_px_psd": [
+    401,
+    403,
+    402,
+    403
+   ]
+  },
+  {
+   "name": "FX Screen Brightness",
+   "role": "linked_effect",
+   "quad": [
+    [
+     850.59,
+     362.4
+    ],
+    [
+     1776.1,
+     362.37
+    ],
+    [
+     1772.57,
+     963.65
+    ],
+    [
+     853.8,
+     962.28
+    ]
+   ],
+   "content": [
+    3456,
+    2234
+   ],
+   "quad_source": "nonAffineTransform",
+   "blend": "screen",
+   "opacity": 0.4,
+   "layer_path": [
+    0,
+    3
+   ],
+   "has_raster_mask": true,
+   "has_vector_mask": false,
+   "pixel_bbox_in_psd": [
+    1256,
+    535,
+    2623,
+    1423
+   ],
+   "mirrored": false,
+   "clipped": false,
+   "bbox_expand_px_psd": [
+    0,
+    0,
+    0,
+    0
+   ]
+  }
+ ],
+ "over_stats": {
+  "max_alpha": 1.0,
+  "covered_fraction": 0.1233
+ },
+ "notes": [
+  "\"Screen Glow\" is a linked copy of the screen content (blend=screen opacity=0.2); hidden in bg and not in over.png; composite it yourself: warp the same content with that blend/opacity; the PSD copy is blurred (glow) - approximate with a gaussian blur",
+  "\"FX Screen Brightness\" is a linked copy of the screen content (blend=screen opacity=0.4); hidden in bg and not in over.png; composite it yourself: warp the same content with that blend/opacity",
+  "layer \"Design Place (Do Not Modify)\" has a raster mask (screen shape, e.g. rounded corners)",
+  "layer \"Screen Glow\" has a raster mask",
+  "\"Screen Glow\" (linked_effect) uses blend=screen opacity=0.2",
+  "layer \"FX Screen Brightness\" has a raster mask",
+  "\"FX Screen Brightness\" (linked_effect) uses blend=screen opacity=0.4",
+  "layers clipped to the screen layer, hidden in bg: FX Screen Brightness"
+ ]
+}

@@ -1,0 +1,70 @@
+{
+ "id": "cafe",
+ "label": "Cafe desk setup laptop",
+ "source_zip": "laptop-mockup-desk-setup-cafe-2026-10-22-10-11-59-utc.zip",
+ "source_psd": "cafe_Baby-Laptop-Desk-Setup-Cafe.psd",
+ "canvas": [
+  2600,
+  2600
+ ],
+ "psd_size": [
+  3000,
+  3000
+ ],
+ "scale": 0.866667,
+ "quad_order": "top-left, top-right, bottom-right, bottom-left of the smart-object content (content corner i -> quad[i]); coords are export pixels, origin top-left, y down",
+ "screens": [
+  {
+   "name": "Your Design Here",
+   "role": "screen",
+   "quad": [
+    [
+     387.33,
+     1019.0
+    ],
+    [
+     1313.72,
+     1019.0
+    ],
+    [
+     1317.96,
+     1593.31
+    ],
+    [
+     376.59,
+     1593.31
+    ]
+   ],
+   "content": [
+    3475,
+    2121
+   ],
+   "quad_source": "nonAffineTransform",
+   "blend": "normal",
+   "opacity": 1.0,
+   "layer_path": [
+    1
+   ],
+   "has_raster_mask": true,
+   "has_vector_mask": false,
+   "pixel_bbox_in_psd": [
+    435,
+    1176,
+    1521,
+    1838
+   ],
+   "mirrored": false,
+   "clipped": false,
+   "embedded_file": "desain.psb"
+  }
+ ],
+ "reflections": [],
+ "linked_effects": [],
+ "over_stats": {
+  "max_alpha": 1.0,
+  "covered_fraction": 0.0797
+ },
+ "notes": [
+  "layer \"Your Design Here\" has a raster mask (screen shape, e.g. rounded corners)"
+ ]
+}

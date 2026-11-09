@@ -1,0 +1,68 @@
+{
+ "id": "vintage-01",
+ "label": "Laptop on vintage chair with green plant 1",
+ "source_zip": "laptop-on-vintage-chair-with-green-plant-mockup-2026-10-22-07-57-14-utc.zip",
+ "source_psd": "chair_labtop-mockup-01.psd",
+ "canvas": [
+  2600,
+  1733
+ ],
+ "psd_size": [
+  4500,
+  3000
+ ],
+ "scale": 0.577778,
+ "quad_order": "top-left, top-right, bottom-right, bottom-left of the smart-object content (content corner i -> quad[i]); coords are export pixels, origin top-left, y down",
+ "screens": [
+  {
+   "name": "Change Screen Design",
+   "role": "screen",
+   "quad": [
+    [
+     837.38,
+     553.32
+    ],
+    [
+     1766.48,
+     552.9
+    ],
+    [
+     1766.56,
+     1134.3
+    ],
+    [
+     837.32,
+     1134.58
+    ]
+   ],
+   "content": [
+    2560,
+    1600
+   ],
+   "quad_source": "nonAffineTransform",
+   "blend": "normal",
+   "opacity": 1.0,
+   "layer_path": [
+    0
+   ],
+   "has_raster_mask": false,
+   "has_vector_mask": false,
+   "pixel_bbox_in_psd": [
+    1449,
+    957,
+    3058,
+    1963
+   ],
+   "mirrored": false,
+   "clipped": false,
+   "embedded_file": "Layer 1.psb"
+  }
+ ],
+ "reflections": [],
+ "linked_effects": [],
+ "over_stats": {
+  "max_alpha": 1.0,
+  "covered_fraction": 0.09
+ },
+ "notes": []
+}
