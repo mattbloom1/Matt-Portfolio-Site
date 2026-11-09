@@ -548,14 +548,36 @@ const hideDetail = () => {
   opener?.focus({ preventScroll: true });
   return true;
 };
-const showDetail = (d: HTMLElement) => {
+let revealIO: IntersectionObserver | null = null;
+/** Gallery images and text blocks rise into place as they scroll into view inside the open project. */
+function revealOnScroll(d: HTMLElement) {
+  revealIO?.disconnect(); revealIO = null;
+  if (reduce || typeof IntersectionObserver === 'undefined') return;
+  const items = [...d.querySelectorAll<HTMLElement>('.detail-gallery .gimg, .detail-text > *')];
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach((en) => {
+      if (!en.isIntersecting) return;
+      io.unobserve(en.target);
+      gsap.to(en.target, { opacity: 1, y: 0, duration: 0.9, ease: 'power3.out', clearProps: 'opacity,transform' });
+    });
+  }, { root: d, rootMargin: '0px 0px -8% 0px', threshold: 0.05 });
+  items.forEach((el) => { gsap.set(el, { opacity: 0, y: 28 }); io.observe(el); });
+  revealIO = io;
+}
+const showDetail = (d: HTMLElement, from?: HTMLElement | null) => {
   gsap.set(contentEl, { clearProps: 'transform' });
   d.hidden = false;
   setModal(true);
   stage.dataset.detailOpen = '1';
   document.title = `${d.getAttribute('aria-label')} · ${sectionTitle()}`;
   d.scrollTop = 0;
-  gsap.fromTo(d, { opacity: 0 }, { opacity: 1, duration: T(0.35) });
+  const r = from && !reduce ? from.getBoundingClientRect() : null;
+  if (r) {
+    // The project opens out of the card it was clicked from.
+    gsap.fromTo(d, { clipPath: `inset(${r.top}px ${innerWidth - r.right}px ${innerHeight - r.bottom}px ${r.left}px)`, opacity: 0.6 },
+      { clipPath: 'inset(0px 0px 0px 0px)', opacity: 1, duration: 0.85, ease: 'power3.inOut', clearProps: 'clipPath' });
+  } else gsap.fromTo(d, { opacity: 0 }, { opacity: 1, duration: T(0.35) });
+  revealOnScroll(d);
   d.querySelector<HTMLElement>('h2')?.focus({ preventScroll: true });
 };
 /** Make the open project match a URL slug (null = none). */
@@ -584,13 +606,17 @@ const onContentClick = (e: MouseEvent) => {
   if (chip) {
     const tag = chip.dataset.filter || '';
     contentEl.querySelectorAll<HTMLElement>('.filter').forEach((b) => b.setAttribute('aria-pressed', String(b === chip)));
-    contentEl.querySelectorAll<HTMLElement>('.cards .card').forEach((c) => { c.hidden = !!tag && c.dataset.tag !== tag; });
+    const cards = [...contentEl.querySelectorAll<HTMLElement>('.cards .card')];
+    const fs = reduce ? null : Flip.getState(cards);
+    cards.forEach((c) => { c.hidden = !!tag && c.dataset.tag !== tag; });
+    // Cards that stay glide to their new spot; newly shown ones rise in via CSS.
+    if (fs) Flip.from(fs, { duration: 0.8, ease: 'power3.inOut', absolute: false, nested: false });
     return;
   }
   const card = t.closest<HTMLElement>('[data-detail]');
   if (card) {
     const d = contentEl.querySelector<HTMLElement>(`#${CSS.escape(card.dataset.detail!)}`);
-    if (d) { history.pushState({ detail: d.id }, '', detailHash(d)); showDetail(d); }
+    if (d) { history.pushState({ detail: d.id }, '', detailHash(d)); showDetail(d, card); }
     return;
   }
   const step = t.closest<HTMLElement>('[data-step]');
