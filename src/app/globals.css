@@ -638,3 +638,9 @@ html, body, .panel, .footer { transition: background-color .5s ease, color .5s e
 .cards .card:nth-child(5) { --i: 4; } .cards .card:nth-child(6) { --i: 5; } .cards .card:nth-child(7) { --i: 6; } .cards .card:nth-child(8) { --i: 7; }
 .cards .card:nth-child(9) { --i: 8; } .cards .card:nth-child(10) { --i: 9; } .cards .card:nth-child(11) { --i: 10; } .cards .card:nth-child(n+12) { --i: 11; }
 @media (prefers-reduced-motion: reduce) { .stage[data-state='page'] .cards .card { animation: none; } .fs-frame, .chip, .detail-step { transition: none; } }
+
+/* Home headline: centered above the stamps, only while the stamps are laid out on the desk */
+.tagline { position: absolute; left: 0; right: 0; top: 30px; margin: 0; padding: 0 20px; text-align: center; font: 400 26px/1.45 var(--serif); z-index: 2; pointer-events: none; transition: opacity .3s; }
+.tagline span { opacity: .7; }
+.stage:not([data-state='nav']) .tagline { opacity: 0; }
+@media (max-width: 640px) { .tagline { top: 16px; font-size: 16px; line-height: 1.4; } }

@@ -37,6 +37,7 @@ export default function Portfolio({ content }: { content: SiteContent }) {
       <canvas ref={canvasRef} className="drawing" aria-hidden="true" />
       <h1 className="sr-only">Matthew Bloomfield, Creative Technologist &amp; Designer</h1>
       <main id="stage" className="stage" data-state="nav">
+        <p className="tagline">I design and build things people use,<br /><span>in software, hardware and infrastructure.</span></p>
         <nav id="stamps" className="stamps" aria-label="Sections" />
         <button className="home" id="home" type="button" aria-label="Home" hidden />
         <section id="content" className="content" tabIndex={-1} hidden />
