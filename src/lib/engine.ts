@@ -64,12 +64,12 @@ const navDesktop: Record<SectionId, NavSpot> = {
   about: { x: 0.79, y: 0.68, w: 0.21 },
 };
 const navMobile: Record<SectionId, NavSpot> = {
-  projects: { x: 0.26, y: 0.2, w: 0.44 },
-  posters: { x: 0.74, y: 0.17, w: 0.44 },
-  experience: { x: 0.26, y: 0.49, w: 0.44 },
-  crafts: { x: 0.74, y: 0.52, w: 0.44 },
-  photography: { x: 0.26, y: 0.8, w: 0.44 },
-  about: { x: 0.74, y: 0.83, w: 0.44 },
+  projects: { x: 0.25, y: 0.2, w: 0.4 },
+  posters: { x: 0.75, y: 0.17, w: 0.4 },
+  experience: { x: 0.25, y: 0.49, w: 0.4 },
+  crafts: { x: 0.75, y: 0.52, w: 0.4 },
+  photography: { x: 0.25, y: 0.8, w: 0.4 },
+  about: { x: 0.75, y: 0.83, w: 0.4 },
 };
 /* Phones: a slight random tilt for each stamp (2 to 5 degrees, either way), fresh on every load. */
 if (window.innerWidth < 640) for (const id of Object.keys(tilt) as SectionId[]) tilt[id] = (Math.random() < 0.5 ? -1 : 1) * (2 + Math.random() * 3);

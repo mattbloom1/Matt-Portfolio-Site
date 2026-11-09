@@ -423,3 +423,10 @@ body:has(#stage[data-state='page']) .draw-hint { opacity: 0; pointer-events: non
 .stage[data-detail-open] .panel { backdrop-filter: none; -webkit-backdrop-filter: none; }
 .stage[data-detail-open] .content { overflow: hidden; }
 .detail { overscroll-behavior: contain; }
+
+/* Phones: the blend-mode corner shading and the heavy shadow get clipped to a hard edge on tilted stamps, so keep both simple. */
+@media (max-width: 639px) {
+  .stamp::after { mix-blend-mode: normal; background: linear-gradient(135deg, rgba(0,0,0,0) 48%, rgba(0,0,0,.1) 100%); }
+  .stamp img { filter: drop-shadow(0 3px 4px rgba(0,0,0,.25)); }
+  .stamp { will-change: auto; }
+}
