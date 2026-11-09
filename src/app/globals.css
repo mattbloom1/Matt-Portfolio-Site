@@ -360,6 +360,7 @@ body:has(#stage[data-state='page']) .draw-hint { opacity: 0; pointer-events: non
 }
 /* Photography: one film roll per month, same 2 / 2 / 1 rhythm as project galleries */
 .roll-gallery { padding: 8px 0 clamp(48px, 7vw, 96px); max-width: none; }
+.roll { max-width: max(900px, min(1400px, calc(1.2 * (100vh - 240px) + 150px))); margin-inline: auto; }
 .roll-gallery .gimg:not(.ld) { aspect-ratio: 3 / 2; }
 .series-year { font: 500 17px var(--mono); letter-spacing: .12em; margin-left: 8px; opacity: .6; vertical-align: middle; }
 .roll-gallery { align-items: start; }
