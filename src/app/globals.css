@@ -66,7 +66,7 @@ body {
   background: linear-gradient(135deg, rgba(255,255,255,0) 48%, rgba(0,0,0,.18) 100%); mix-blend-mode: multiply;
 }
 .stamp .tag {
-  position: absolute; left: 50%; top: 100%; transform: translate(-50%, 8px); white-space: nowrap;
+  position: absolute; left: 50%; top: 100%; transform: translate(-50%, 8px); white-space: nowrap; color: var(--ink);
   font: 500 11px var(--mono); letter-spacing: .14em; text-transform: lowercase; opacity: 0; transition: opacity .2s;
 }
 .stamps[data-mode='nav'] .stamp:hover .tag, .stamps[data-mode='nav'] .stamp:focus-visible .tag { opacity: 1; }
