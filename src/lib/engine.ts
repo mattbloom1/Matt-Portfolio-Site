@@ -97,15 +97,19 @@ let justDragged = false;
 
 /* Where the visitor has dragged each home-page stamp, as fractions of the stage so it survives resizes. */
 const POS_KEY = 'stampPositions.v1';
+/* Phones and tablets: stamps spring back to their spot on release and nothing is saved. */
+const isTouchDevice = () => typeof window !== 'undefined' && window.matchMedia('(pointer: coarse)').matches;
 const moved: Partial<Record<SectionId, { fx: number; fy: number }>> = (() => {
+  if (isTouchDevice()) return {};
   try { return JSON.parse(localStorage.getItem(POS_KEY) || '{}'); } catch { return {}; }
 })();
 const savePositions = () => { try { localStorage.setItem(POS_KEY, JSON.stringify(moved)); } catch { /* private mode: positions last for the visit only */ } };
 const offsetOf = (id: SectionId) => ({ x: (moved[id]?.fx || 0) * stage.clientWidth, y: (moved[id]?.fy || 0) * stage.clientHeight });
 function enableDrag(el: HTMLButtonElement, id: SectionId) {
-  let pid = -1, sx = 0, sy = 0, ox = 0, oy = 0, drag = false, vx = 0, vy = 0;
+  let pid = -1, sx = 0, sy = 0, ox = 0, oy = 0, drag = false, vx = 0, vy = 0, touch = false;
   el.addEventListener('pointerdown', (e) => {
     if (e.button !== 0 || busy || pid !== -1) return;
+    touch = e.pointerType === 'touch' || isTouchDevice();
     pid = e.pointerId; sx = e.clientX; sy = e.clientY; drag = false; vx = 0; vy = 0;
     ox = Number(gsap.getProperty(el, 'x')) || 0; oy = Number(gsap.getProperty(el, 'y')) || 0;
   });
@@ -131,7 +135,7 @@ function enableDrag(el: HTMLButtonElement, id: SectionId) {
     justDragged = true;
     setTimeout(() => { justDragged = false; }, 0);
     el.classList.remove('held');
-    if (state !== 'nav') {
+    if (state !== 'nav' || touch) {
       gsap.to(el, { x: 0, y: 0, scale: 1, rotation: restRotation(id), duration: reduce ? 0.2 : 0.8, ease: reduce ? 'power2.out' : 'elastic.out(1, 0.55)', overwrite: 'auto' });
       return;
     }
