@@ -279,10 +279,34 @@ export const SEED_PROJECTS: Project[] = [
     tag: 'Hardware',
     role: 'Computational fabrication: Rhino, Grasshopper & fabrication',
     year: 2023,
-    summary: 'Topographical maps translated into 3D structures using Grasshopper and Rhino. I turned the geographic variability of a map into a 3D model, with two deliverables: the model itself and a laser-cut template for it to sit in. In Grasshopper I laid out a grid of points, sampled the map image and sorted each point by its nearest swatch color, then extruded cylinders to matching heights. I applied a Delaunay mesh to the top points, smoothed it, turned it into a Brep solid and unioned it with a cube underneath. I finished by making custom coasters with the related topography for my family. My one change would be to 3D print the models in a color like white so the shadows and contours are more visible. My biggest problems were scope creep, trying to do more than was feasible, and list ordering in Grasshopper.',
-    heroImage: asset('/projects/topomaps/01.webp'),
-    images: ['03', '02', '04', '05', '06', '07'].map((n) => asset(`/projects/topomaps/${n}.webp`)),
-    imageAlts: ['A color-coded elevation map of Boulder, CO turned into a red 3D terrain model', 'Nine steps showing a flat red surface becoming a Boulder terrain mesh in Grasshopper', 'A grey Rhino render of the Boulder terrain model', 'A laser-engraved bear coaster in a wood and plywood frame', 'A wood coaster engraved with a bottle, glass and bread', 'Three finished coasters stacked on a table'],
+    summary: 'Topographical maps translated to 3D structures using Grasshopper and Rhino. For my project I’m creating 3D structures based on topographical maps, taking the geographic variability and turning that into a 3D model. This project includes two deliverables: the first being the 3D model with topo variability, and the second being a laser-cut template for the model to be contained within.',
+    heroImage: asset('/projects/topomaps/08.webp'),
+    kit: {
+      sections: [
+        {
+          title: 'Challenge: the Grasshopper process',
+          note: 'Steps from top left to bottom right. Lay out a grid of points, use an image sampler along with swatches to compare color values, and sort by nearest RGB value based on swatch order. Using the length of the swatch and given parameters, extrude cylinders to relative heights. Take the topmost point of each cylinder and apply a Delaunay mesh to the grid of points. Smooth the mesh, turn it into a Brep solid object, and union it with a cube underneath to turn it into a solid object.',
+          cols: 2,
+          images: [
+            { src: asset('/projects/topomaps/03.webp'), alt: 'A color-coded elevation map of Boulder, CO turned into a red 3D terrain model' },
+            { src: asset('/projects/topomaps/02.webp'), alt: 'Nine steps showing a flat red surface becoming a Boulder terrain mesh in Grasshopper' },
+            { src: asset('/projects/topomaps/04.webp'), alt: 'A grey Rhino render of the Boulder terrain model' },
+            { src: asset('/projects/topomaps/09.webp'), alt: 'A second Rhino render of the terrain from another angle' },
+          ],
+        },
+        {
+          title: 'Result',
+          note: 'I finished this project by creating custom coasters with the related topography for my family. I’m quite happy with how they turned out. My one change would probably be to have 3D printed the models with a color such as white so the shadows and contours are more visible. Many of my biggest problems came with scope creep and attempting to do more work than was feasibly possible. Grasshopper also gave me lots of trouble with list ordering.',
+          cols: 2,
+          images: [
+            { src: asset('/projects/topomaps/07.webp'), alt: 'Three finished coasters on a table' },
+            { src: asset('/projects/topomaps/05.webp'), alt: 'A laser-engraved bear coaster in a wood and plywood frame' },
+            { src: asset('/projects/topomaps/06.webp'), alt: 'A wood coaster engraved with a bottle, glass and bread' },
+            { src: asset('/projects/topomaps/01.webp'), alt: 'The 3D printed Boulder, CO terrain model in black' },
+          ],
+        },
+      ],
+    },
   }),
   p('ClimbSmart Hangboard', 'Projects', {
     tag: 'Hardware',
