@@ -488,6 +488,7 @@ html.lb-open, html.lb-open body { overflow: hidden; }
 :root[data-theme='night'] { --paper: #15171c; --ink: #ece9e2; --sk-base: #23262d; --sk-hi: #2d3139; color-scheme: dark; }
 :root[data-theme='night'] .panel { background: rgba(21,23,28,.8); }
 :root[data-theme='night'] .stage[data-state='page'] .panel-head { background: #0a0b0e; color: var(--ink); }
+:root[data-theme='night'] .drawing { filter: invert(1); } /* charcoal strokes flip to chalk; the emailed doodle still flattens onto light paper */
 :root[data-theme='night'] .grain { mix-blend-mode: screen; opacity: .08; }
 :root[data-theme='night'] .stamp img { filter: drop-shadow(1px 2px 1px rgba(0,0,0,.5)) drop-shadow(0 12px 14px rgba(0,0,0,.55)); }
 :root[data-theme='night'] .filmstrip { --fs-hole: #ece9e2; }
