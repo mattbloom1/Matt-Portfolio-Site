@@ -1,5 +1,5 @@
 import localFont from 'next/font/local';
-import { Lora, Newsreader, IBM_Plex_Mono } from 'next/font/google';
+import { Lora, Newsreader, Cormorant_Infant } from 'next/font/google';
 
 /**
  * Type pairing (swap here to use Matt's own fonts):
@@ -13,8 +13,10 @@ import { Lora, Newsreader, IBM_Plex_Mono } from 'next/font/google';
  * then keep the same CSS variable name; nothing else changes.
  */
 export const display = Lora({ subsets: ['latin'], style: ['normal', 'italic'], variable: '--font-display', display: 'swap' });
-export const body = Newsreader({ subsets: ['latin'], variable: '--font-body', display: 'swap' });
-export const mono = IBM_Plex_Mono({ subsets: ['latin'], weight: ['400', '500'], variable: '--font-mono', display: 'swap' });
+/** Body: Newsreader with its optical-size axis (replaces Windows-only Sitka). */
+export const body = Newsreader({ subsets: ['latin'], axes: ['opsz'], variable: '--font-body', display: 'swap' });
+/** Labels: Cormorant Infant, a thin calligraphic face (replaces Windows-only Himalaya), self-hosted by next/font. */
+export const mono = Cormorant_Infant({ subsets: ['latin'], weight: ['500', '600'], variable: '--font-mono', display: 'swap' });
 
 /** Footer text (Afacad Flux, SIL OFL), self-hosted from @fontsource. */
 export const footer = localFont({
