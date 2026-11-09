@@ -116,6 +116,7 @@ body {
 .job p { margin: 10px 0 0; max-width: 60ch; animation: jobIn .35s ease; }
 @keyframes jobIn { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: none; } }
 @media (prefers-reduced-motion: reduce) { .job-toggle, .job-toggle::before, .job-toggle::after { transition: none; } .job p { animation: none; } }
+@media (max-width: 640px) { .timeline h3 { font-size: 20px; } .timeline .meta { font-size: 11px; } .job p { font-size: 15px; } }
 .gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 16px; }
 .gallery.wide { grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); }
 .gallery.wide .shot { aspect-ratio: 3 / 2; }
