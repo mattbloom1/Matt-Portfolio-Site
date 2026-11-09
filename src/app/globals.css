@@ -436,3 +436,6 @@ body:has(#stage[data-state='page']) .draw-hint { opacity: 0; pointer-events: non
 /* small stamp nav labels use the site ink, not the browser's default button/link colour */
 .stage[data-state='page'] .stamps[data-mode='mini'] .stamp .tag { color: var(--ink); -webkit-text-fill-color: var(--ink); }
 @media (min-width: 900px) { .stage[data-state='page'] .stamps[data-mode='mini'] .stamp .tag { color: var(--paper); -webkit-text-fill-color: var(--paper); } }
+
+/* the close X inverts against whatever is behind it, so it stays visible on dark and light */
+.stage[data-state='page'] .home, .stage[data-state='page'] .home:hover { color: #fff; mix-blend-mode: difference; }
