@@ -178,9 +178,16 @@ function photographyHtml(c: SiteContent) {
       const srcset = /\/photography\/.+\.webp$/.test(full) ? ` srcset="${esc(full.replace(/\.webp$/, '-800.webp'))} 800w, ${esc(full)} ${f.w || 1600}w" sizes="${single ? '(max-width: 560px) 100vw, 700px' : '(max-width: 560px) 50vw, 400px'}"` : '';
       return `<figure class="gimg"><img onload="this.parentNode.classList.add('ld')" onerror="this.parentNode.classList.add('ld')" src="${esc(full)}"${srcset} alt="${esc(f.alt || `${s.title} film roll`)}"${f.w && f.h ? ` width="${f.w}" height="${f.h}"` : ''} loading="lazy" decoding="async"></figure>`;
     }).join('');
-    return `<section class="roll"><h3 class="series">${esc(s.title)}${s.year ? ` <span class="series-year">${s.year}</span>` : ''}</h3>${s.summary ? `<p>${esc(s.summary)}</p>` : ''}<div class="detail-gallery roll-gallery">${imgs}</div></section>`;
+    return `<section class="roll" id="roll-${esc(s.slug)}"><h3 class="series">${esc(s.title)}${s.year ? ` <span class="series-year">${s.year}</span>` : ''}</h3>${s.summary ? `<p>${esc(s.summary)}</p>` : ''}<div class="detail-gallery roll-gallery">${imgs}</div></section>`;
   }).join('');
-  return `${series}${c.placeholder.photography ? todo('Placeholder. Photography content has not been supplied.') : ''}`;
+  const rolls = c.photography.filter((s) => (s.frames || []).some((f) => safeUrl(f.image)));
+  const frameNo = (i: number) => String(i + 1).padStart(2, '0');
+  // Sticky film strip: one frame per roll, in order. engine.ts wires up the scroll tracking and the jump-to-roll clicks.
+  const strip = rolls.length > 1 ? `<nav class="filmstrip" aria-label="Film rolls"><div class="fs-holes" aria-hidden="true"></div><ol class="fs-track">${rolls.map((s, i) => {
+    const thumb = encodeURI(safeUrl((s.frames || [])[0].image)).replace(/\/[^/]+\.webp$/, '/thumb.webp');
+    return `<li><a class="fs-frame" href="#roll-${esc(s.slug)}" data-roll="roll-${esc(s.slug)}" aria-label="${esc(s.title)}${s.year ? ' ' + s.year : ''}, roll ${i + 1}"><span class="fs-no" aria-hidden="true">${frameNo(i)}</span><span class="fs-img"><img src="${esc(thumb)}" alt="" width="120" height="80" loading="lazy" decoding="async"></span><span class="fs-lbl" aria-hidden="true">${esc(s.title.slice(0, 3))}${s.year ? ` ’${String(s.year).slice(2)}` : ''}</span></a></li>`;
+  }).join('')}</ol><div class="fs-holes fs-holes-b" aria-hidden="true"></div></nav>` : '';
+  return `${series}${c.placeholder.photography ? todo('Placeholder. Photography content has not been supplied.') : ''}${strip}`;
 }
 function postersHtml(c: SiteContent) {
   return c.posters.map((set) => `<section class="roll"><h3 class="series">${esc(set.title)}</h3><div class="detail-gallery poster-gallery">${set.items.filter((i) => safeUrl(i.src)).map((i) => `<figure class="gimg"><img onload="this.parentNode.classList.add('ld')" onerror="this.parentNode.classList.add('ld')" src="${esc(encodeURI(safeUrl(i.src)))}" alt="${esc(i.alt)}" width="${i.w}" height="${i.h}" loading="lazy" decoding="async"></figure>`).join('')}</div></section>`).join('');

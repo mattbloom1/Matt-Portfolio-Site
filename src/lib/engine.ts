@@ -243,6 +243,87 @@ function renderContent(id: SectionId) {
   contentEl.innerHTML = `<div class="panel"><header class="panel-head"><div class="no">${s.no} · ${s.stampName}</div><h1 tabindex="-1">${s.label}</h1></header><div class="panel-body">${s.html}</div></div>`;
   contentEl.scrollTop = 0;
   document.title = `${s.label} · ${SITE.name}`;
+  stopFilmStrip();
+  if (id === 'photography') startFilmStrip();
+}
+/* ---------- photography film strip: highlights the roll in view, advances the film as you scroll, jumps to a roll on tap ---------- */
+let stopStrip: (() => void) | null = null;
+function stopFilmStrip() { stopStrip?.(); stopStrip = null; }
+function startFilmStrip() {
+  const strip = contentEl.querySelector<HTMLElement>('.filmstrip');
+  if (!strip) return;
+  const track = strip.querySelector<HTMLElement>('.fs-track')!;
+  const frames = [...strip.querySelectorAll<HTMLAnchorElement>('.fs-frame')];
+  const rolls = frames.map((f) => contentEl.querySelector<HTMLElement>('#' + f.dataset.roll));
+  let cur = -1, raf = 0, last = contentEl.scrollTop, lock = -1;
+  const timers: number[] = [];
+  const unlock = () => { lock = -1; timers.splice(0).forEach(clearTimeout); };
+  const center = (i: number, smooth: boolean) => {
+    const f = frames[i];
+    if (!f || track.scrollWidth <= track.clientWidth) return;
+    track.scrollTo({ left: f.offsetLeft - (track.clientWidth - f.offsetWidth) / 2, behavior: smooth && !reduce ? 'smooth' : 'auto' });
+  };
+  const set = (i: number, smooth = true) => {
+    if (i === cur) return;
+    cur = i;
+    frames.forEach((f, k) => { if (k === i) f.setAttribute('aria-current', 'true'); else f.removeAttribute('aria-current'); });
+    center(i, smooth);
+  };
+  const update = () => {
+    raf = 0;
+    const top = contentEl.getBoundingClientRect().top;
+    const line = top + contentEl.clientHeight * 0.4;
+    let i = 0;
+    rolls.forEach((r, k) => { if (r && r.getBoundingClientRect().top <= line) i = k; });
+    // At the very bottom the last roll wins even if it is short.
+    if (contentEl.scrollTop + contentEl.clientHeight >= contentEl.scrollHeight - 4) i = rolls.length - 1;
+    if (lock >= 0) i = lock;
+    set(i);
+    // Film advance: the sprocket holes crawl along with the scroll, and the strip leans slightly in the direction of travel.
+    const y = contentEl.scrollTop;
+    strip.style.setProperty('--adv', `${(-y * 0.6).toFixed(1)}px`);
+    strip.dataset.dir = y > last + 1 ? 'down' : y < last - 1 ? 'up' : strip.dataset.dir || '';
+    last = y;
+  };
+  const onScroll = () => { if (!raf) raf = requestAnimationFrame(update); };
+  const onClick = (e: Event) => {
+    const a = (e.target as HTMLElement).closest<HTMLAnchorElement>('.fs-frame');
+    if (!a) return;
+    e.preventDefault();
+    const i = frames.indexOf(a);
+    set(i);
+    strip.classList.remove('click');
+    void strip.offsetWidth;
+    strip.classList.add('click');
+    // Lazy images above the target change its position as they load, so jump, then re-align a few times unless the reader takes over.
+    unlock();
+    lock = i;
+    const go = () => rolls[i]?.scrollIntoView({ behavior: 'auto', block: 'start' });
+    go();
+    [250, 700, 1500].forEach((ms) => timers.push(window.setTimeout(go, ms)));
+    timers.push(window.setTimeout(unlock, 1600));
+    rolls[i]?.querySelector<HTMLElement>('h3')?.setAttribute('tabindex', '-1');
+    rolls[i]?.querySelector<HTMLElement>('h3')?.focus({ preventScroll: true });
+  };
+  const takeOver = () => unlock();
+  contentEl.addEventListener('wheel', takeOver, { passive: true });
+  contentEl.addEventListener('touchstart', takeOver, { passive: true });
+  contentEl.addEventListener('keydown', takeOver);
+  contentEl.addEventListener('scroll', onScroll, { passive: true });
+  strip.addEventListener('click', onClick);
+  window.addEventListener('resize', onScroll);
+  update();
+  center(Math.max(cur, 0), false);
+  stopStrip = () => {
+    unlock();
+    contentEl.removeEventListener('wheel', takeOver);
+    contentEl.removeEventListener('touchstart', takeOver);
+    contentEl.removeEventListener('keydown', takeOver);
+    contentEl.removeEventListener('scroll', onScroll);
+    strip.removeEventListener('click', onClick);
+    window.removeEventListener('resize', onScroll);
+    if (raf) cancelAnimationFrame(raf);
+  };
 }
 function showContent(focus: boolean, swap = false) {
   if (swap) {
@@ -308,7 +389,7 @@ async function pageSwap(id: SectionId) {
 async function goHome(replay = true) {
   if (busy || state !== 'page') return;
   busy = true;
-  gsap.to(contentEl, { opacity: 0, duration: T(0.25), onComplete: () => { contentEl.hidden = true; } });
+  gsap.to(contentEl, { opacity: 0, duration: T(0.25), onComplete: () => { contentEl.hidden = true; stopFilmStrip(); } });
   gsap.to(bgEl, { opacity: 0, duration: T(0.7) });
   gsap.to(homeBtn, { opacity: 0, duration: T(0.3), onComplete: () => { homeBtn.hidden = true; } });
   const activeEl = stampEls.get(active as SectionId)!;
@@ -373,6 +454,7 @@ function enterInstant(id: SectionId | null) {
     layoutNav();
     gsap.set(bgEl, { opacity: 0 });
     contentEl.hidden = true;
+    stopFilmStrip();
     homeBtn.hidden = true;
     document.title = SITE.name;
   }

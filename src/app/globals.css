@@ -439,3 +439,47 @@ body:has(#stage[data-state='page']) .draw-hint { opacity: 0; pointer-events: non
 
 /* the close X inverts against whatever is behind it, so it stays visible on dark and light */
 .stage[data-state='page'] .home, .stage[data-state='page'] .home:hover { color: #fff; mix-blend-mode: difference; }
+/* Photography: sticky film strip. One frame per roll; sprocket holes crawl with the scroll, the roll in view is lit. */
+.panel-body:has(.filmstrip) { padding-bottom: 0 !important; }
+.roll { scroll-margin-top: 24px; }
+.filmstrip {
+  --fs-bg: #151412; --fs-hole: var(--paper); --fs-edge: #d9a441; --adv: 0px;
+  position: sticky; bottom: 0; z-index: 3; margin: 0 calc(-1 * var(--fs-px, 20px)); background: var(--fs-bg); color: #e9e3d3;
+  padding-bottom: env(safe-area-inset-bottom, 0px); box-shadow: 0 -10px 24px rgba(0,0,0,.18);
+}
+@media (min-width: 900px) { .filmstrip { --fs-px: clamp(24px, 5vw, 88px); } }
+.fs-holes {
+  height: 12px; background-image: linear-gradient(90deg, var(--fs-hole) 0 10px, transparent 10px);
+  background-size: 18px 5px; background-repeat: repeat-x; background-position: var(--adv) 3.5px; opacity: .85;
+  -webkit-mask: linear-gradient(90deg, transparent, #000 4%, #000 96%, transparent); mask: linear-gradient(90deg, transparent, #000 4%, #000 96%, transparent);
+  border-radius: 1px;
+}
+.fs-holes-b { background-position: calc(var(--adv) + 5px) 3.5px; }
+.fs-track {
+  list-style: none; margin: 0; padding: 4px clamp(12px, 3vw, 32px); display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none;
+  scroll-snap-type: x proximity; -webkit-overflow-scrolling: touch;
+}
+.fs-track::-webkit-scrollbar { display: none; }
+.fs-track li { flex: 0 0 auto; scroll-snap-align: center; }
+.fs-frame {
+  display: grid; grid-template-columns: auto auto; grid-template-areas: 'no no' 'img img' 'lbl lbl'; justify-items: center; gap: 3px;
+  width: 92px; color: inherit; text-decoration: none; opacity: .55; transform: translateY(0) scale(.94); transform-origin: 50% 100%;
+  transition: opacity .35s, transform .45s cubic-bezier(.2,.8,.2,1);
+  -webkit-tap-highlight-color: transparent;
+}
+.fs-frame:hover { opacity: .85; }
+.fs-frame[aria-current='true'] { opacity: 1; transform: translateY(-2px) scale(1); }
+.fs-no { grid-area: no; justify-self: start; font: 500 10px/1 var(--mono); letter-spacing: .12em; color: var(--fs-edge); }
+.fs-no::before { content: '\25B8\00a0'; }
+.fs-img { grid-area: img; width: 100%; aspect-ratio: 3 / 2; background: #2b2924; overflow: hidden; outline: 2px solid transparent; outline-offset: 1px; transition: outline-color .3s; }
+.fs-frame[aria-current='true'] .fs-img { outline-color: var(--fs-edge); }
+.fs-img img { width: 100%; height: 100%; object-fit: cover; display: block; filter: saturate(.85); transition: filter .35s; }
+.fs-frame[aria-current='true'] .fs-img img { filter: none; }
+.fs-lbl { grid-area: lbl; justify-self: start; font: 500 10px/1 var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--fs-edge); opacity: .9; }
+.fs-frame:focus-visible { outline: 2px solid var(--fs-edge); outline-offset: 3px; box-shadow: none; }
+/* tapping a frame advances the film: a quick slide of the whole strip */
+.filmstrip.click .fs-track { animation: fs-advance .5s cubic-bezier(.2,.8,.2,1); }
+@keyframes fs-advance { 0% { transform: translateX(14px); } 100% { transform: none; } }
+.filmstrip[data-dir='down'] .fs-frame[aria-current='true'] .fs-img { box-shadow: 0 2px 0 var(--fs-edge); }
+@media (max-width: 899px) { .filmstrip { --fs-px: 20px; } .fs-frame { width: 76px; } .fs-track { gap: 6px; } }
+@media (prefers-reduced-motion: reduce) { .fs-frame, .fs-img, .fs-img img { transition: none; } .filmstrip.click .fs-track { animation: none; } }
