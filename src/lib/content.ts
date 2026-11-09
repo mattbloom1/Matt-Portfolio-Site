@@ -15,8 +15,8 @@ export interface Section {
   html: string;
 }
 
-/** Google Doc ID of Matt's resume (the long id in docs.google.com/document/d/<ID>/edit). Doc must be shared as "anyone with the link can view". Empty hides the embed. */
-export const RESUME_DOC_ID = '';
+/** Resume PDF, generated from scripts/resume/resume.html (see README there). */
+export const RESUME_PDF = `${process.env.NEXT_PUBLIC_BASE_PATH || ''}/resume/Matthew-Bloomfield-Resume.pdf`;
 
 export const SITE = {
   name: 'Matthew Bloomfield',
@@ -214,8 +214,7 @@ function experienceHtml(c: SiteContent) {
       : `<li>${head}</li>`;
   }).join('');
   const edu = `<p class="meta">Education</p><p><strong>${esc(EDUCATION.school)}</strong>, ${esc(EDUCATION.year)}<br>${esc(EDUCATION.detail)}</p>`;
-  const doc = RESUME_DOC_ID ? `https://docs.google.com/document/d/${RESUME_DOC_ID}` : '';
-  const resume = doc ? `<section class="resume"><div class="resume-head"><p class="meta">Resume</p><span><a href="${doc}/export?format=pdf" target="_blank" rel="noopener">Download PDF</a><a href="${doc}/edit" target="_blank" rel="noopener">Open in Google Docs</a></span></div><iframe class="resume-frame" src="${doc}/preview" title="Matthew Bloomfield resume" loading="lazy" referrerpolicy="no-referrer"></iframe></section>` : '';
+  const resume = `<section class="resume"><div class="resume-head"><p class="meta">Resume</p><span><a href="${RESUME_PDF}" download>Download PDF</a><a href="${RESUME_PDF}" target="_blank" rel="noopener">Open full size</a></span></div><iframe class="resume-frame" src="${RESUME_PDF}#toolbar=0&navpanes=0&view=FitH" title="Matthew Bloomfield resume (PDF)" loading="lazy"></iframe></section>`;
   return `<ol class="timeline">${items}</ol>${edu}${resume}${c.placeholder.experience ? todo('Placeholder timeline. Experience content has not been supplied.') : ''}`;
 }
 function photographyHtml(c: SiteContent) {
