@@ -65,7 +65,8 @@ export const SEED_PROJECTS: Project[] = [
         { label: 'Developer', value: 'Advanced Development Group' },
         { label: 'Architecture', value: 'Netta Architects' },
         { label: 'Construction', value: 'EAJ Services' },
-        { label: 'Scope', value: 'Website design, development and content, homepage video' },
+        { label: 'Scope', value: 'Brand identity, stationery, brochures, website design, development and content, homepage video' },
+        { label: 'Team', value: 'Two designers, including me' },
       ],
       brand: {
         logos: [{ src: asset('/projects/le-reve/wordmark.svg'), alt: 'Le Rêve Boca Raton wordmark', bg: '#ebf1f9', w: 34 }],
@@ -114,7 +115,8 @@ export const SEED_PROJECTS: Project[] = [
         { label: 'Developers', value: 'Kastelo Development, 4TRO Development and Capital' },
         { label: 'Architecture', value: 'RWB/Linares Architecture' },
         { label: 'Interiors', value: 'Stef Leonel Interior Design, Ava Gray Interiors' },
-        { label: 'Scope', value: 'Website design, development and content; assisted on renderings' },
+        { label: 'Scope', value: 'Brand identity, stationery, brochures, website design, development and content; assisted on renderings' },
+        { label: 'Team', value: 'Two designers, including me' },
       ],
       brand: {
         logos: [
