@@ -38,7 +38,7 @@ export const STACK_GROUPS = ['Framework', 'Styling', 'Data', 'Hosting', 'Integra
 export type StackGroup = typeof STACK_GROUPS[number];
 export interface Project {
   title: string; slug: string; summary?: string; featured?: boolean; year?: number;
-  disciplines?: string[]; /** Extra filter chips this project also appears under (the first discipline or `tag` stays its main one). */ alsoTags?: string[]; role?: string; heroImage?: string; /** Card cover; falls back to heroImage */ cover?: string; images?: string[]; imageAlts?: string[]; accent?: string;
+  disciplines?: string[]; /** Extra filter chips this project also appears under (the first discipline or `tag` stays its main one). */ alsoTags?: string[]; role?: string; heroImage?: string; /** Card cover; falls back to heroImage */ cover?: string; /** Landscape cover for the full-width lead tile on the Work grid (desktop). */ coverWide?: string; images?: string[]; imageAlts?: string[]; accent?: string;
   videoUrl?: string; href?: string; linkLabel?: string;
   /** Kept in the data but not shown anywhere until it has content. */
   hidden?: boolean;
@@ -165,10 +165,21 @@ function workViews(items: Project[], noun: string, defaultMeta: string) {
     safeUrl(p.href) ? `<a href="${esc(safeUrl(p.href))}" target="_blank" rel="noopener">${esc(p.linkLabel || 'Visit')}</a>` : '',
   ].filter(Boolean).join(' · ');
   const cardCover = (p: Project) => safeUrl(p.cover || p.heroImage);
+  // Layout: the developments lead the grid (two half-width tiles, then one full-width), everything else runs three across.
+  const devs = items.filter((p) => tagOf(p) === 'Developments').map((p) => p.slug);
+  const lead = (p: Project) => { const k = devs.indexOf(p.slug); return k < 0 || devs.length < 3 ? '' : k === 2 ? ' lead lead-wide' : ' lead'; };
+  const photo = (p: Project) => {
+    const src = cardCover(p), wide = safeUrl(p.coverWide);
+    if (!src) return '';
+    const isWide = !!wide && lead(p).includes('wide');
+    const sizes = isWide ? '(max-width: 899px) 100vw, 78vw' : lead(p) ? '(max-width: 899px) 100vw, 39vw' : '(max-width: 640px) 50vw, (max-width: 899px) 33vw, 26vw';
+    const img = `<img class="card-photo" src="${esc(encodeURI(src))}"${srcsetFor(src, sizes)} alt="" loading="lazy" decoding="async">`;
+    return isWide ? `<picture><source media="(min-width: 900px)" srcset="${esc(encodeURI(wide))}">${img}</picture>` : img;
+  };
   const card = (p: Project, i: number) => `
-    <button type="button" class="card${cardCover(p) ? '' : ' no-img'}" data-detail="d-${esc(p.slug)}" data-tag="${esc(tagOf(p))}" data-tags="${esc(allTags(p).join("|"))}">
-      <span class="card-img${cardCover(p) ? ' has-img' : ''}" style="--c:${safeColor(p.accent) || accents[i % accents.length]}">${cardCover(p) ? `<img class="card-photo" src="${esc(encodeURI(cardCover(p)))}"${srcsetFor(cardCover(p), '(max-width: 640px) 50vw, (max-width: 899px) 33vw, 26vw')} alt="" loading="lazy" decoding="async">` : ''}</span>
-      <span class="card-over"><span class="card-name">${esc(p.title)}</span><span class="card-sub">${esc([p.role, p.year].filter(Boolean).join(' · '))}</span></span>
+    <button type="button" class="card${cardCover(p) ? '' : ' no-img'}${lead(p)}" data-detail="d-${esc(p.slug)}" data-tag="${esc(tagOf(p))}" data-tags="${esc(allTags(p).join("|"))}">
+      <span class="card-img${cardCover(p) ? ' has-img' : ''}" style="--c:${safeColor(p.accent) || accents[i % accents.length]}">${photo(p)}</span>
+      <span class="card-cap"><span class="card-name">${esc(p.title)}</span><span class="card-sub">${esc([p.role, p.year].filter(Boolean).join(' · '))}</span></span>
     </button>`;
   const siblings = (_p: Project) => c.projects;
   const stepper = (p: Project) => {
