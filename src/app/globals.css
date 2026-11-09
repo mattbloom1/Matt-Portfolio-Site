@@ -245,16 +245,7 @@ body:has(#stage[data-state='page']) .draw-hint { opacity: 0; pointer-events: non
 }
 
 /* project cards: image only, name on hover, click for details */
-.card { display: block; position: relative; overflow: hidden; padding: 0; border: 0; background: none; color: inherit; font: inherit; text-align: left; cursor: pointer; aspect-ratio: 4 / 5; }
-.card-img { position: absolute; inset: 0; display: block; aspect-ratio: auto; transition: transform .6s cubic-bezier(.2,.7,.2,1); }
-.card-over { position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: flex-end; gap: 4px; padding: 18px; color: #fff; background: linear-gradient(to top, rgba(14,14,14,.72), rgba(14,14,14,.12) 60%); opacity: 0; transition: opacity .35s ease; }
-.card-name { font: 500 24px/1.15 var(--serif); }
-.card-sub { font: 500 14px var(--mono); letter-spacing: .14em; text-transform: lowercase; }
-.card:hover .card-img, .card:focus-visible .card-img { transform: scale(1.05); }
-.card:hover .card-over, .card:focus-visible .card-over { opacity: 1; }
 .card:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
-@media (hover: none) { .card-over { opacity: 1; padding: 12px; } .card-name { font-size: 18px; } }
-@media (prefers-reduced-motion: reduce) { .card-img, .card-over { transition: none; } .card:hover .card-img { transform: none; } }
 
 /* project detail overlay */
 .detail { position: fixed; inset: 0; z-index: 6; overflow-y: auto; background: var(--paper); color: var(--ink); }
@@ -293,30 +284,15 @@ body:has(#stage[data-state='page']) .draw-hint { opacity: 0; pointer-events: non
 /* cleaner project page */
 .stage[data-state='page'] section + section { margin-top: 56px; }
 .group { display: flex; justify-content: space-between; align-items: baseline; font: 500 16px var(--mono); letter-spacing: .18em; text-transform: lowercase; border-bottom: 1px solid var(--ink); padding-bottom: 12px; margin: 0 0 24px; }
-.stage[data-state='page'] .cards { grid-template-columns: repeat(auto-fill, minmax(min(100%, 230px), 1fr)); gap: 24px; }
 .card .card-img { background-color: color-mix(in srgb, var(--c, var(--ochre)) 70%, var(--paper)); }
-.card.no-img .card-over { opacity: 1; background: none; color: var(--ink); }
-.card.no-img .card-name { font-size: 22px; }
-.card.no-img:hover .card-over, .card.no-img:focus-visible .card-over { background: linear-gradient(to top, rgba(14,14,14,.18), transparent 60%); }
 .stage[data-state='page'] .todo { display: none; }
 @media (min-width: 900px) { .stage[data-state='page'] .panel-body { padding-top: 88px; } }
-@media (max-width: 640px) { .stage[data-state='page'] .cards { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; } .card.no-img .card-name, .card-name { font-size: 17px; } }
 @media (min-width: 900px) {
   /* the single column: labels sit beside each stamp */
   .stage[data-state='page'] .stamps[data-mode='mini'] .stamp .tag { left: 50%; top: 100%; right: auto; bottom: auto; transform: translate(-50%, 6px); white-space: nowrap; text-align: center; font-size: 12px; }
   .stage[data-state='page'] .stamp[aria-current='page'] .tag { opacity: 1; font-weight: 600; }
 }
 
-/* project cards: the title is always shown, the role and year appear on hover */
-.card .card-over { opacity: 1; background: linear-gradient(to top, rgba(14,14,14,.6), rgba(14,14,14,0) 42%); transition: background .35s ease; }
-.card:hover .card-over, .card:focus-visible .card-over { background: linear-gradient(to top, rgba(14,14,14,.78), rgba(14,14,14,.18) 70%); }
-.card .card-sub { max-height: 0; opacity: 0; overflow: hidden; transition: max-height .35s ease, opacity .35s ease; }
-.card:hover .card-sub, .card:focus-visible .card-sub { max-height: 3.5em; opacity: 1; }
-.card.no-img .card-over { background: none; }
-.card.no-img:hover .card-over, .card.no-img:focus-visible .card-over { background: linear-gradient(to top, rgba(14,14,14,.18), transparent 60%); }
-.card.no-img .card-sub { color: var(--ink); }
-@media (hover: none) { .card .card-sub { max-height: 3.5em; opacity: 1; } }
-@media (prefers-reduced-motion: reduce) { .card .card-over, .card .card-sub { transition: none; } }
 
 
 /* mobile pass */
@@ -324,8 +300,6 @@ body:has(#stage[data-state='page']) .draw-hint { opacity: 0; pointer-events: non
 .foot-right { white-space: nowrap; flex-shrink: 0; }
 @media (max-width: 360px) { .footer { font-size: 10px; padding: 0 10px; } .foot-left { gap: 0 8px; } }
 @media (hover: none) {
-  .card .card-over { padding: 10px; gap: 2px; }
-  .card .card-sub { max-height: none; font-size: 10px; letter-spacing: .06em; line-height: 1.3; }
   .detail-close { padding: 13px 18px; }
 }
 @media (max-width: 640px) {
@@ -532,14 +506,11 @@ html, body, .panel, .footer { transition: background-color .5s ease, color .5s e
 .detail-close { min-height: 44px; }
 .detail-sum { font-size: 20px; line-height: 1.5; max-width: 62ch; }
 /* Card titles stay readable on busy photos. */
-.card:not(.no-img) .card-over { background: linear-gradient(to top, rgba(14,14,14,.84), rgba(14,14,14,.4) 40%, rgba(14,14,14,0) 66%); }
-.card:not(.no-img):hover .card-over, .card:not(.no-img):focus-visible .card-over { background: linear-gradient(to top, rgba(14,14,14,.88), rgba(14,14,14,.45) 55%, rgba(14,14,14,.1) 90%); }
-.card:not(.no-img) .card-name { text-shadow: 0 1px 8px rgba(0,0,0,.55); }
 /* Card covers are real lazy images now: shimmer sits behind, the photo fades in over it. */
 .card .card-img.has-img { overflow: hidden; background-image: none; animation: none; }
 .card .card-img.has-img::before { content: ''; position: absolute; inset: 0; background: var(--sk-grad); background-size: 200% 100%; animation: sk-shimmer-1 1.6s ease-in-out infinite; }
 .card .card-img.ld::before { display: none; }
-.card-photo { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity .35s ease; }
+.card-photo { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity .35s ease, transform .7s var(--ease-out); }
 .card-img.ld .card-photo { opacity: 1; }
 @media (prefers-reduced-motion: reduce) { .card .card-img.has-img::before { animation: none; } .card-photo { transition: none; } }
 /* Photography: rolls far off screen are skipped until near, so 270 photos are not decoded at once. */
@@ -636,7 +607,7 @@ html, body, .panel, .footer { transition: background-color .5s ease, color .5s e
 /* ---------- motion polish: one shared ease-out (like power3.out), softer hovers, staggered card rise ---------- */
 :root { --ease-out: cubic-bezier(.22, 1, .36, 1); }
 .card-img { transition: transform .9s var(--ease-out); }
-.card .card-over, .card .card-sub { transition-timing-function: var(--ease-out); transition-duration: .5s; }
+.card .card-sub { transition-timing-function: var(--ease-out); transition-duration: .5s; }
 .card-photo { transition-duration: .6s; transition-timing-function: var(--ease-out); }
 .fs-frame { transition: opacity .5s var(--ease-out), transform .6s var(--ease-out); }
 .chip { transition: background-color .3s var(--ease-out), color .3s var(--ease-out); }
@@ -654,3 +625,25 @@ html, body, .panel, .footer { transition: background-color .5s ease, color .5s e
 .stage:not([data-state='nav']) .tagline { opacity: 0; }
 @media (max-width: 640px) { .tagline { top: 16px; font-size: 16px; line-height: 1.4; } }
 .cards.filtering .card { animation: none !important; }
+
+/* ---------- Work grid: captions under the image, developments lead ---------- */
+.card { display: flex; flex-direction: column; gap: 12px; position: relative; padding: 0; border: 0; background: none; color: inherit; font: inherit; text-align: left; cursor: pointer; min-width: 0; }
+.card .card-img { position: relative; display: block; aspect-ratio: 4 / 5; overflow: hidden; border-radius: 2px; }
+.card.lead-wide .card-img { aspect-ratio: 4 / 5; }
+.card:hover .card-photo, .card:focus-visible .card-photo { transform: scale(1.035); }
+.card-cap { display: flex; flex-direction: column; gap: 3px; padding: 0 2px; }
+.card-name { font: 500 19px/1.25 var(--serif); color: var(--ink); }
+.card-sub { font: 500 13px var(--mono); letter-spacing: .12em; text-transform: lowercase; color: var(--ink); opacity: .62; }
+.card.no-img .card-img { display: grid; place-items: center; }
+.stage[data-state='page'] .cards { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 28px 16px; }
+@media (min-width: 900px) {
+  .stage[data-state='page'] .cards { grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 44px 28px; }
+  .stage[data-state='page'] .cards .card { grid-column: span 2; }
+  .stage[data-state='page'] .cards .card.lead { grid-column: span 3; }
+  .stage[data-state='page'] .cards .card.lead-wide { grid-column: span 6; }
+  .card.lead-wide .card-img { aspect-ratio: 2 / 1; }
+  .card.lead .card-name { font-size: 24px; }
+  .card.lead .card-sub { font-size: 14px; }
+}
+@media (max-width: 640px) { .card { gap: 8px; } .card-name { font-size: 15px; } .card-sub { font-size: 11px; letter-spacing: .08em; } .cards .card.lead { grid-column: span 2; } }
+@media (prefers-reduced-motion: reduce) { .card-photo { transition: opacity .35s ease; } .card:hover .card-photo { transform: none; } }
