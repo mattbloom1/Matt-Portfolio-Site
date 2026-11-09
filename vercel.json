@@ -1,12 +1,12 @@
 {
   "redirects": [
     {
-      "source": "/:sec(projects|websites|crafts)",
+      "source": "/:sec(projects|websites|crafts)(/)?",
       "destination": "/work/",
       "permanent": true
     },
     {
-      "source": "/:sec(projects|websites|crafts)/:rest((?!.*\\.).*)",
+      "source": "/:sec(projects|websites|crafts)/:rest((?!.*\\.).*)(/)?",
       "destination": "/work/:rest",
       "permanent": true
     }
