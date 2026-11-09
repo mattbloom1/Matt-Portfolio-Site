@@ -549,3 +549,25 @@ html, body, .panel, .footer { transition: background-color .5s ease, color .5s e
 .roll { content-visibility: auto; contain-intrinsic-size: auto 5200px; }
 /* About links get a 44px touch target on small screens. */
 @media (max-width: 899px) { .links a { display: inline-block; padding-block: 13px; } }
+
+/* Project kit (Le Rêve, Casa Avenida): credits, brand identity, then website mockups */
+.kit-credits { margin: 20px 0 0; display: grid; gap: 0; border-top: 1px solid var(--ink); }
+.kit-credits > div { display: grid; grid-template-columns: 8.5em minmax(0, 1fr); gap: 12px; padding: 9px 0; border-bottom: 1px solid color-mix(in srgb, var(--ink) 18%, transparent); }
+.kit-credits dt { font: 500 11px/1.6 var(--mono); letter-spacing: .14em; text-transform: lowercase; opacity: .65; }
+.kit-credits dd { margin: 0; font: 400 16px/1.45 var(--serif); }
+.kit-brand, .kit-head { max-width: 1400px; margin: 0 auto; padding: 0 clamp(20px, 4vw, 64px); }
+.kit-brand { padding-bottom: clamp(32px, 5vw, 64px); }
+.kit-head { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr); gap: clamp(16px, 4vw, 64px); padding-top: clamp(32px, 5vw, 72px); padding-bottom: 24px; }
+.kit-head p { margin: 0; }
+.kit-head p:not(.meta) { font: 400 18px/1.5 var(--serif); max-width: 62ch; }
+.kit-logos { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(12px, 2vw, 28px); }
+.kit-logo { margin: 0; aspect-ratio: 3 / 2; display: grid; place-items: center; }
+.kit-logo:first-child:nth-last-child(odd) { grid-column: 1 / -1; aspect-ratio: 16 / 7; }
+.kit-logo img { height: auto; max-height: 60%; width: auto; object-fit: contain; }
+.kit-palette { list-style: none; margin: clamp(12px, 2vw, 28px) 0 0; padding: 0; display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; gap: 0; }
+.kit-palette li { background: var(--sw); height: clamp(90px, 12vw, 160px); display: flex; align-items: flex-end; padding: 10px 12px; }
+.kit-palette li span { font: 500 11px var(--mono); letter-spacing: .1em; mix-blend-mode: difference; color: #fff; }
+.kit-fonts { margin: 18px 0 0; }
+.kit-web { padding-bottom: 28px; }
+@media (max-width: 760px) { .kit-head { grid-template-columns: minmax(0, 1fr); gap: 8px; } .kit-logos { grid-template-columns: minmax(0, 1fr); } .kit-credits > div { grid-template-columns: 7em minmax(0, 1fr); } }
+.kit-brand .kit-head { padding-left: 0; padding-right: 0; max-width: none; }

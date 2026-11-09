@@ -49,7 +49,7 @@ export const SEED_PROJECTS: Project[] = [
     href: 'https://www.gearbook.shop/',
     linkLabel: 'Visit site',
   }),
-  p('Le Reve', 'Websites', {
+  p('Le Reve', 'Developments', {
     role: 'Design, development & content',
     year: 2025,
     summary: 'Le Rêve is the marketing site for five luxury townhomes in downtown Boca Raton, built for the Gasdaska Verdiglione Conlon Team at Douglas Elliman. It needed to capture leads and inquiries while showing off the finishes, the available residences, and the teams behind the development: Advanced Development Group, Netta Architects and EAJ Services. Details came from several parties, so the hardest part was keeping every spec and claim accurate. Leads go straight to the MLS, and the site has brought in 23 leads so far on roughly $5 million residences. I handled the design, development and content, including the homepage hero video and the on-brand stylized elements, and edited the photography.',
@@ -57,17 +57,55 @@ export const SEED_PROJECTS: Project[] = [
     cover: asset('/websites/covers/le-reve.webp'),
     images: ['macbook-2', 'macbook-3', 'macbook-4', 'phones'].map((n) => asset(`/websites/le-reve-${n}.webp`)),
     stack: { Framework: ['Next.js', 'React'], Hosting: ['Vercel'], Integrations: ['MLS lead capture', 'Vercel Analytics', 'Vercel Speed Insights'] },
+    kit: {
+      credits: [
+        { label: 'Location', value: 'Boca Raton, FL' },
+        { label: 'Client', value: 'Gasdaska Verdiglione Conlon Team at Douglas Elliman' },
+        { label: 'Developer', value: 'Advanced Development Group' },
+        { label: 'Architecture', value: 'Netta Architects' },
+        { label: 'Construction', value: 'EAJ Services' },
+        { label: 'Scope', value: 'Website design, development and content, homepage video' },
+      ],
+      brand: {
+        logos: [{ src: asset('/projects/le-reve/wordmark.svg'), alt: 'Le Rêve Boca Raton wordmark', bg: '#ebf1f9', w: 34 }],
+        palette: ['#141c30', '#2a3650', '#38496a', '#4c5f84', '#c4d2e2', '#ebf1f9'],
+        fonts: ['Roquila', 'Avenir Next'],
+        note: 'A hand-lettered script wordmark in deep navy, paired with a quiet sans and a cool, pale blue palette.',
+      },
+      websiteNote: 'One site to gather leads and inquiries while showing finishes, available units and the teams behind the building.',
+    },
     href: 'https://www.lerevebocaraton.com/',
     linkLabel: 'Visit site',
   }),
-  p('Casa Avenida', 'Websites', {
+  p('Casa Avenida', 'Developments', {
     role: 'Design, development & content',
     year: 2025,
     summary: 'Casa Avenida is the marketing site for eight luxury townhome-style condominiums one block from Atlantic Avenue in downtown Delray Beach. I built it in early 2025 for the Gasdaska Verdiglione Conlon Team at Douglas Elliman, with the developers Kastelo Development and 4TRO Development and Capital and RWB/Linares Architecture. The site captures inquiries and leads while presenting the residences, finishes, renderings and a 360 virtual tour. It was my first real client website, so I learned a lot on the fly. I handled the design, development and content, and assisted on the renderings. Three of the eight residences have sold so far. It is public and still maintained.',
     heroImage: asset('/websites/casa-avenida-macbook-1.webp'),
     cover: asset('/websites/covers/casa-avenida.webp'),
     images: ['macbook-2', 'macbook-3', 'macbook-4', 'phones'].map((n) => asset(`/websites/casa-avenida-${n}.webp`)),
-    stack: { Framework: ['Next.js 14', 'React'], Styling: ['Tailwind CSS', 'Motion'], Data: ['JSON content files'], Hosting: ['Vercel'], Integrations: ['Resend', 'Google Sheets', 'MailerLite', 'Google Maps', 'reCAPTCHA', 'Vercel Analytics'] },
+    stack: { Framework: ['Framer'], Hosting: ['Framer'], Integrations: ['Google Analytics', 'Meta Pixel'] },
+    kit: {
+      credits: [
+        { label: 'Location', value: 'Downtown Delray Beach, FL' },
+        { label: 'Client', value: 'Gasdaska Verdiglione Conlon Team at Douglas Elliman' },
+        { label: 'Developers', value: 'Kastelo Development, 4TRO Development and Capital' },
+        { label: 'Architecture', value: 'RWB/Linares Architecture' },
+        { label: 'Interiors', value: 'Stef Leonel Interior Design, Ava Gray Interiors' },
+        { label: 'Scope', value: 'Website design, development and content; assisted on renderings' },
+      ],
+      brand: {
+        logos: [
+          { src: asset('/projects/casa-avenida/wordmark.svg'), alt: 'Casa Avenida wordmark', bg: '#4f2c1d', w: 46 },
+          { src: asset('/projects/casa-avenida/monogram.svg'), alt: 'Casa Avenida A monogram', bg: '#373a36', w: 22 },
+          { src: asset('/projects/casa-avenida/app-icon.svg'), alt: 'Casa Avenida app icon', bg: '#ede2d9', w: 22 },
+        ],
+        palette: ['#4f2c1d', '#373a36', '#006a8e', '#dfd1a7', '#ede2d9'],
+        fonts: ['Nunito Sans', 'Afacad Flux'],
+        note: 'A champagne-gold serif wordmark and monogram on deep brown and charcoal, with a teal accent and warm cream.',
+      },
+      websiteNote: 'The marketing site for the eight residences: inquiries, finishes, renderings and a 360 virtual tour.',
+    },
     href: 'https://casaavenidadelray.com/',
     linkLabel: 'Visit site',
   }),
@@ -143,7 +181,6 @@ export const SEED_PROJECTS: Project[] = [
     href: 'https://livpolani.com',
     linkLabel: 'Visit site',
   }),
-  ...['Le Reve', 'Casa Avenida'].map((t) => p(t, 'Branding')),
   p('Trimble Business Systems', 'Branding', {
     role: 'Brand identity & intranet design',
     year: 2025,

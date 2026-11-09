@@ -37,6 +37,21 @@ export interface Project {
   stack?: Partial<Record<StackGroup, string[]>>;
   /** Optional case-study extras, rendered the same way on any project detail page. */
   extras?: ProjectExtras;
+  /** Full project kit (credits, brand identity) rendered above the website mockups, in the style of a studio case study. */
+  kit?: ProjectKit;
+}
+export interface ProjectKit {
+  /** Credit lines shown beside the story, e.g. Location, Architecture. */
+  credits?: { label: string; value: string }[];
+  brand?: {
+    /** Logos shown on a coloured field. */
+    logos: { src: string; alt: string; bg: string; w?: number }[];
+    palette?: string[];
+    fonts?: string[];
+    note?: string;
+  };
+  /** Heading above the website mockups. */
+  websiteNote?: string;
 }
 export interface ProjectExtras {
   /** Large figures with captions (e.g. a photo of a physical object). */
@@ -92,6 +107,13 @@ function stackHtml(p: Project) {
     .map((g) => `<div class="stack-row"><dt>${esc(g)}</dt><dd>${(p.stack![g] || []).map((t) => `<span class="chip">${esc(t)}</span>`).join('')}</dd></div>`).join('');
   return rows ? `<dl class="stack" aria-label="Tech stack"><p class="meta">Built with</p>${rows}</dl>` : '';
 }
+function kitHtml(p: Project) {
+  const b = p.kit?.brand;
+  if (!b) return '';
+  const logos = b.logos.filter((l) => safeUrl(l.src)).map((l) => `<figure class="kit-logo" style="background:${safeColor(l.bg) || '#fff'}"><img src="${esc(encodeURI(safeUrl(l.src)))}" alt="${esc(l.alt)}" style="max-width:${l.w || 60}%" loading="lazy" decoding="async"></figure>`).join('');
+  const sw = (b.palette || []).filter((c) => safeColor(c)).map((c) => `<li style="--sw:${c}"><span>${esc(c.toUpperCase())}</span></li>`).join('');
+  return `<section class="kit-brand"><div class="kit-head"><p class="meta">Brand identity</p>${b.note ? `<p>${esc(b.note)}</p>` : ''}</div><div class="kit-logos">${logos}</div>${sw ? `<ul class="kit-palette" aria-label="Colour palette">${sw}</ul>` : ''}${(b.fonts || []).length ? `<p class="meta kit-fonts">Type: ${(b.fonts || []).map(esc).join(' · ')}</p>` : ''}</section>${p.images?.length ? `<div class="kit-head kit-web"><p class="meta">Website</p>${p.kit?.websiteNote ? `<p>${esc(p.kit.websiteNote)}</p>` : ''}</div>` : ''}`;
+}
 function extrasHtml(p: Project) {
   const x = p.extras;
   if (!x) return '';
@@ -100,7 +122,7 @@ function extrasHtml(p: Project) {
   const notes = (x.notes || []).map((n) => `<div class="xnote"><h3>${esc(n.heading)}</h3><p>${esc(n.body)}</p></div>`).join('');
   return `<div class="detail-extra">${figs ? `<div class="xfigs">${figs}</div>` : ''}${stats ? `<dl class="xstats">${stats}</dl>` : ''}${notes ? `<div class="xnotes">${notes}</div>` : ''}</div>`;
 }
-const GROUPS = ['Websites', 'Branding', 'Projects', 'Ignite Adaptive Sports'];
+const GROUPS = ['Developments', 'Websites', 'Branding', 'Projects', 'Ignite Adaptive Sports'];
 /** Cards plus full-screen detail pages, shared by Projects and Crafts. */
 function workViews(items: Project[], noun: string, defaultMeta: string) {
   const c = { projects: items };
@@ -134,10 +156,12 @@ function workViews(items: Project[], noun: string, defaultMeta: string) {
           <h2 tabindex="-1">${esc(p.title)}</h2>
           <p class="meta">${esc([p.role, p.year].filter(Boolean).join(' · '))}</p>
           ${p.summary ? `<p class="detail-sum">${esc(p.summary)}</p>` : `<p class="todo">The story, images and details for this ${noun} are still to come.</p>`}
+          ${p.kit?.credits?.length ? `<dl class="kit-credits">${p.kit.credits.map((c) => `<div><dt>${esc(c.label)}</dt><dd>${esc(c.value)}</dd></div>`).join('')}</dl>` : ''}
           ${stackHtml(p)}
           ${links(p) ? `<p class="meta detail-links">${links(p)}</p>` : ''}
         </div>
       </div>
+      ${kitHtml(p)}
       ${(p.images || []).filter((u) => safeUrl(u)).length ? `<div class="detail-gallery">${(p.images || []).map((u, k) => ({ u, k })).filter(({ u }) => safeUrl(u)).map(({ u, k }) => `<figure class="gimg"><img src="${esc(encodeURI(safeUrl(u)))}" alt="${esc((p.imageAlts || [])[k] || `${p.title} mockup`)}" loading="lazy" decoding="async"></figure>`).join('')}</div>` : ''}
       ${extrasHtml(p)}
     </div>`;
