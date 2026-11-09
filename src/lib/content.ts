@@ -55,6 +55,8 @@ export interface ProjectKit {
     fonts?: string[];
     note?: string;
   };
+  /** Collateral sections (guidelines, stationery, brochures...) shown after the brand identity, in order. */
+  sections?: { title: string; note?: string; /** columns on desktop; images keep their own aspect ratio */ cols?: 1 | 2 | 3 | 4; /** first image full width, the rest in pairs */ mix?: boolean; images: { src: string; alt: string }[] }[];
   /** Heading above the website mockups. */
   websiteNote?: string;
 }
@@ -116,10 +118,17 @@ function stackHtml(p: Project) {
 }
 function kitHtml(p: Project) {
   const b = p.kit?.brand;
-  if (!b) return '';
-  const logos = b.logos.filter((l) => safeUrl(l.src)).map((l) => `<figure class="kit-logo" style="background:${safeColor(l.bg) || '#fff'}"><img src="${esc(encodeURI(safeUrl(l.src)))}" alt="${esc(l.alt)}" style="max-width:${l.w || 60}%" loading="lazy" decoding="async"></figure>`).join('');
-  const sw = (b.palette || []).filter((c) => safeColor(c)).map((c) => `<li style="--sw:${c}"><span>${esc(c.toUpperCase())}</span></li>`).join('');
-  return `<section class="kit-brand"><div class="kit-head"><p class="meta">Brand identity</p>${b.note ? `<p>${esc(b.note)}</p>` : ''}</div><div class="kit-logos">${logos}</div>${sw ? `<ul class="kit-palette" aria-label="Colour palette">${sw}</ul>` : ''}${(b.fonts || []).length ? `<p class="meta kit-fonts">Type: ${(b.fonts || []).map(esc).join(' · ')}</p>` : ''}</section>${p.images?.length ? `<div class="kit-head kit-web"><p class="meta">Website</p>${p.kit?.websiteNote ? `<p>${esc(p.kit.websiteNote)}</p>` : ''}</div>` : ''}`;
+  const brand = b ? (() => {
+    const logos = b.logos.filter((l) => safeUrl(l.src)).map((l) => `<figure class="kit-logo" style="background:${safeColor(l.bg) || '#fff'}"><img src="${esc(encodeURI(safeUrl(l.src)))}" alt="${esc(l.alt)}" style="max-width:${l.w || 60}%" loading="lazy" decoding="async"></figure>`).join('');
+    const sw = (b.palette || []).map((c) => c.split('|')).filter(([c]) => safeColor(c)).map(([c, n]) => `<li style="--sw:${c}"><span>${n ? `${esc(n)}<br>` : ''}${esc(c.toUpperCase())}</span></li>`).join('');
+    return `<section class="kit-brand"><div class="kit-head"><p class="meta">Brand identity</p>${b.note ? `<p>${esc(b.note)}</p>` : ''}</div><div class="kit-logos">${logos}</div>${sw ? `<ul class="kit-palette" aria-label="Colour palette">${sw}</ul>` : ''}${(b.fonts || []).length ? `<p class="meta kit-fonts">Type: ${(b.fonts || []).map(esc).join(' · ')}</p>` : ''}</section>`;
+  })() : '';
+  const secs = (p.kit?.sections || []).map((sec) => {
+    const figs = sec.images.filter((i) => safeUrl(i.src)).map((i) => `<figure class="kit-fig"><img src="${esc(encodeURI(safeUrl(i.src)))}" alt="${esc(i.alt)}" loading="lazy" decoding="async"></figure>`).join('');
+    return `<section class="kit-sec"><div class="kit-head"><p class="meta">${esc(sec.title)}</p>${sec.note ? `<p>${esc(sec.note)}</p>` : ''}</div><div class="kit-grid ${sec.mix ? 'kit-mix' : `c${sec.cols || 2}`}">${figs}</div></section>`;
+  }).join('');
+  const web = p.images?.length ? `<div class="kit-head kit-web"><p class="meta">Website</p>${p.kit?.websiteNote ? `<p>${esc(p.kit.websiteNote)}</p>` : ''}</div>` : '';
+  return `${brand}${secs}${web}`;
 }
 function extrasHtml(p: Project) {
   const x = p.extras;

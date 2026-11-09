@@ -69,10 +69,31 @@ export const SEED_PROJECTS: Project[] = [
       ],
       brand: {
         logos: [{ src: asset('/projects/le-reve/wordmark.svg'), alt: 'Le Rêve Boca Raton wordmark', bg: '#ebf1f9', w: 34 }],
-        palette: ['#141c30', '#2a3650', '#38496a', '#4c5f84', '#c4d2e2', '#ebf1f9'],
-        fonts: ['Roquila', 'Avenir Next'],
-        note: 'A hand-lettered script wordmark in deep navy, paired with a quiet sans and a cool, pale blue palette.',
+        palette: ['#38496a|Navy', '#4c5f84|Slate blue', '#d7d2cb|Warm gray'],
+        fonts: ['Roquila (heading)', 'Novecento Sans Light (subheading)', 'Avenir Next (text)', 'Acumin Pro Thin'],
+        note: 'A hand-lettered script wordmark in deep navy, paired with a quiet sans and a restrained navy and warm gray palette.',
       },
+      sections: [
+        { title: 'Brand guidelines', cols: 1, images: [
+          { src: asset('/projects/le-reve/kit/brand-guide.webp'), alt: 'Le Rêve branding guide: colours, typography and logo' },
+        ] },
+        { title: 'Stationery', cols: 2, images: [
+          { src: asset('/projects/le-reve/kit/stationery-1.webp'), alt: 'Le Rêve stationery mockup: folder, letterhead, envelope and business cards' },
+          { src: asset('/projects/le-reve/kit/stationery-2.webp'), alt: 'Le Rêve stationery mockup, second layout' },
+        ] },
+        { title: 'Brochure', cols: 2, images: [
+          { src: asset('/projects/le-reve/kit/brochure-cover.webp'), alt: 'Le Rêve brochure cover' },
+          { src: asset('/projects/le-reve/kit/brochure-welcome.webp'), alt: 'Le Rêve brochure welcome panel' },
+          { src: asset('/projects/le-reve/kit/brochure-residences.webp'), alt: 'Le Rêve brochure residences panel' },
+          { src: asset('/projects/le-reve/kit/brochure-back.webp'), alt: 'Le Rêve brochure back panel with contacts and map' },
+        ] },
+        { title: 'Fact sheet', cols: 1, images: [
+          { src: asset('/projects/le-reve/kit/fact-sheet.webp'), alt: 'Le Rêve fact sheet' },
+        ] },
+        { title: 'Location map', cols: 1, images: [
+          { src: asset('/projects/le-reve/kit/map.webp'), alt: 'Le Rêve location map of Boca Raton' },
+        ] },
+      ],
       websiteNote: 'One site to gather leads and inquiries while showing finishes, available units and the teams behind the building.',
     },
     href: 'https://www.lerevebocaraton.com/',
@@ -97,26 +118,69 @@ export const SEED_PROJECTS: Project[] = [
       ],
       brand: {
         logos: [
-          { src: asset('/projects/casa-avenida/wordmark.svg'), alt: 'Casa Avenida wordmark', bg: '#4f2c1d', w: 46 },
+          { src: asset('/projects/casa-avenida/logo-gold.svg'), alt: 'Casa Avenida wordmark in gold and bronze', bg: '#ffffff', w: 40 },
+          { src: asset('/projects/casa-avenida/logo-white.svg'), alt: 'Casa Avenida wordmark in white', bg: '#4f2c1d', w: 55 },
           { src: asset('/projects/casa-avenida/monogram.svg'), alt: 'Casa Avenida A monogram', bg: '#373a36', w: 22 },
-          { src: asset('/projects/casa-avenida/app-icon.svg'), alt: 'Casa Avenida app icon', bg: '#ede2d9', w: 22 },
         ],
-        palette: ['#4f2c1d', '#373a36', '#006a8e', '#dfd1a7', '#ede2d9'],
-        fonts: ['Nunito Sans', 'Afacad Flux'],
-        note: 'A champagne-gold serif wordmark and monogram on deep brown and charcoal, with a teal accent and warm cream.',
+        palette: ['#4f2c1d|Saddle', '#373a36|Lunar', '#006a8e|Bahama Blue', '#dfd1a7|Sapling', '#ffffff|Pure White'],
+        fonts: ['Quake (display)', 'Nunito Sans Light (heading)', 'Helvetica Bold (subheading)', 'Afacad Flux Light (text)'],
+        note: 'A high-contrast serif wordmark with a spaced CASA above it, a bold A monogram, and a palette of saddle brown, lunar charcoal, Bahama blue and sapling gold, used as flat colour and as gradients.',
       },
+      sections: [
+        { title: 'Brand guidelines', cols: 1, images: [
+          { src: asset('/projects/casa-avenida/kit/brand-guide.webp'), alt: 'Casa Avenida final brand guidelines: logo, colours, typography and design elements' },
+        ] },
+        { title: 'Stationery', mix: true, images: [
+          { src: asset('/projects/casa-avenida/kit/stationery-1.webp'), alt: 'Casa Avenida letterhead, envelope and business card mockup' },
+          { src: asset('/projects/casa-avenida/kit/stationery-2.webp'), alt: 'Casa Avenida stationery mockup in blue and brown' },
+          { src: asset('/projects/casa-avenida/kit/stationery-3.webp'), alt: 'Casa Avenida stationery mockup in gold' },
+        ] },
+        { title: 'Brochure', cols: 4, images: [
+          { src: asset('/projects/casa-avenida/kit/brochure-1.webp'), alt: 'Casa Avenida brochure, page 1' },
+          { src: asset('/projects/casa-avenida/kit/brochure-2.webp'), alt: 'Casa Avenida brochure, page 2' },
+          { src: asset('/projects/casa-avenida/kit/brochure-4.webp'), alt: 'Casa Avenida brochure, page 4' },
+          { src: asset('/projects/casa-avenida/kit/brochure-5.webp'), alt: 'Casa Avenida brochure, page 5' },
+          { src: asset('/projects/casa-avenida/kit/brochure-7.webp'), alt: 'Casa Avenida brochure, page 7' },
+          { src: asset('/projects/casa-avenida/kit/brochure-9.webp'), alt: 'Casa Avenida brochure, page 9' },
+          { src: asset('/projects/casa-avenida/kit/brochure-13.webp'), alt: 'Casa Avenida brochure, page 13' },
+          { src: asset('/projects/casa-avenida/kit/brochure-14.webp'), alt: 'Casa Avenida brochure, page 14' },
+        ] },
+        { title: 'Fact sheet and finishes', cols: 2, images: [
+          { src: asset('/projects/casa-avenida/kit/fact-sheet.webp'), alt: 'Casa Avenida fact sheet' },
+          { src: asset('/projects/casa-avenida/kit/finishes-sheet.webp'), alt: 'Casa Avenida finishes tear sheet' },
+        ] },
+      ],
       websiteNote: 'The marketing site for the eight residences: inquiries, finishes, renderings and a 360 virtual tour.',
     },
     href: 'https://casaavenidadelray.com/',
     linkLabel: 'Visit site',
   }),
-  p('The Edge Delray', 'Websites', {
+  p('The Edge Delray', 'Developments', {
     role: 'Design, development & content',
     year: 2026,
     summary: 'The Edge is the marketing site for seven luxury townhomes in two four-story buildings in Delray Beach, built for the Gasdaska Verdiglione Conlon Team at Douglas Elliman, with Advanced Development Group as developer and Netta Architects as architect. It presents the floor plans, the location and the teams behind the project, and captures inquiries ahead of launch. The site is built but not live yet. I handled the design, development and content.',
     heroImage: asset('/websites/the-edge-delray-macbook-1.webp'),
     cover: asset('/websites/covers/the-edge-delray.webp'),
     images: ['macbook-2', 'macbook-3', 'macbook-4', 'phones'].map((n) => asset(`/websites/the-edge-delray-${n}.webp`)),
+    kit: {
+      credits: [
+        { label: 'Location', value: '602 NE 2nd St, Delray Beach, FL' },
+        { label: 'Client', value: 'Gasdaska Verdiglione Conlon Team at Douglas Elliman' },
+        { label: 'Developer', value: 'Advanced Development Group' },
+        { label: 'Architecture', value: 'Netta Architects' },
+        { label: 'Residences', value: '7 townhomes in two four-story buildings' },
+      ],
+      sections: [
+        { title: 'Renderings', mix: true, images: [
+          { src: asset('/projects/the-edge-delray/kit/rendering-1.webp'), alt: 'The Edge rendering at dusk from the street corner' },
+          { src: asset('/projects/the-edge-delray/kit/rendering-2.webp'), alt: 'The Edge rendering of the two buildings and the walkway between them' },
+          { src: asset('/projects/the-edge-delray/kit/rendering-3.webp'), alt: 'The Edge rendering in daylight' },
+        ] },
+        { title: 'Floor plans', note: 'Branded upper-floor plans for the townhomes and their rooftop pools.', cols: 1, images: [
+          { src: asset('/projects/the-edge-delray/kit/floorplan-upper.webp'), alt: 'The Edge branded floor plans for floors three and four and the roof' },
+        ] },
+      ],
+    },
     stack: { Framework: ['Framer'] },
   }),
   p('Pictorial Symbols Library', 'Websites', {
