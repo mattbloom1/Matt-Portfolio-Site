@@ -129,7 +129,7 @@ export const SEED_PROJECTS: Project[] = [
     summary: 'The internal workspace for the GVC Team, built so every listing, rental, pitch and new development lives in one place instead of across Drive, Asana and Douglas Elliman. Each job has its own page with its facts, stages, agents, marketing pieces, social posts and change log, and the sale or rental dates sit on a timeline. An Errors page flags where Asana, Elliman and Drive disagree, new developments carry milestones, a construction schedule and a budget, and a set of tools (showsheets, brochures, postcards, seller packages, signage, floor plans and more) makes the marketing straight from a job’s facts. A small desktop helper keeps Elliman and Asana in sync and saves finished PDFs into the right Drive folder. The workspace is login-only, so every screen shown here uses made-up sample data.',
     heroImage: asset('/websites/gvc-workspace/macbook-1.webp'),
     cover: asset('/websites/covers/gvc-workspace.webp'),
-    images: ['macbook-2', 'macbook-3', 'macbook-4', 'phones-gray'].map((n) => asset(`/websites/gvc-workspace/${n}.webp`)),
+    images: ['macbook-2', 'laptop-phone-1', 'phones-gray', 'macbook-3', 'laptop-phone-2', 'screens-a', 'laptop-phone-3', 'macbook-4', 'phones-b', 'laptop-phone-4', 'screens-c', 'phones-c'].map((n) => asset(`/websites/gvc-workspace/${n}.webp`)),
     stack: { Framework: ['Hand-coded HTML, CSS & JavaScript', 'Node.js (desktop helper)'], Styling: ['Custom CSS', 'GSAP'], Data: ['Supabase (Postgres, Auth, row-level security)'], Hosting: ['GitHub Pages'], Integrations: ['Asana', 'Google Drive', 'Douglas Elliman listings', 'Playwright'] },
   }),
   p('Client Portfolio Site', 'Websites', {
