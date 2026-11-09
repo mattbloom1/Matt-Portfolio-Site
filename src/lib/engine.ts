@@ -363,7 +363,7 @@ function enterInstant(id: SectionId | null) {
     homeBtn.hidden = false;
     gsap.set(homeBtn, { opacity: 1 });
     swapBackground(id);
-    gsap.set(bgEl, { opacity: 0.95 });
+    gsap.set(bgEl, { opacity: 0 });
     renderContent(id);
     gsap.set(contentEl, { opacity: 1, y: 0 });
   } else {
