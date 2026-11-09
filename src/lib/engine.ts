@@ -580,13 +580,35 @@ const onPop = () => {
   const r = parseRoute();
   if (r.id === active) syncDetail(r.slug);
 };
+let filterTl: gsap.core.Timeline | null = null;
 const onContentClick = (e: MouseEvent) => {
   const t = e.target as HTMLElement;
   const chip = t.closest<HTMLElement>('[data-filter]');
   if (chip) {
     const tag = chip.dataset.filter || '';
     contentEl.querySelectorAll<HTMLElement>('.filter').forEach((b) => b.setAttribute('aria-pressed', String(b === chip)));
-    contentEl.querySelectorAll<HTMLElement>('.cards .card').forEach((c) => { c.hidden = !!tag && !(c.dataset.tags || c.dataset.tag || '').split('|').includes(tag); });
+    const cards = [...contentEl.querySelectorAll<HTMLElement>('.cards .card')];
+    const grid = contentEl.querySelector<HTMLElement>('.cards');
+    const show = (c: HTMLElement) => !tag || (c.dataset.tags || c.dataset.tag || '').split('|').includes(tag);
+    if (reduce || !grid) { cards.forEach((c) => { c.hidden = !show(c); }); return; }
+    // 1) cards that go fade out, 2) the rest glide into their new spots, 3) cards that come back fade in.
+    filterTl?.kill(); gsap.killTweensOf(cards);
+    grid.classList.add('filtering');
+    const leaving = cards.filter((c) => !c.hidden && !show(c));
+    const entering = cards.filter((c) => c.hidden && show(c));
+    // 'filtering' stays on so the CSS card-rise never replays over the cards.
+    const finish = () => { gsap.set(cards, { clearProps: 'opacity,transform' }); };
+    filterTl = gsap.timeline({ onComplete: finish, onInterrupt: finish });
+    filterTl.to(leaving, { opacity: 0, scale: 0.96, duration: 0.2, ease: 'power2.out' });
+    filterTl.add(() => {
+      const fs = Flip.getState(cards.filter((c) => !c.hidden && show(c)));
+      leaving.forEach((c) => { c.hidden = true; });
+      entering.forEach((c) => { c.hidden = false; gsap.set(c, { opacity: 0, y: 16 }); });
+      gsap.set(cards, { clearProps: 'scale' });
+      Flip.from(fs, { duration: 0.7, ease: 'power3.inOut', absolute: false });
+      gsap.to(entering, { opacity: 1, y: 0, duration: 0.7, ease: 'power3.out' });
+    });
+    filterTl.to({}, { duration: 1 });
     return;
   }
   const card = t.closest<HTMLElement>('[data-detail]');
