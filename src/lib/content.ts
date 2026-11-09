@@ -15,6 +15,9 @@ export interface Section {
   html: string;
 }
 
+/** Google Doc ID of Matt's resume (the long id in docs.google.com/document/d/<ID>/edit). Doc must be shared as "anyone with the link can view". Empty hides the embed. */
+export const RESUME_DOC_ID = '';
+
 export const SITE = {
   name: 'Matthew Bloomfield',
   role: 'Creative Technologist & Designer',
@@ -184,7 +187,9 @@ function experienceHtml(c: SiteContent) {
       : `<li>${head}</li>`;
   }).join('');
   const edu = `<p class="meta">Education</p><p><strong>${esc(EDUCATION.school)}</strong>, ${esc(EDUCATION.year)}<br>${esc(EDUCATION.detail)}</p>`;
-  return `<ol class="timeline">${items}</ol>${edu}${c.placeholder.experience ? todo('Placeholder timeline. Experience content has not been supplied.') : ''}`;
+  const doc = RESUME_DOC_ID ? `https://docs.google.com/document/d/${RESUME_DOC_ID}` : '';
+  const resume = doc ? `<section class="resume"><div class="resume-head"><p class="meta">Resume</p><span><a href="${doc}/export?format=pdf" target="_blank" rel="noopener">Download PDF</a><a href="${doc}/edit" target="_blank" rel="noopener">Open in Google Docs</a></span></div><iframe class="resume-frame" src="${doc}/preview" title="Matthew Bloomfield resume" loading="lazy" referrerpolicy="no-referrer"></iframe></section>` : '';
+  return `<ol class="timeline">${items}</ol>${edu}${resume}${c.placeholder.experience ? todo('Placeholder timeline. Experience content has not been supplied.') : ''}`;
 }
 function craftsHtml(c: SiteContent) {
   const items: Project[] = c.crafts.map((k) => ({ title: k.title, slug: k.slug, summary: k.summary, year: k.year, role: k.role, cover: k.cover, heroImage: k.heroImage || k.image, images: k.images, imageAlts: k.imageAlts, disciplines: ['Crafts'] }));
@@ -222,6 +227,16 @@ function aboutHtml() {
   return `<div class="about-top"><img class="portrait" src="${esc(PROFILE_PHOTO.src)}" srcset="${esc(PROFILE_PHOTO.src.replace(/\.webp$/, '-800.webp'))} 800w, ${esc(PROFILE_PHOTO.src)} 1600w" sizes="(max-width: 760px) 100vw, 45vw" alt="${esc(PROFILE_PHOTO.alt)}" width="1600" height="1061" loading="lazy" decoding="async" /><div><p class="lead">${esc(SITE.role)}.</p>
     ${paras(BIO_SHORT)}</div></div>
     <p class="fun">${esc(FUN_NOTE)}</p>
+    <section class="contact"><p class="meta">Write me a letter</p>
+    <div class="letter"><form class="letter-form"><div class="sheet">
+      <label>Your name<input name="name" type="text" required maxlength="100" autocomplete="name"></label>
+      <label>Your email<input name="email" type="email" required maxlength="200" autocomplete="email"></label>
+      <label>Message<textarea name="message" required minlength="2" maxlength="5000" rows="6"></textarea></label>
+      <input class="hp" name="website" type="text" tabindex="-1" autocomplete="off" aria-hidden="true">
+      <button type="submit" class="letter-send">Fold, stamp and send</button>
+    </div></form>
+    <div class="letter-done"><p>Your letter is on its way.</p><button type="button" class="letter-again">Write another</button></div></div>
+    <p class="letter-status" role="status" aria-live="polite"></p></section>
     <p class="meta">Elsewhere</p><ul class="links">${links}<li><a href="mailto:${SITE.email}">${SITE.email}</a></li></ul>`;
 }
 

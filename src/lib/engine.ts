@@ -1,3 +1,4 @@
+import { initLetter } from './letter';
 import { gsap } from 'gsap';
 import { Flip } from 'gsap/Flip';
 import { SITE, buildSections, type Section, type SectionId, type SiteContent } from './content';
@@ -257,7 +258,10 @@ function renderContent(id: SectionId) {
   document.title = `${s.label} · ${SITE.name}`;
   stopFilmStrip();
   if (id === 'photography') startFilmStrip();
+  stopLetter?.(); stopLetter = null;
+  if (id === 'about') stopLetter = initLetter(contentEl);
 }
+let stopLetter: (() => void) | null = null;
 /* ---------- photography film strip: highlights the roll in view, advances the film as you scroll, jumps to a roll on tap ---------- */
 let stopStrip: (() => void) | null = null;
 function stopFilmStrip() { stopStrip?.(); stopStrip = null; }

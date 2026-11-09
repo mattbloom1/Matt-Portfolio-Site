@@ -3,18 +3,7 @@
 const TO = 'matthewb3333@gmail.com';
 const ALLOWED = [/^https:\/\/(www\.)?matthewsbloomfield\.com$/, /^https:\/\/matt-portfolio-site[a-z0-9-]*\.vercel\.app$/];
 const MAX_BYTES = 3 * 1024 * 1024;
-const hits = new Map(); // best-effort per-instance limits
-let globalHits = [];
-
-function limited(ip) {
-  const now = Date.now(), hour = 3600e3;
-  globalHits = globalHits.filter((t) => now - t < hour);
-  const mine = (hits.get(ip) || []).filter((t) => now - t < 10 * 60e3);
-  if (globalHits.length >= 20 || mine.length >= 3) { hits.set(ip, mine); return true; }
-  mine.push(now); globalHits.push(now); hits.set(ip, mine);
-  if (hits.size > 500) hits.clear();
-  return false;
-}
+const { allow, clientIp } = require('./_ratelimit');
 
 module.exports = async function handler(req, res) {
   res.setHeader('Cache-Control', 'no-store');
@@ -29,8 +18,12 @@ module.exports = async function handler(req, res) {
   if (!m) return res.status(400).json({ error: 'bad image' });
   const buf = Buffer.from(m[1], 'base64');
   if (buf.length > MAX_BYTES || buf[0] !== 0xff || buf[1] !== 0xd8) return res.status(400).json({ error: 'bad image' });
-  const ip = String(req.headers['x-forwarded-for'] || '').split(',')[0].trim() || 'unknown';
-  if (limited(ip)) return res.status(429).json({ error: 'slow down' });
+  const ip = clientIp(req);
+  // 3 per IP per 10 minutes, 10 per IP per day, 30 in total per day (Resend free tier is 100/day shared with the contact form).
+  if (!(await allow([{ key: `doodle:ip10m:${ip}`, limit: 3, windowSec: 600 }, { key: `doodle:ipday:${ip}`, limit: 10, windowSec: 86400 }, { key: 'doodle:day', limit: 30, windowSec: 86400 }]))) {
+    res.setHeader('Retry-After', '600');
+    return res.status(429).json({ error: 'slow down' });
+  }
   try {
     const r = await fetch('https://api.resend.com/emails', {
       method: 'POST',
