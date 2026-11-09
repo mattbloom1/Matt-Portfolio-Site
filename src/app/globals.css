@@ -492,6 +492,8 @@ html.lb-open, html.lb-open body { overflow: hidden; }
 :root[data-theme='night'] .grain { mix-blend-mode: screen; opacity: .08; }
 :root[data-theme='night'] .stamp img { filter: drop-shadow(1px 2px 1px rgba(0,0,0,.5)) drop-shadow(0 12px 14px rgba(0,0,0,.55)); }
 :root[data-theme='night'] .filmstrip { --fs-hole: #ece9e2; }
+:root[data-theme='night'] .icon-cursor, :root[data-theme='night'] .icon-stamp { filter: invert(1); } /* black icon strokes flip to white */
+:root[data-theme='night'] .icon-stamp { mix-blend-mode: screen; }
 html, body, .panel, .footer { transition: background-color .5s ease, color .5s ease; }
 .theme-toggle { display: inline-grid; place-items: center; width: 28px; height: 28px; padding: 0; background: none; border: 1px solid currentColor; border-radius: 50%; color: inherit; cursor: pointer; opacity: .75; }
 .theme-toggle:hover, .theme-toggle:focus-visible { opacity: 1; }
