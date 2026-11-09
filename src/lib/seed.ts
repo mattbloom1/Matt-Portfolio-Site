@@ -169,7 +169,14 @@ export const SEED_PROJECTS: Project[] = [
     heroImage: asset('/projects/bloc-cnc/01.webp'),
     images: ['02', '03', '04'].map((n) => asset(`/projects/bloc-cnc/${n}.webp`)),
   }),
-  p('Topomaps', 'Projects'),
+  p('Topomaps', 'Projects', {
+    role: 'Computational fabrication: Rhino, Grasshopper & fabrication',
+    year: 2023,
+    summary: 'Topographical maps translated into 3D structures using Grasshopper and Rhino. I turned the geographic variability of a map into a 3D model, with two deliverables: the model itself and a laser-cut template for it to sit in. In Grasshopper I laid out a grid of points, sampled the map image and sorted each point by its nearest swatch color, then extruded cylinders to matching heights. I applied a Delaunay mesh to the top points, smoothed it, turned it into a Brep solid and unioned it with a cube underneath. I finished by making custom coasters with the related topography for my family. My one change would be to 3D print the models in a color like white so the shadows and contours are more visible. My biggest problems were scope creep, trying to do more than was feasible, and list ordering in Grasshopper.',
+    heroImage: asset('/projects/topomaps/01.webp'),
+    images: ['03', '02', '04', '05', '06', '07'].map((n) => asset(`/projects/topomaps/${n}.webp`)),
+    imageAlts: ['A color-coded elevation map of Boulder, CO turned into a red 3D terrain model', 'Nine steps showing a flat red surface becoming a Boulder terrain mesh in Grasshopper', 'A grey Rhino render of the Boulder terrain model', 'A laser-engraved bear coaster in a wood and plywood frame', 'A wood coaster engraved with a bottle, glass and bread', 'Three finished coasters stacked on a table'],
+  }),
 ];
 
 const craftSlug = (t: string) => t.toLowerCase().replace(/[^a-z0-9]+/g, '-');
