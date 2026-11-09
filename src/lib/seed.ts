@@ -23,13 +23,14 @@ export const FUN_NOTE = 'Owner of a 2003 Eurovan!';
 
 export const SEED_EXPERIENCE: Experience[] = [
   { organization: 'GVC', role: 'Graphic Design, 3D Modelling, Web Design', startDate: 'August 2025', endDate: 'Present', description: 'Full-time graphic designer on the Gasdaska Verdiglione Conlon Team at Douglas Elliman. Designs and builds marketing websites for new developments, including Le Rêve and Casa Avenida, alongside graphic design and 3D modelling for the team.' },
+  { organization: 'GearBook, Boulder, CO', role: 'Co-founder & CMO', startDate: '2025', endDate: 'Present', description: 'Co-founded an affiliate gear catalog for outdoor professionals with Luke Wong. Handles design, development, content, marketing, partner integrations and the legal side, and has signed up 15 members so far.' },
   { organization: 'Trimble', role: 'Business Systems Management & Design', startDate: 'May 2025', endDate: 'August 2025', description: 'Created intranet pages for the DevOps, Change Management and Business Systems teams, and wrote posts that kept stakeholders up to date on Trimble’s software development cycle. Designed a brand identity for the Business Systems team, including a logo, marketing assets and a voice.' },
   { organization: 'Environmental Center, University of Colorado Boulder', role: 'Graphic Designer', startDate: 'May 2022', endDate: 'August 2025', description: 'Designed social posts promoting sustainability and an eco-conscious mindset across the campus community. Grew engagement by 10% and helped build the largest audience the account has had in its ten years, reaching 52,886 people in a single month.' },
   { organization: 'millerBlaker, Bronx, NY', role: 'Associate Project Manager & Intern on Engineering Team', startDate: 'May 2024', endDate: 'August 2024', description: 'Worked through the full architectural millwork workflow: client relations, drafting, engineering, estimating and in-house fabrication. Contributed to high-profile projects including Google team pods, Morgan Stanley and L’Oréal.' },
   { organization: 'Free Float Media LLC, Boulder, CO', role: 'Web Developer', startDate: 'May 2023', endDate: 'October 2023', description: 'Strengthened brand recognition and cohesion for Free Float Media across several websites and social channels, and reviewed and improved digital design and layout.' },
   { organization: 'Gravity Vault Indoor Rock Climbing, Upper Saddle River, NJ', role: 'Instructor', startDate: 'May 2022', endDate: 'August 2023' },
   { organization: 'Woodward Camps, Woodward, PA', role: 'Recreational Staff', startDate: 'May 2021', endDate: 'August 2022' },
-  { organization: 'Ignite Adaptive Sports', role: 'Pro Bono Graphic Design & Event Marketing, On-Snow Volunteer', description: 'Unpaid design and event marketing work for a nonprofit that opens up snowsports to athletes of all ages, disabilities and financial circumstances at Eldora Mountain Resort, plus on-snow volunteering that supports athletes in their lessons.' },
+  { organization: 'Ignite Adaptive Sports', role: 'Pro Bono Graphic Design & Event Marketing, On-Snow Volunteer', startDate: 'May 2026', endDate: 'Present', description: 'Unpaid design and event marketing work for a nonprofit that opens up snowsports to athletes of all ages, disabilities and financial circumstances at Eldora Mountain Resort, plus on-snow volunteering that supports athletes in their lessons.' },
 ];
 
 const asset = (path: string) => `${process.env.NEXT_PUBLIC_BASE_PATH || ''}${path}`;
@@ -188,8 +189,8 @@ export const SEED_PROJECTS: Project[] = [
     heroImage: asset('/projects/trimble-business-systems/01.webp'),
     images: ['03'].map((n) => asset(`/projects/trimble-business-systems/${n}.webp`)),
   }),
-  p('Opus', 'Branding', { summary: 'In progress.' }),
-  p('Essays In Bloom', 'Branding', { summary: 'In progress.' }),
+  p('Opus', 'Branding', { summary: 'In progress.', hidden: true }),
+  p('Essays In Bloom', 'Branding', { summary: 'In progress.', hidden: true }),
   p('CU Skate Forge', 'Projects', {
     role: 'Founder & President',
     year: 2023,
@@ -235,8 +236,8 @@ export const SEED_CRAFTS: Craft[] = [
     images: ['01', '02', '03', '05', '06'].map((n) => craftImg('skate-rings', n)),
     imageAlts: ['Stripped skateboard decks and cut yellow and teal plywood pieces on a workbench', 'Close-up of the colored plywood layers in a sanded skateboard deck', 'Three finished skate rings and a pendant on a striped teal display block', 'A skate ring on a plaster hand', 'Pencil sketches of ring shapes on grid paper'],
   },
-  { title: 'Pottery', slug: 'pottery' },
-  { title: 'Recycled Climbing Rope Crafts', slug: craftSlug('Recycled Climbing Rope Crafts') },
+  { title: 'Pottery', slug: 'pottery', hidden: true },
+  { title: 'Recycled Climbing Rope Crafts', slug: craftSlug('Recycled Climbing Rope Crafts'), hidden: true },
 ];
 
 

@@ -1,7 +1,7 @@
 import { urlFor } from './sanity';
 import { SEED_PHOTOGRAPHY, PROFILE_PHOTO, BIO_SHORT, EDUCATION, FUN_NOTE, SEED_CRAFTS, SEED_EXPERIENCE, SEED_POSTERS, SEED_PROJECTS } from './seed';
 
-export type SectionId = 'projects' | 'posters' | 'experience' | 'about' | 'crafts' | 'photography';
+export type SectionId = 'websites' | 'projects' | 'posters' | 'experience' | 'about' | 'crafts' | 'photography';
 
 export interface Section {
   id: SectionId;
@@ -37,6 +37,8 @@ export interface Project {
   title: string; slug: string; summary?: string; featured?: boolean; year?: number;
   disciplines?: string[]; role?: string; heroImage?: string; /** Card cover; falls back to heroImage */ cover?: string; images?: string[]; imageAlts?: string[]; accent?: string;
   videoUrl?: string; href?: string; linkLabel?: string;
+  /** Kept in the data but not shown anywhere until it has content. */
+  hidden?: boolean;
   stack?: Partial<Record<StackGroup, string[]>>;
   /** Optional case-study extras, rendered the same way on any project detail page. */
   extras?: ProjectExtras;
@@ -67,6 +69,8 @@ export interface ProjectExtras {
   cursorIcons?: string[];
 }
 export interface Craft {
+  /** Kept in the data but not shown until it has content. */
+  hidden?: boolean;
   title: string; slug: string; summary?: string; year?: number; role?: string;
   /** Card cover: one animated image (gif or animated webp). */
   cover?: string; /** Large image on the detail page. */ heroImage?: string; image?: string; notes?: string;
@@ -125,7 +129,6 @@ function extrasHtml(p: Project) {
   const notes = (x.notes || []).map((n) => `<div class="xnote"><h3>${esc(n.heading)}</h3><p>${esc(n.body)}</p></div>`).join('');
   return `<div class="detail-extra">${figs ? `<div class="xfigs">${figs}</div>` : ''}${stats ? `<dl class="xstats">${stats}</dl>` : ''}${notes ? `<div class="xnotes">${notes}</div>` : ''}</div>`;
 }
-const GROUPS = ['Developments', 'Websites', 'Branding', 'Projects', 'Ignite Adaptive Sports'];
 /** Cards plus full-screen detail pages, shared by Projects and Crafts. */
 function workViews(items: Project[], noun: string, defaultMeta: string) {
   const c = { projects: items };
@@ -140,7 +143,7 @@ function workViews(items: Project[], noun: string, defaultMeta: string) {
       <span class="card-img${cardCover(p) ? ' has-img' : ''}" style="--c:${safeColor(p.accent) || accents[i % accents.length]}">${cardCover(p) ? `<img class="card-photo" src="${esc(encodeURI(cardCover(p)))}" alt="" loading="lazy" decoding="async">` : ''}</span>
       <span class="card-over"><span class="card-name">${esc(p.title)}</span><span class="card-sub">${esc([p.role, p.year].filter(Boolean).join(' · '))}</span></span>
     </button>`;
-  const siblings = (p: Project) => c.projects.filter((q) => (q.disciplines || [])[0] === (p.disciplines || [])[0]);
+  const siblings = (_p: Project) => c.projects;
   const stepper = (p: Project) => {
     const sib = siblings(p);
     if (sib.length < 2) return '';
@@ -170,17 +173,22 @@ function workViews(items: Project[], noun: string, defaultMeta: string) {
     </div>`;
   return { card, detail };
 }
-function projectsHtml(c: SiteContent) {
-  const { card, detail } = workViews(c.projects, 'project', 'Project');
-  const groups = [...new Set([...GROUPS, ...c.projects.flatMap((p) => p.disciplines || [])])];
-  const html = groups.map((g) => {
-    const items = c.projects.filter((p) => (p.disciplines || [])[0] === g);
-    return items.length ? `<section><h2 class="group"><span>${esc(g)}</span></h2><div class="cards">${items.map(card).join('')}</div></section>` : '';
-  }).join('');
-  return `${html}${c.projects.map(detail).join('')}${todo('Titles are from Matt’s list. Images, descriptions and links are still to come.')}`;
+/** Websites and Projects are separate stamps: a site is a Project whose first discipline is "Websites". */
+export const isSite = (p: Project) => (p.disciplines || [])[0] === 'Websites';
+function worksHtml(items: Project[], noun: string, defaultMeta: string, note: string) {
+  const { card, detail } = workViews(items, noun, defaultMeta);
+  return `<section><div class="cards">${items.map(card).join('')}</div></section>${items.map(detail).join('')}${todo(note)}`;
 }
+const websitesHtml = (c: SiteContent) => worksHtml(c.projects.filter(isSite), 'website', 'Website', 'More sites are on the way.');
+const projectsHtml = (c: SiteContent) => worksHtml(c.projects.filter((p) => !isSite(p)), 'project', 'Project', 'More projects are on the way.');
+const MONTHS = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'];
+/** "August 2025" -> a sortable number; missing or unreadable dates give -1. */
+const when = (d = '') => { const m = d.match(/([a-z]{3})[a-z]*\.?\s+(\d{4})/i); const y = d.match(/\d{4}/); return m ? +m[2] * 12 + Math.max(0, MONTHS.indexOf(m[1].toLowerCase())) : y ? +y[0] * 12 : -1; };
+const isOpen = (e: Experience) => !e.endDate || /present|current|now/i.test(e.endDate);
+/** Open roles first, then by end date (newest first); ties go to the later start. */
+const byEnd = (a: Experience, b: Experience) => (+isOpen(b) - +isOpen(a)) || (isOpen(a) ? 0 : when(b.endDate) - when(a.endDate)) || when(b.startDate) - when(a.startDate);
 function experienceHtml(c: SiteContent) {
-  const items = c.experience.map((e) => {
+  const items = [...c.experience].sort(byEnd).map((e) => {
     const head = `<span class="meta">${esc(dates(e))}</span><h2>${esc(e.role)}, ${esc(e.organization)}</h2>`;
     return e.description
       ? `<li><details class="job"><summary>${head}<span class="job-toggle" aria-hidden="true"></span></summary><p>${esc(e.description)}</p></details></li>`
@@ -240,27 +248,33 @@ function aboutHtml() {
     <p class="meta">Elsewhere</p><ul class="links">${links}<li><a href="mailto:${SITE.email}">${SITE.email}</a></li></ul>`;
 }
 
+/** Drops entries flagged hidden. */
+const visible = (c: SiteContent): SiteContent => ({ ...c, projects: c.projects.filter((p) => !p.hidden), crafts: c.crafts.filter((k) => !k.hidden) });
+
 /** Plain, text-only outline of the whole site, rendered into the static HTML (inside <noscript>) for crawlers, link readers and no-JS visitors. */
-export function outlineHtml(c: SiteContent): string {
+export function outlineHtml(all: SiteContent): string {
+  const c = visible(all);
   const li = (t: string, d?: string) => `<li><strong>${esc(t)}</strong>${d ? ` ${esc(d)}` : ''}</li>`;
-  const groups = [...new Set(c.projects.flatMap((p) => (p.disciplines || [])[0] || []))];
   return `<h1>${esc(SITE.name)}, ${esc(SITE.role)}</h1>
 <h2>About</h2>${BIO_SHORT.map((t) => `<p>${esc(t)}</p>`).join('')}
-<h2>Projects</h2>${groups.map((g) => `<h3>${esc(g)}</h3><ul>${c.projects.filter((p) => (p.disciplines || [])[0] === g).map((p) => li(p.title, [p.role, p.year].filter(Boolean).join(', '))).join('')}</ul>`).join('')}
-<h2>Experience</h2><ul>${c.experience.map((e) => li(`${e.role}, ${e.organization}`, dates(e))).join('')}</ul>
+<h2>Websites</h2><ul>${c.projects.filter(isSite).map((p) => li(p.title, [p.role, p.year].filter(Boolean).join(', '))).join('')}</ul>
+<h2>Projects</h2><ul>${c.projects.filter((p) => !isSite(p)).map((p) => li(p.title, [p.role, p.year].filter(Boolean).join(', '))).join('')}</ul>
+<h2>Experience</h2><ul>${[...c.experience].sort(byEnd).map((e) => li(`${e.role}, ${e.organization}`, dates(e))).join('')}</ul>
 <h2>Crafts</h2><ul>${c.crafts.map((k) => li(k.title, k.role)).join('')}</ul>
 <h2>Elsewhere</h2><ul>${SITE.links.map((l) => `<li><a href="${esc(l.href)}">${esc(l.label)}</a></li>`).join('')}<li><a href="mailto:${SITE.email}">${SITE.email}</a></li></ul>`;
 }
 
-export function buildSections(c: SiteContent): Section[] {
+export function buildSections(all: SiteContent): Section[] {
+  const c = visible(all);
   const L = (id: SectionId, no: string, label: string, stampName: string, art: string, html: string): Section => ({ id, no, label, stampName, orientation: 'landscape', ratio: 1658 / 1130, alt: `${stampName} stamp, ${art}`, html });
   return [
-    L('projects', '01', 'Projects', 'Web & Graphic Design', 'a vintage computer', projectsHtml(c)),
-    L('posters', '02', 'Posters', 'Posters', 'two printed posters', postersHtml(c)),
-    L('experience', '03', 'Experience', 'Work History', 'a vintage suitcase', experienceHtml(c)),
-    L('crafts', '04', 'Crafts', 'Crafts', 'six pieces of pottery', craftsHtml(c)),
-    L('photography', '05', 'Photography', 'Photography', 'a Minolta X-700 film camera', photographyHtml(c)),
-    L('about', '06', 'About', 'About', 'a halftone portrait of Matt', aboutHtml()),
+    L('websites', '01', 'Websites', 'Websites', 'a vintage computer', websitesHtml(c)),
+    L('projects', '02', 'Projects', 'Projects', 'a stack of project work', projectsHtml(c)),
+    L('posters', '03', 'Posters', 'Posters', 'two printed posters', postersHtml(c)),
+    L('experience', '04', 'Experience', 'Experience', 'a vintage suitcase', experienceHtml(c)),
+    L('crafts', '05', 'Crafts', 'Crafts', 'six pieces of pottery', craftsHtml(c)),
+    L('photography', '06', 'Photography', 'Photography', 'a Minolta X-700 film camera', photographyHtml(c)),
+    L('about', '07', 'About', 'About', 'a halftone portrait of Matt', aboutHtml()),
   ];
 }
 
