@@ -445,12 +445,14 @@ function fanIn() {
 /** Real URLs: /projects/ for a section, /projects/gearbook/ for one open project. */
 /** Earlier section URLs (and the old Crafts stamp) now live under Work. */
 const LEGACY: Record<string, string> = { websites: 'work', projects: 'work', crafts: 'work' };
+/** Slugs renamed to match project names; old links keep working. */
+const SLUG_ALIAS: Record<string, string> = { 'the-gvc-team': 'gvc-team', 'trimble-business-systems': 'trimble', 'pictorial-symbols-library': 'pictorial-symbols', 'client-portfolio-site': 'client-portfolio' };
 const BASE = process.env.NEXT_PUBLIC_BASE_PATH || '';
 const routePath = (id: SectionId | null, slug?: string | null) => `${BASE}/${id ? id + '/' : ''}${id && slug ? slug + '/' : ''}`;
 /** Old links used #/projects/gearbook; rewrite them to the real URL without adding a history entry. */
 function migrateHash() {
   const m = location.hash.match(/^#\/([a-z]+)(?:\/([a-z0-9-]+))?\/?$/);
-  if (m && SECTIONS.some((s) => s.id === m[1])) history.replaceState(history.state, '', routePath(m[1] as SectionId, m[2]));
+  if (m && SECTIONS.some((s) => s.id === m[1])) history.replaceState(history.state, '', routePath(LEGACY[m[1]] as SectionId || m[1] as SectionId, SLUG_ALIAS[m[2]] || m[2]));
   else if (location.hash.startsWith('#/')) history.replaceState(history.state, '', routePath(null));
 }
 function parseRoute(): { id: SectionId | null; slug: string | null } {
@@ -458,7 +460,7 @@ function parseRoute(): { id: SectionId | null; slug: string | null } {
   const path = location.pathname.slice(BASE.length);
   const m = path.match(/^\/([a-z]+)(?:\/([a-z0-9-]+))?\/?$/);
   const id = (LEGACY[m?.[1] || ''] || m?.[1]) as SectionId | undefined;
-  return id && SECTIONS.some((s) => s.id === id) ? { id, slug: m![2] || null } : { id: null, slug: null };
+  return id && SECTIONS.some((s) => s.id === id) ? { id, slug: (m![2] && SLUG_ALIAS[m![2]]) || m![2] || null } : { id: null, slug: null };
 }
 const parseHash = () => parseRoute().id;
 function enterInstant(id: SectionId | null, slug: string | null = null) {

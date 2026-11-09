@@ -185,7 +185,7 @@ export const SEED_PROJECTS: Project[] = [
     },
     stack: { Framework: ['Framer'] },
   }),
-  p('Pictorial Symbols Library', 'Websites', {
+  p('Pictorial Symbols Library', 'Websites', { slug: 'pictorial-symbols',
     role: 'Design & development',
     year: 2026,
     summary: 'A searchable library of 3,133 pictogram icons that I digitized from the 1976 Dover book Handbook of Pictorial Symbols. Each icon went through the same pipeline: scan, crop, vector trace, then name. The site lets you search by name, filter by category, sort, jump to a random icon, star favorites and download any icon as an SVG. A References page credits the source book. It is an archival personal project, not an openly licensed icon set.',
@@ -217,7 +217,7 @@ export const SEED_PROJECTS: Project[] = [
     images: ['macbook-2', 'macbook-3', 'macbook-4', 'phones-gray'].map((n) => asset(`/websites/reseller-ledger/${n}.webp`)),
     stack: { Framework: ['React 19', 'TypeScript', 'Vite'], Data: ['Supabase (Postgres, Auth)'], Hosting: ['Cloudflare Workers Static Assets'], Integrations: ['Vitest', 'Playwright'] },
   }),
-  p('The GVC Team', 'Websites', {
+  p('The GVC Team', 'Websites', { slug: 'gvc-team',
     role: 'Design, development & content',
     year: 2025,
     summary: 'The home of the Gasdaska Verdiglione Conlon Real Estate Team, one of the top real estate teams working across three state markets (NY, NJ & FL). I rebuilt the site in 2025 as a single place where visitors can see what the team can do, learn who they are, and get in touch. I handled the design, development, and content, and I’ve maintained it since.',
@@ -237,7 +237,7 @@ export const SEED_PROJECTS: Project[] = [
     images: ['macbook-2', 'laptop-phone-1', 'phones-gray', 'macbook-3', 'laptop-phone-2', 'screens-a', 'laptop-phone-3', 'macbook-4', 'phones-b', 'laptop-phone-4', 'screens-c', 'phones-c'].map((n) => asset(`/websites/gvc-workspace/${n}.webp`)),
     stack: { Framework: ['Hand-coded HTML, CSS & JavaScript', 'Node.js (desktop helper)'], Styling: ['Custom CSS', 'GSAP'], Data: ['Supabase (Postgres, Auth, row-level security)'], Hosting: ['GitHub Pages'], Integrations: ['Asana', 'Google Drive', 'Douglas Elliman listings', 'Playwright'] },
   }),
-  p('Client Portfolio Site', 'Websites', {
+  p('Client Portfolio Site', 'Websites', { slug: 'client-portfolio',
     role: 'Design & development',
     year: 2026,
     summary: 'A fashion portfolio for Liv Polani, built to feel like a designer’s desk rather than a template. The home page is a paper collage of scanned scraps, lace and tape, with an ink-bleed hover effect, and the work lives in a ledger-style project register. Each project page carries a full case study (Endure, Distorted Bloom, Desert Wildflower, The Sweat Set and more) exported from Canva, and the résumé on the About page is embedded live from Canva so it never goes out of date. I handled the design and development.',
@@ -248,7 +248,7 @@ export const SEED_PROJECTS: Project[] = [
     href: 'https://livpolani.com',
     linkLabel: 'Visit site',
   }),
-  p('Trimble Business Systems', 'Branding', {
+  p('Trimble Business Systems', 'Branding', { slug: 'trimble',
     role: 'Brand identity & intranet design',
     year: 2025,
     summary: 'The Business Systems team within Trimble’s Digital Transformation group took me on as an intern to rebrand their systems and clean up their intranet pages. The result was a full rebrand for the Business Systems team of 400+ Trimble employees, built in Adobe Illustrator in line with the Trimble brand playbook, plus branded content published through a CMS. Some of the work cannot be shared, so only the public pieces are shown here.',

@@ -1,4 +1,16 @@
 {
+  "redirects": [
+    {
+      "source": "/:sec(projects|websites|crafts)",
+      "destination": "/work/",
+      "permanent": true
+    },
+    {
+      "source": "/:sec(projects|websites|crafts)/:rest((?!.*\\.).*)",
+      "destination": "/work/:rest",
+      "permanent": true
+    }
+  ],
   "headers": [
     {
       "source": "/_next/static/(.*)",
@@ -34,18 +46,6 @@
           "value": "camera=(), microphone=(), geolocation=()"
         }
       ]
-    }
-  ],
-  "redirects": [
-    {
-      "source": "/:sec(projects|websites|crafts)",
-      "destination": "/work/",
-      "permanent": true
-    },
-    {
-      "source": "/:sec(projects|websites|crafts)/:rest((?!.*\\.).*)",
-      "destination": "/work/:rest",
-      "permanent": true
     }
   ]
 }
