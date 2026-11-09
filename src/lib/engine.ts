@@ -41,7 +41,7 @@ const byId = (id: SectionId) => SECTIONS.find((s) => s.id === id) as Section;
 const isMobile = () => window.innerWidth < 640;
 /** Wide screens: section pages are a full-screen split, with the other stamps in the dark left column. */
 const isSplit = () => window.innerWidth >= 900;
-const colWidth = () => Math.max(300, stage.clientWidth * 0.32);
+const colWidth = () => Math.max(240, stage.clientWidth * 0.22);
 const restRotation = (id: SectionId) => (state === 'nav' ? tilt[id] : 0);
 const img = (id: SectionId) => `${process.env.NEXT_PUBLIC_BASE_PATH || ''}/stamps/${id}.webp`;
 const imgSmall = (id: SectionId) => `${process.env.NEXT_PUBLIC_BASE_PATH || ''}/stamps/${id}-600.webp`;
@@ -220,10 +220,10 @@ function placeMini(id: SectionId, slot: number) {
     // One column down the left of the dark panel, all five stamps in fixed slots, above the heading.
     const cw = colWidth(), H = stage.clientHeight;
     const pad = Math.min(44, Math.max(24, stage.clientWidth * 0.03));
-    const top = 48, bottom = 210, label = 14;
+    const top = 48, bottom = 210, label = 30;
     const slotH = Math.max(70, (H - top - bottom) / order.length);
     const r = byId(id).ratio;
-    const w = Math.min((cw - pad * 2) * 0.55, (slotH - label) * r);
+    const w = Math.min((cw - pad * 2) * 0.8, (slotH - label) * r);
     const h = w / r;
     gsap.set(stampEls.get(id)!, { left: pad, top: top + slot * slotH + (slotH - label - h) / 2, width: w, rotation: 0, x: 0, y: 0, scale: 1 });
     return;

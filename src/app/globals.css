@@ -226,8 +226,8 @@ body:has(#stage[data-state='page']) .draw-hint { opacity: 0; pointer-events: non
 /* wide screens: dark title column on the left holds the other stamps, content fills the rest */
 @media (min-width: 900px) {
   .stage[data-state='page'] .content { inset: 0; }
-  .stage[data-state='page'] .panel { display: grid; grid-template-columns: minmax(300px, 32%) minmax(0, 1fr); }
-  .stage[data-state='page'] .panel-head { position: sticky; top: 0; align-self: start; height: 100vh; height: 100dvh; background: var(--ink); color: var(--paper); padding: clamp(24px, 3vw, 44px); display: flex; flex-direction: column; justify-content: flex-end; }
+  .stage[data-state='page'] .panel { display: grid; grid-template-columns: minmax(240px, 22%) minmax(0, 1fr); }
+  .stage[data-state='page'] .panel-head { position: sticky; top: 0; align-self: start; height: 100vh; height: 100dvh; background: var(--ink); color: var(--paper); padding: clamp(24px, 2.4vw, 44px); display: flex; flex-direction: column; justify-content: flex-end; }
   .stage[data-state='page'] .panel h1 { font-size: clamp(36px, 4vw, 72px); margin: 12px 0 0; overflow-wrap: break-word; }
   .stage[data-state='page'] .panel-body { padding: clamp(28px, 4vw, 64px) clamp(24px, 5vw, 88px) 72px; }
   .stage[data-state='page'] .home { top: 20px; right: 28px; }
@@ -303,7 +303,7 @@ body:has(#stage[data-state='page']) .draw-hint { opacity: 0; pointer-events: non
 @media (max-width: 640px) { .stage[data-state='page'] .cards { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; } .card.no-img .card-name, .card-name { font-size: 17px; } }
 @media (min-width: 900px) {
   /* the single column: labels sit beside each stamp */
-  .stage[data-state='page'] .stamps[data-mode='mini'] .stamp .tag { left: 100%; top: 50%; right: auto; bottom: auto; transform: translate(18px, -50%); white-space: nowrap; text-align: left; font-size: 12px; }
+  .stage[data-state='page'] .stamps[data-mode='mini'] .stamp .tag { left: 50%; top: 100%; right: auto; bottom: auto; transform: translate(-50%, 6px); white-space: nowrap; text-align: center; font-size: 12px; }
   .stage[data-state='page'] .stamp[aria-current='page'] .tag { opacity: 1; font-weight: 600; }
 }
 
