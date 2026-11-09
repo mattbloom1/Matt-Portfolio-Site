@@ -452,7 +452,7 @@ const routePath = (id: SectionId | null, slug?: string | null) => `${BASE}/${id 
 /** Old links used #/projects/gearbook; rewrite them to the real URL without adding a history entry. */
 function migrateHash() {
   const m = location.hash.match(/^#\/([a-z]+)(?:\/([a-z0-9-]+))?\/?$/);
-  if (m && SECTIONS.some((s) => s.id === m[1])) history.replaceState(history.state, '', routePath(LEGACY[m[1]] as SectionId || m[1] as SectionId, SLUG_ALIAS[m[2]] || m[2]));
+  if (m && (LEGACY[m[1]] || SECTIONS.some((s) => s.id === m[1]))) history.replaceState(history.state, '', routePath(LEGACY[m[1]] as SectionId || m[1] as SectionId, SLUG_ALIAS[m[2]] || m[2]));
   else if (location.hash.startsWith('#/')) history.replaceState(history.state, '', routePath(null));
 }
 function parseRoute(): { id: SectionId | null; slug: string | null } {
