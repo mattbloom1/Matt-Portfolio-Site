@@ -669,3 +669,14 @@ html, body, .panel, .footer { transition: background-color .5s ease, color .5s e
 }
 @media (max-width: 640px) { .card { gap: 8px; } .card-name { font-size: 15px; } .card-sub { font-size: 11px; letter-spacing: .08em; } .cards .card.lead { grid-column: span 2; } }
 @media (prefers-reduced-motion: reduce) { .card-photo { transition: opacity .35s ease; } .card:hover .card-photo { transform: none; } }
+
+/* ---------- Large screens: cap media by viewport height so nothing runs off the bottom ---------- */
+@media (min-width: 900px) {
+  /* Work grid: the two lead cards (4:5) stay within one viewport height */
+  .stage[data-state='page'] .cards, .stage[data-state='page'] .filters { max-width: max(900px, min(1500px, calc(1.6 * (100vh - 260px) + 28px))); margin-inline: auto; }
+}
+/* Full-width gallery images that are portrait never grow taller than the window */
+.roll-gallery .gimg:nth-child(3n), .roll-gallery .gimg:last-child:nth-child(3n + 1),
+.detail-gallery .gimg:nth-child(3n), .detail-gallery .gimg:last-child:nth-child(3n + 1) { display: flex; justify-content: center; }
+.roll-gallery .gimg:nth-child(3n) img, .roll-gallery .gimg:last-child:nth-child(3n + 1) img,
+.detail-gallery .gimg:nth-child(3n) img, .detail-gallery .gimg:last-child:nth-child(3n + 1) img { width: auto; max-width: 100%; max-height: calc(100vh - 140px); max-height: calc(100dvh - 140px); }
