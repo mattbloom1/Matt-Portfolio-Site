@@ -418,3 +418,8 @@ body:has(#stage[data-state='page']) .draw-hint { opacity: 0; pointer-events: non
   .detail-inner { padding-bottom: 96px; }
   .detail-gallery { padding-bottom: 104px; }
 }
+
+/* backdrop-filter on .panel made it the containing block for the fixed project overlay, so on phones the overlay (and its close button) sat at the panel's scrolled position instead of the viewport. Drop it while a project is open. */
+.stage[data-detail-open] .panel { backdrop-filter: none; -webkit-backdrop-filter: none; }
+.stage[data-detail-open] .content { overflow: hidden; }
+.detail { overscroll-behavior: contain; }
