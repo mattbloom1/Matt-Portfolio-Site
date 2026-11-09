@@ -19,11 +19,10 @@ export const SITE = {
   name: 'Matthew Bloomfield',
   role: 'Creative Technologist & Designer',
   email: 'matthewb3333@gmail.com',
-  openerDate: 'OCT 2026',
   links: [
     { label: 'LinkedIn', href: 'https://www.linkedin.com/in/mattsbloomfield/' },
     { label: 'GitHub', href: 'https://github.com/mattbloom1/' },
-    { label: 'Gearbook', href: 'https://www.gearbook.shop/catalog/matt-bloomfield', linkLabel: 'Gearbook' },
+    { label: 'Gearbook', href: 'https://www.gearbook.shop/catalog/matt-bloomfield' },
   ],
 };
 
@@ -110,9 +109,10 @@ function workViews(items: Project[], noun: string, defaultMeta: string) {
     safeUrl(p.videoUrl) ? `<a href="${esc(safeUrl(p.videoUrl))}" target="_blank" rel="noopener">Watch</a>` : '',
     safeUrl(p.href) ? `<a href="${esc(safeUrl(p.href))}" target="_blank" rel="noopener">${esc(p.linkLabel || 'Visit')}</a>` : '',
   ].filter(Boolean).join(' · ');
+  const cardCover = (p: Project) => safeUrl(p.cover || p.heroImage);
   const card = (p: Project, i: number) => `
-    <button type="button" class="card${safeUrl(p.cover || p.heroImage) ? '' : ' no-img'}" data-detail="d-${esc(p.slug)}" aria-label="${esc(p.title)}: view details">
-      <span class="card-img${safeUrl(p.cover || p.heroImage) ? ' has-img' : ''}" style="${bg({ ...p, heroImage: p.cover || p.heroImage }, i)}"></span>
+    <button type="button" class="card${cardCover(p) ? '' : ' no-img'}" data-detail="d-${esc(p.slug)}">
+      <span class="card-img${cardCover(p) ? ' has-img' : ''}" style="--c:${safeColor(p.accent) || accents[i % accents.length]}">${cardCover(p) ? `<img class="card-photo" src="${esc(encodeURI(cardCover(p)))}" alt="" loading="lazy" decoding="async">` : ''}</span>
       <span class="card-over"><span class="card-name">${esc(p.title)}</span><span class="card-sub">${esc([p.role, p.year].filter(Boolean).join(' · '))}</span></span>
     </button>`;
   const siblings = (p: Project) => c.projects.filter((q) => (q.disciplines || [])[0] === (p.disciplines || [])[0]);
@@ -138,7 +138,7 @@ function workViews(items: Project[], noun: string, defaultMeta: string) {
           ${links(p) ? `<p class="meta detail-links">${links(p)}</p>` : ''}
         </div>
       </div>
-      ${(p.images || []).filter((u) => safeUrl(u)).length ? `<div class="detail-gallery">${(p.images || []).map((u, k) => ({ u, k })).filter(({ u }) => safeUrl(u)).map(({ u, k }) => `<figure class="gimg"><img onload="this.parentNode.classList.add('ld')" onerror="this.parentNode.classList.add('ld')" src="${esc(encodeURI(safeUrl(u)))}" alt="${esc((p.imageAlts || [])[k] || `${p.title} mockup`)}" loading="lazy" decoding="async"></figure>`).join('')}</div>` : ''}
+      ${(p.images || []).filter((u) => safeUrl(u)).length ? `<div class="detail-gallery">${(p.images || []).map((u, k) => ({ u, k })).filter(({ u }) => safeUrl(u)).map(({ u, k }) => `<figure class="gimg"><img src="${esc(encodeURI(safeUrl(u)))}" alt="${esc((p.imageAlts || [])[k] || `${p.title} mockup`)}" loading="lazy" decoding="async"></figure>`).join('')}</div>` : ''}
       ${extrasHtml(p)}
     </div>`;
   return { card, detail };
@@ -154,7 +154,7 @@ function projectsHtml(c: SiteContent) {
 }
 function experienceHtml(c: SiteContent) {
   const items = c.experience.map((e) => {
-    const head = `<span class="meta">${esc(dates(e))}</span><h3>${esc(e.role)}, ${esc(e.organization)}</h3>`;
+    const head = `<span class="meta">${esc(dates(e))}</span><h2>${esc(e.role)}, ${esc(e.organization)}</h2>`;
     return e.description
       ? `<li><details class="job"><summary>${head}<span class="job-toggle" aria-hidden="true"></span></summary><p>${esc(e.description)}</p></details></li>`
       : `<li>${head}</li>`;
@@ -170,15 +170,15 @@ function craftsHtml(c: SiteContent) {
 function photographyHtml(c: SiteContent) {
   const series = c.photography.map((s) => {
     const frames = (s.frames || []).filter((f) => safeUrl(f.image));
-    if (!frames.length) return `<section><h3 class="series">${esc(s.title)}</h3><div class="gallery wide"><figure class="shot"></figure></div></section>`;
+    if (!frames.length) return `<section><h2 class="series">${esc(s.title)}</h2><div class="gallery wide"><figure class="shot"></figure></div></section>`;
     const imgs = frames.map((f, idx) => {
       // 800px variant for small slots (pairs, phones); the full file is used when the slot is wide or the screen is dense.
       const full = encodeURI(safeUrl(f.image));
       const single = idx % 3 === 2 || (idx === frames.length - 1 && idx % 3 === 0);
-      const srcset = /\/photography\/.+\.webp$/.test(full) ? ` srcset="${esc(full.replace(/\.webp$/, '-800.webp'))} 800w, ${esc(full)} ${f.w || 1600}w" sizes="${single ? '(max-width: 560px) 100vw, 700px' : '(max-width: 560px) 50vw, 400px'}"` : '';
-      return `<figure class="gimg"><img onload="this.parentNode.classList.add('ld')" onerror="this.parentNode.classList.add('ld')" src="${esc(full)}"${srcset} alt="${esc(f.alt || `${s.title} film roll`)}"${f.w && f.h ? ` width="${f.w}" height="${f.h}"` : ''} loading="lazy" decoding="async"></figure>`;
+      const srcset = /\/photography\/.+\.webp$/.test(full) ? ` srcset="${esc(full.replace(/\.webp$/, '-400.webp'))} 400w, ${esc(full.replace(/\.webp$/, '-800.webp'))} 800w, ${esc(full)} ${f.w || 1600}w" sizes="${single ? '(max-width: 560px) 100vw, 700px' : '(max-width: 560px) 50vw, 400px'}"` : '';
+      return `<figure class="gimg"><img src="${esc(full)}"${srcset} alt="${esc(f.alt || `${s.title} film roll`)}"${f.w && f.h ? ` width="${f.w}" height="${f.h}"` : ''} loading="lazy" decoding="async"></figure>`;
     }).join('');
-    return `<section class="roll" id="roll-${esc(s.slug)}"><h3 class="series">${esc(s.title)}${s.year ? ` <span class="series-year">${s.year}</span>` : ''}</h3>${s.summary ? `<p>${esc(s.summary)}</p>` : ''}<div class="detail-gallery roll-gallery">${imgs}</div></section>`;
+    return `<section class="roll" id="roll-${esc(s.slug)}"><h2 class="series">${esc(s.title)}${s.year ? ` <span class="series-year">${s.year}</span>` : ''}</h2>${s.summary ? `<p>${esc(s.summary)}</p>` : ''}<div class="detail-gallery roll-gallery">${imgs}</div></section>`;
   }).join('');
   const rolls = c.photography.filter((s) => (s.frames || []).some((f) => safeUrl(f.image)));
   const frameNo = (i: number) => String(i + 1).padStart(2, '0');
@@ -190,19 +190,31 @@ function photographyHtml(c: SiteContent) {
   return `${series}${c.placeholder.photography ? todo('Placeholder. Photography content has not been supplied.') : ''}${strip}`;
 }
 function postersHtml(c: SiteContent) {
-  return c.posters.map((set) => `<section class="roll"><h3 class="series">${esc(set.title)}</h3><div class="detail-gallery poster-gallery">${set.items.filter((i) => safeUrl(i.src)).map((i) => `<figure class="gimg"><img onload="this.parentNode.classList.add('ld')" onerror="this.parentNode.classList.add('ld')" src="${esc(encodeURI(safeUrl(i.src)))}" alt="${esc(i.alt)}" width="${i.w}" height="${i.h}" loading="lazy" decoding="async"></figure>`).join('')}</div></section>`).join('');
+  return c.posters.map((set) => `<section class="roll"><h2 class="series">${esc(set.title)}</h2><div class="detail-gallery poster-gallery">${set.items.filter((i) => safeUrl(i.src)).map((i) => `<figure class="gimg"><img src="${esc(encodeURI(safeUrl(i.src)))}" alt="${esc(i.alt)}" width="${i.w}" height="${i.h}" loading="lazy" decoding="async"></figure>`).join('')}</div></section>`).join('');
 }
 function aboutHtml() {
   const links = SITE.links.map((l) => `<li><a href="${l.href}" target="_blank" rel="noopener">${l.label}</a></li>`).join('');
   const paras = (a: string[]) => a.map((t) => `<p>${esc(t)}</p>`).join('');
-  return `<div class="about-top"><img class="portrait" src="${esc(PROFILE_PHOTO.src)}" alt="${esc(PROFILE_PHOTO.alt)}" width="1600" height="1061" loading="lazy" decoding="async" /><div><p class="lead">${esc(SITE.role)}.</p>
+  return `<div class="about-top"><img class="portrait" src="${esc(PROFILE_PHOTO.src)}" srcset="${esc(PROFILE_PHOTO.src.replace(/\.webp$/, '-800.webp'))} 800w, ${esc(PROFILE_PHOTO.src)} 1600w" sizes="(max-width: 760px) 100vw, 45vw" alt="${esc(PROFILE_PHOTO.alt)}" width="1600" height="1061" loading="lazy" decoding="async" /><div><p class="lead">${esc(SITE.role)}.</p>
     ${paras(BIO_SHORT)}</div></div>
     <p class="fun">${esc(FUN_NOTE)}</p>
     <p class="meta">Elsewhere</p><ul class="links">${links}<li><a href="mailto:${SITE.email}">${SITE.email}</a></li></ul>`;
 }
 
+/** Plain, text-only outline of the whole site, rendered into the static HTML (inside <noscript>) for crawlers, link readers and no-JS visitors. */
+export function outlineHtml(c: SiteContent): string {
+  const li = (t: string, d?: string) => `<li><strong>${esc(t)}</strong>${d ? ` ${esc(d)}` : ''}</li>`;
+  const groups = [...new Set(c.projects.flatMap((p) => (p.disciplines || [])[0] || []))];
+  return `<h1>${esc(SITE.name)}, ${esc(SITE.role)}</h1>
+<h2>About</h2>${BIO_SHORT.map((t) => `<p>${esc(t)}</p>`).join('')}
+<h2>Projects</h2>${groups.map((g) => `<h3>${esc(g)}</h3><ul>${c.projects.filter((p) => (p.disciplines || [])[0] === g).map((p) => li(p.title, [p.role, p.year].filter(Boolean).join(', '))).join('')}</ul>`).join('')}
+<h2>Experience</h2><ul>${c.experience.map((e) => li(`${e.role}, ${e.organization}`, dates(e))).join('')}</ul>
+<h2>Crafts</h2><ul>${c.crafts.map((k) => li(k.title, k.role)).join('')}</ul>
+<h2>Elsewhere</h2><ul>${SITE.links.map((l) => `<li><a href="${esc(l.href)}">${esc(l.label)}</a></li>`).join('')}<li><a href="mailto:${SITE.email}">${SITE.email}</a></li></ul>`;
+}
+
 export function buildSections(c: SiteContent): Section[] {
-  const L = (id: SectionId, no: string, label: string, stampName: string, art: string, html: string): Section => ({ id, no, label, stampName, orientation: 'landscape', ratio: 1658 / 1130, alt: `Stamp ${no}, ${stampName}, ${art}`, html });
+  const L = (id: SectionId, no: string, label: string, stampName: string, art: string, html: string): Section => ({ id, no, label, stampName, orientation: 'landscape', ratio: 1658 / 1130, alt: `${stampName} stamp, ${art}`, html });
   return [
     L('projects', '01', 'Projects', 'Web & Graphic Design', 'a vintage computer', projectsHtml(c)),
     L('posters', '02', 'Posters', 'Posters', 'two printed posters', postersHtml(c)),

@@ -12,11 +12,15 @@ export function initLightbox(): () => void {
   root.innerHTML = `
     <div class="lb-top"><span class="lb-cap" aria-live="polite"></span><button type="button" class="lb-close" aria-label="Close viewer">close ×</button></div>
     <button type="button" class="lb-nav lb-prev" aria-label="Previous image">‹</button>
-    <figure class="lb-fig"><img alt="" decoding="async"></figure>
+    <figure class="lb-fig"></figure>
     <button type="button" class="lb-nav lb-next" aria-label="Next image">›</button>`;
   document.body.appendChild(root);
 
-  const img = root.querySelector('img') as HTMLImageElement;
+  const fig = root.querySelector('.lb-fig') as HTMLElement;
+  // The <img> only exists while the viewer is open, so the page never carries an empty-src image.
+  const img = document.createElement('img');
+  img.alt = '';
+  img.decoding = 'async';
   const cap = root.querySelector('.lb-cap') as HTMLElement;
   const closeBtn = root.querySelector('.lb-close') as HTMLButtonElement;
 
@@ -40,6 +44,7 @@ export function initLightbox(): () => void {
     title = (gal.closest('.roll')?.querySelector('.series')?.firstChild?.textContent || '').trim();
     opener = el;
     root.hidden = false;
+    fig.replaceChildren(img);
     document.documentElement.classList.add('lb-open');
     show(frames.indexOf(el));
     closeBtn.focus();
@@ -47,6 +52,7 @@ export function initLightbox(): () => void {
   const close = () => {
     root.hidden = true;
     document.documentElement.classList.remove('lb-open');
+    fig.replaceChildren();
     img.removeAttribute('src');
     opener?.scrollIntoView({ block: 'center' });
     opener?.focus?.({ preventScroll: true });

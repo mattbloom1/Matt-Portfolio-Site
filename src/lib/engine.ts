@@ -5,6 +5,7 @@ import { SITE, buildSections, type Section, type SectionId, type SiteContent } f
 gsap.registerPlugin(Flip);
 
 export function initPortfolio(content: SiteContent): () => void {
+const HOME_TITLE = `${SITE.name} · ${SITE.role}`;
 const SECTIONS = buildSections(content);
 const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 const T = (s: number) => (reduce ? Math.min(0.2, s) : s);
@@ -29,8 +30,8 @@ let disposed = false;
 function done() {
   busy = false;
   if (disposed) return;
-  const id = parseHash();
-  if (id !== active) enterInstant(id);
+  const { id, slug } = parseRoute();
+  if (id !== active) enterInstant(id, slug);
   else if (state === 'nav') layoutNav();
   else if (state === 'page') layoutMini();
 }
@@ -42,6 +43,7 @@ const isSplit = () => window.innerWidth >= 900;
 const colWidth = () => Math.max(300, stage.clientWidth * 0.32);
 const restRotation = (id: SectionId) => (state === 'nav' ? tilt[id] : 0);
 const img = (id: SectionId) => `${process.env.NEXT_PUBLIC_BASE_PATH || ''}/stamps/${id}.webp`;
+const imgSmall = (id: SectionId) => `${process.env.NEXT_PUBLIC_BASE_PATH || ''}/stamps/${id}-600.webp`;
 /* ---------- close button (home): a hand-drawn-style X, matching the footer tool icons ---------- */
 function mountLogo() {
   homeBtn.innerHTML = '<svg class="x-icon" viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" aria-hidden="true"><path d="M5 5l14 14M19 5L5 19"/></svg>';
@@ -80,8 +82,8 @@ function buildStamps() {
     b.type = 'button';
     b.className = 'stamp';
     b.dataset.id = s.id;
-    b.setAttribute('aria-label', `${s.label}, stamp ${s.no}`);
-    b.innerHTML = `<img src="${img(s.id)}" alt="${s.alt}" width="${s.ratio >= 1 ? 1000 : 682}" height="${s.ratio >= 1 ? 682 : 1000}" draggable="false" /><span class="tag">${s.label}</span>`;
+    b.setAttribute('aria-label', s.label);
+    b.innerHTML = `<img src="${img(s.id)}" srcset="${imgSmall(s.id)} 600w, ${img(s.id)} 1000w" sizes="(max-width: 640px) 45vw, 24vw" alt="${s.alt}" width="${s.ratio >= 1 ? 1000 : 682}" height="${s.ratio >= 1 ? 682 : 1000}" draggable="false" /><span class="tag">${s.label}</span>`;
     b.addEventListener('click', () => { if (!justDragged) select(s.id); });
     b.addEventListener('pointermove', (e) => { if (!dragging) nudge(b, s.id, e.clientX, e.clientY); });
     enableDrag(b, s.id);
@@ -106,7 +108,17 @@ const moved: Partial<Record<SectionId, { fx: number; fy: number }>> = (() => {
   try { return JSON.parse(localStorage.getItem(POS_KEY) || '{}'); } catch { return {}; }
 })();
 const savePositions = () => { try { localStorage.setItem(POS_KEY, JSON.stringify(moved)); } catch { /* private mode: positions last for the visit only */ } };
-const offsetOf = (id: SectionId) => ({ x: (moved[id]?.fx || 0) * stage.clientWidth, y: (moved[id]?.fy || 0) * stage.clientHeight });
+/** Keep a (dragged) home stamp fully inside the stage, whatever the viewport or the saved position. */
+function clampOffset(id: SectionId, x: number, y: number) {
+  const sp = (isMobile() ? navMobile : navDesktop)[id];
+  const W = stage.clientWidth, H = stage.clientHeight;
+  const { w, h } = sizeOf(id, sp.w * W);
+  const pad = 10;
+  const left = sp.x * W - w / 2, top = sp.y * H - h / 2;
+  const cl = (v: number, lo: number, hi: number) => (lo > hi ? (lo + hi) / 2 : Math.max(lo, Math.min(hi, v)));
+  return { x: cl(x, pad - left, W - pad - (left + w)), y: cl(y, pad - top, H - pad - (top + h)) };
+}
+const offsetOf = (id: SectionId) => clampOffset(id, (moved[id]?.fx || 0) * stage.clientWidth, (moved[id]?.fy || 0) * stage.clientHeight);
 function enableDrag(el: HTMLButtonElement, id: SectionId) {
   let pid = -1, sx = 0, sy = 0, ox = 0, oy = 0, drag = false, vx = 0, vy = 0, touch = false;
   el.addEventListener('pointerdown', (e) => {
@@ -146,11 +158,8 @@ function enableDrag(el: HTMLButtonElement, id: SectionId) {
     const cap = (v: number) => Math.max(-26, Math.min(26, v * 4));
     let x = Number(gsap.getProperty(el, 'x')) + (reduce ? 0 : cap(vx));
     let y = Number(gsap.getProperty(el, 'y')) + (reduce ? 0 : cap(vy));
-    // keep the stamp's centre on screen, so it can never be lost
-    const r = el.getBoundingClientRect(), sr = stage.getBoundingClientRect();
-    const cx = r.left + r.width / 2 - sr.left, cy = r.top + r.height / 2 - sr.top;
-    const mx = Math.min(Math.max(cx, W * 0.06), W * 0.94) - cx, my = Math.min(Math.max(cy, H * 0.08), H * 0.92) - cy;
-    x += mx; y += my;
+    // keep the whole stamp on screen, so it can never be lost or clipped
+    ({ x, y } = clampOffset(id, x, y));
     moved[id] = { fx: x / W, fy: y / H };
     savePositions();
     gsap.to(el, { x, y, scale: 1, rotation: restRotation(id), duration: reduce ? 0.2 : 0.9, ease: reduce ? 'power2.out' : 'elastic.out(1, 0.5)', overwrite: 'auto' });
@@ -184,16 +193,18 @@ function placeNav(id: SectionId) {
   const W = stage.clientWidth, H = stage.clientHeight;
   const { w, h } = sizeOf(id, sp.w * W);
   gsap.set(stampEls.get(id)!, { left: sp.x * W - w / 2, top: sp.y * H - h / 2, width: w, rotation: tilt[id], x: offsetOf(id).x, y: offsetOf(id).y, opacity: 1, scale: 1 });
+  gsap.set(stampEls.get(id)!.querySelector('img'), { opacity: 1 });
 }
 /** Label font size (px) and the width a slot needs so neighbouring labels never collide. */
-const labelPx = () => (isMobile() ? (stage.clientWidth < 360 ? 7.5 : 9) : 12);
+const labelPx = () => (isMobile() ? 10 : 12);
+const measuredLabel = (id: SectionId) => stampEls.get(id)?.querySelector<HTMLElement>('.tag')?.offsetWidth || 0;
 function miniSlots() {
   const mob = isMobile();
   const gap = mob ? (stage.clientWidth < 360 ? 3 : 6) : 20;
   const build = (hgt: number) => {
     const slots = order.map((id) => {
       const sw = hgt * byId(id).ratio;
-      const lw = byId(id).label.length * labelPx() * 0.78;
+      const lw = measuredLabel(id) || byId(id).label.length * labelPx() * 0.78; // real rendered width when available
       return { id, sw, w: Math.max(sw, lw) };
     });
     return { slots, total: slots.reduce((t, x) => t + x.w, 0) + gap * (slots.length - 1) };
@@ -227,20 +238,21 @@ function layoutMini() {
   order.forEach((id, i) => placeMini(id, i));
   stampEls.forEach((el, id) => {
     el.removeAttribute('tabindex');
-    gsap.set(el, { opacity: id === active ? 1 : 0.6, pointerEvents: 'auto' });
+    gsap.set(el, { opacity: 1, pointerEvents: 'auto' });
+    gsap.set(el.querySelector('img'), { opacity: id === active ? 1 : 0.6 });
     if (id === active) el.setAttribute('aria-current', 'page'); else el.removeAttribute('aria-current');
   });
 }
 
 function swapBackground(id: SectionId) {
-  bgEl.style.backgroundImage = `url(${img(id)})`;
+  bgEl.style.backgroundImage = `url(${imgSmall(id)})`; // blurred backdrop: the small file is plenty
 }
 
 /* ---------- content ---------- */
 function renderContent(id: SectionId) {
   const s = byId(id);
   contentEl.hidden = false;
-  contentEl.innerHTML = `<div class="panel"><header class="panel-head"><div class="no">${s.no} · ${s.stampName}</div><h1 tabindex="-1">${s.label}</h1></header><div class="panel-body">${s.html}</div></div>`;
+  contentEl.innerHTML = `<div class="panel"><header class="panel-head"><div class="no">${s.stampName}</div><h1 tabindex="-1">${s.label}</h1></header><div class="panel-body">${s.html}</div></div>`;
   contentEl.scrollTop = 0;
   document.title = `${s.label} · ${SITE.name}`;
   stopFilmStrip();
@@ -302,8 +314,8 @@ function startFilmStrip() {
     go();
     [250, 700, 1500].forEach((ms) => timers.push(window.setTimeout(go, ms)));
     timers.push(window.setTimeout(unlock, 1600));
-    rolls[i]?.querySelector<HTMLElement>('h3')?.setAttribute('tabindex', '-1');
-    rolls[i]?.querySelector<HTMLElement>('h3')?.focus({ preventScroll: true });
+    rolls[i]?.querySelector<HTMLElement>('h2')?.setAttribute('tabindex', '-1');
+    rolls[i]?.querySelector<HTMLElement>('h2')?.focus({ preventScroll: true });
   };
   const takeOver = () => unlock();
   contentEl.addEventListener('wheel', takeOver, { passive: true });
@@ -375,8 +387,8 @@ async function pageSwap(id: SectionId) {
   const prev = active as SectionId;
   active = id;
   // Stamps never move: just light up the new one. Only the page body swaps, the dark column stays.
-  gsap.to(stampEls.get(prev)!, { opacity: 0.6, duration: T(0.3) });
-  gsap.to(stampEls.get(id)!, { opacity: 1, duration: T(0.3) });
+  gsap.to(stampEls.get(prev)!.querySelector('img'), { opacity: 0.6, duration: T(0.3) });
+  gsap.to(stampEls.get(id)!.querySelector('img'), { opacity: 1, duration: T(0.3) });
   stampEls.get(prev)!.removeAttribute('aria-current');
   stampEls.get(id)!.setAttribute('aria-current', 'page');
   gsap.to(contentEl.querySelector('.panel-body'), { opacity: 0, duration: T(0.2) });
@@ -403,7 +415,7 @@ async function goHome(replay = true) {
   activeEl.removeAttribute('tabindex');
   activeEl.focus({ preventScroll: true });
   Flip.from(flipState, { duration: T(0.9), ease: 'power3.inOut', stagger: reduce ? 0 : 0.04, absolute: false });
-  document.title = SITE.name;
+  document.title = HOME_TITLE;
   setHash('#/');
   if (!replay) { /* reserved */ }
   await new Promise((r) => setTimeout(r, T(1) * 1000));
@@ -413,6 +425,10 @@ async function goHome(replay = true) {
 /* ---------- entrances ---------- */
 function fanIn() {
   const W = stage.clientWidth;
+  if (!reduce) {
+    gsap.set([...stampEls.values()], { pointerEvents: 'none' });
+    gsap.delayedCall(T(1.4) + SECTIONS.length * 0.08 + 0.05, () => { if (!disposed && state === 'nav') gsap.set([...stampEls.values()], { pointerEvents: 'auto' }); });
+  }
   SECTIONS.forEach((s, i) => {
     const el = stampEls.get(s.id)!;
     const side = i % 2 === 0 ? -1 : 1;
@@ -424,15 +440,17 @@ function fanIn() {
 }
 
 /* ---------- routing ---------- */
-function parseHash(): SectionId | null {
-  const m = location.hash.match(/^#\/([a-z]+)$/);
+/** #/projects, or #/projects/gearbook for one open project. */
+function parseRoute(): { id: SectionId | null; slug: string | null } {
+  const m = location.hash.match(/^#\/([a-z]+)(?:\/([a-z0-9-]+))?\/?$/);
   const id = m?.[1] as SectionId | undefined;
-  return id && SECTIONS.some((s) => s.id === id) ? id : null;
+  return id && SECTIONS.some((s) => s.id === id) ? { id, slug: m![2] || null } : { id: null, slug: null };
 }
-function enterInstant(id: SectionId | null) {
+const parseHash = () => parseRoute().id;
+function enterInstant(id: SectionId | null, slug: string | null = null) {
   delete stage.dataset.detailOpen; // a leftover open project would keep the stamps hidden (blank page)
   contentEl.querySelectorAll<HTMLElement>('.detail').forEach((d) => { d.hidden = true; });
-  stampsEl.inert = false;
+  setModal(false);
   gsap.killTweensOf([...stampEls.values(), contentEl, bgEl]);
   stampEls.forEach((el) => { gsap.set(el, { pointerEvents: 'auto', opacity: 1 }); el.removeAttribute('tabindex'); });
   if (id) {
@@ -447,6 +465,7 @@ function enterInstant(id: SectionId | null) {
     gsap.set(bgEl, { opacity: 0 });
     renderContent(id);
     gsap.set(contentEl, { opacity: 1, y: 0 });
+    if (slug) syncDetail(slug);
   } else {
     state = 'nav';
     active = null;
@@ -456,7 +475,7 @@ function enterInstant(id: SectionId | null) {
     contentEl.hidden = true;
     stopFilmStrip();
     homeBtn.hidden = true;
-    document.title = SITE.name;
+    document.title = HOME_TITLE;
   }
   busy = false;
 }
@@ -479,10 +498,10 @@ mountLogo();
 const onHome = () => goHome();
 const onHash = () => {
   if (busy) return; // done() re-syncs when a transition ends
-  const id = parseHash();
+  const { id, slug } = parseRoute();
   if (location.hash && !id) history.replaceState(null, '', '#/');
-  if (id === active) return;
-  enterInstant(id);
+  if (id === active) { if (id) syncDetail(slug); return; }
+  enterInstant(id, slug);
 };
 let resizeRaf = 0;
 // Re-lay out every frame while the window changes size so the stamps track it live.
@@ -496,11 +515,21 @@ const onResize = () => {
   });
 };
 const openDetail = () => contentEl.querySelector<HTMLElement>('.detail:not([hidden])');
+const footerEl = document.querySelector<HTMLElement>('.footer');
+/** While a project is open everything behind it is inert: Tab stays inside the dialog and screen readers skip the page. */
+function setModal(on: boolean) {
+  const behind: (HTMLElement | null)[] = [stampsEl, homeBtn, footerEl, ...contentEl.querySelectorAll<HTMLElement>('.panel-head, .panel-body > :not(.detail)')];
+  behind.forEach((e) => { if (e) e.inert = on; });
+}
+const sectionTitle = () => (active ? `${byId(active).label} · ${SITE.name}` : HOME_TITLE);
+const detailHash = (d: HTMLElement) => `#/${active}/${d.id.slice(2)}`;
 const hideDetail = () => {
   const d = openDetail();
   if (!d) return false;
   d.hidden = true;
+  setModal(false);
   delete stage.dataset.detailOpen;
+  document.title = sectionTitle();
   const opener = contentEl.querySelector<HTMLElement>(`[data-detail="${d.id}"]`);
   opener?.focus({ preventScroll: true });
   return true;
@@ -508,43 +537,54 @@ const hideDetail = () => {
 const showDetail = (d: HTMLElement) => {
   gsap.set(contentEl, { clearProps: 'transform' });
   d.hidden = false;
+  setModal(true);
   stage.dataset.detailOpen = '1';
+  document.title = `${d.getAttribute('aria-label')} · ${sectionTitle()}`;
   d.scrollTop = 0;
   gsap.fromTo(d, { opacity: 0 }, { opacity: 1, duration: T(0.35) });
   d.querySelector<HTMLElement>('h2')?.focus({ preventScroll: true });
 };
-// Each open project is its own history entry, so the browser back button closes it instead of leaving the section.
+/** Make the open project match a URL slug (null = none). */
+function syncDetail(slug: string | null) {
+  const cur = openDetail();
+  const d = slug ? contentEl.querySelector<HTMLElement>(`#${CSS.escape('d-' + slug)}`) : null;
+  if (d === cur) return;
+  if (cur) hideDetail();
+  if (d) showDetail(d);
+}
+// Each open project is its own history entry and its own URL (#/projects/gearbook), so back closes it and it can be shared.
 const closeDetail = () => {
   if (!openDetail()) return false;
-  if (history.state && history.state.detail) history.back(); else hideDetail();
+  if (history.state && history.state.detail) history.back();
+  else { hideDetail(); if (active) history.replaceState(null, '', `#/${active}`); }
   return true;
 };
-const onPop = (e: PopStateEvent) => {
-  const want = e.state && e.state.detail;
-  const cur = openDetail();
-  if (want) {
-    const d = contentEl.querySelector<HTMLElement>(`#${CSS.escape(want)}`);
-    if (d && d !== cur && state === 'page') { hideDetail(); showDetail(d); }
-  } else if (cur) hideDetail();
+const onPop = () => {
+  if (state !== 'page' || busy) return;
+  const r = parseRoute();
+  if (r.id === active) syncDetail(r.slug);
 };
 const onContentClick = (e: MouseEvent) => {
   const t = e.target as HTMLElement;
   const card = t.closest<HTMLElement>('[data-detail]');
   if (card) {
     const d = contentEl.querySelector<HTMLElement>(`#${CSS.escape(card.dataset.detail!)}`);
-    if (d) { history.pushState({ detail: d.id }, '', location.href); showDetail(d); }
+    if (d) { history.pushState({ detail: d.id }, '', detailHash(d)); showDetail(d); }
     return;
   }
   const step = t.closest<HTMLElement>('[data-step]');
   if (step) {
     const d = contentEl.querySelector<HTMLElement>(`#${CSS.escape(step.dataset.step!)}`);
     // replace (not push) the history entry so back still closes the project
-    if (d) { history.replaceState({ detail: d.id }, '', location.href); hideDetail(); showDetail(d); }
+    if (d) { history.replaceState({ detail: d.id }, '', detailHash(d)); hideDetail(); showDetail(d); }
     return;
   }
   if (t.closest('[data-close]') || t.classList.contains('detail')) closeDetail();
 };
 const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape' && state === 'page' && !closeDetail()) goHome(); };
+const onImgDone = (e: Event) => { if (e.target instanceof HTMLImageElement) e.target.closest('.gimg, .card-img')?.classList.add('ld'); };
+contentEl.addEventListener('load', onImgDone, true);
+contentEl.addEventListener('error', onImgDone, true);
 contentEl.addEventListener('click', onContentClick);
 homeBtn.addEventListener('click', onHome);
 window.addEventListener('hashchange', onHash);
@@ -553,8 +593,8 @@ window.addEventListener('resize', onResize);
 document.addEventListener('keydown', onKey);
 
 {
-  const hashId = parseHash();
-  if (hashId) enterInstant(hashId);
+  const route = parseRoute();
+  if (route.id) enterInstant(route.id, route.slug);
   else { enterInstant(null); fanIn(); }
 }
 
@@ -567,12 +607,14 @@ return () => {
   window.removeEventListener('resize', onResize);
   document.removeEventListener('keydown', onKey);
   contentEl.removeEventListener('click', onContentClick);
+  contentEl.removeEventListener('load', onImgDone, true);
+  contentEl.removeEventListener('error', onImgDone, true);
   disposed = true;
   dragging = false; justDragged = false;
   logoCleanup();
   gsap.killTweensOf([...stampEls.values(), contentEl, bgEl, homeBtn]);
   stampsEl.replaceChildren();
   bleedLayer.replaceChildren();
-  document.title = 'Matthew Bloomfield';
+  document.title = HOME_TITLE;
 };
 }

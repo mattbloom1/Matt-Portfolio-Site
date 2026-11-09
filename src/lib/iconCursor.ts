@@ -12,7 +12,7 @@ export function initIconCursor(): () => void {
   el.className = 'icon-cursor';
   el.alt = '';
   el.setAttribute('aria-hidden', 'true');
-  document.body.appendChild(el);
+  // attached on first use so an empty-src image never sits in the page
 
   let bag: string[] = [];
   let list: string[] = [];
@@ -21,6 +21,7 @@ export function initIconCursor(): () => void {
   const pick = () => {
     if (!bag.length) bag = shuffle([...list]).filter((u) => u !== el.getAttribute('src'));
     el.src = bag.pop() as string;
+    if (!el.isConnected) document.body.appendChild(el);
     if (!reduce) { el.classList.remove('pop'); void el.offsetWidth; el.classList.add('pop'); }
   };
   const hide = () => { if (shown) { shown = false; el.classList.remove('on'); } };

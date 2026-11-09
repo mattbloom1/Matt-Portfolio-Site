@@ -40,17 +40,6 @@ body {
 .stage { position: fixed; inset: 0 0 var(--footer-h) 0; z-index: 1; }
 :focus-visible { outline: 3px solid var(--ink); outline-offset: 3px; box-shadow: 0 0 0 6px var(--paper); }
 
-/* opener */
-.opener { position: absolute; inset: 0; display: grid; place-items: center; }
-.opener-stamp { width: min(78vw, 340px); aspect-ratio: 3 / 4; filter: drop-shadow(0 10px 14px rgba(0,0,0,.3)); will-change: transform, filter, opacity; }
-.opener-stamp svg { width: 100%; height: 100%; display: block; }
-.opener-stamp text { font-family: var(--serif); fill: var(--ink); }
-.skip {
-  position: absolute; right: 20px; bottom: 16px; font: 500 12px var(--mono); letter-spacing: .14em; text-transform: lowercase;
-  background: none; border: 1px solid var(--ink); padding: 8px 14px; color: var(--ink); cursor: pointer;
-}
-.skip:hover { background: var(--ink); color: var(--paper); }
-
 /* stamps */
 .stamps { position: absolute; inset: 0; z-index: 3; pointer-events: none; }
 .stamp {
@@ -94,7 +83,7 @@ body {
 .meta { font: 500 12px var(--mono); letter-spacing: .14em; text-transform: lowercase; margin: 0; }
 .todo { font: 500 12px var(--mono); letter-spacing: .08em; opacity: .65; border-top: 1px dashed var(--ink); padding-top: 12px; margin-top: 28px; }
 .cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 20px; }
-.card h3, .timeline h3 { font: 500 24px/1.2 var(--serif); margin: 10px 0 2px; }
+.timeline h2 { font: 500 24px/1.2 var(--serif); margin: 10px 0 2px; }
 .card-img, .shot { aspect-ratio: 4 / 5; background: color-mix(in srgb, var(--c, var(--ochre)) 85%, white); }
 .card:nth-child(2) .card-img, .shot:nth-child(2) { --c: var(--rose); }
 .card:nth-child(3) .card-img, .shot:nth-child(3) { --c: var(--sky); }
@@ -105,7 +94,7 @@ body {
 .timeline li::before { content: ''; position: absolute; left: -26px; top: 6px; width: 11px; height: 11px; background: var(--paper); border: 1px solid var(--ink); border-radius: 50%; }
 .job summary { list-style: none; cursor: pointer; position: relative; padding-right: 44px; min-height: 44px; }
 .job summary::-webkit-details-marker { display: none; }
-.job summary h3 { margin: 4px 0 0; }
+.job summary h2 { margin: 4px 0 0; }
 .job-toggle { position: absolute; right: 0; top: 2px; width: 28px; height: 28px; border: 1px solid var(--ink); border-radius: 50%; transition: background .25s, transform .35s; }
 .job-toggle::before, .job-toggle::after { content: ''; position: absolute; left: 50%; top: 50%; width: 12px; height: 1px; background: var(--ink); transform: translate(-50%, -50%); transition: transform .35s; }
 .job-toggle::after { transform: translate(-50%, -50%) rotate(90deg); }
@@ -116,7 +105,7 @@ body {
 .job p { margin: 10px 0 0; max-width: 60ch; animation: jobIn .35s ease; }
 @keyframes jobIn { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: none; } }
 @media (prefers-reduced-motion: reduce) { .job-toggle, .job-toggle::before, .job-toggle::after { transition: none; } .job p { animation: none; } }
-@media (max-width: 640px) { .timeline h3 { font-size: 20px; } .timeline .meta { font-size: 11px; } .job p { font-size: 15px; } }
+@media (max-width: 640px) { .timeline h2 { font-size: 20px; } .timeline .meta { font-size: 11px; } .job p { font-size: 15px; } }
 .gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 16px; }
 .gallery.wide { grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); }
 .gallery.wide .shot { aspect-ratio: 3 / 2; }
@@ -512,3 +501,51 @@ html, body, .panel, .footer { transition: background-color .5s ease, color .5s e
 .theme-toggle { display: inline-grid; place-items: center; width: 28px; height: 28px; padding: 0; background: none; border: 1px solid currentColor; border-radius: 50%; color: inherit; cursor: pointer; opacity: .75; }
 .theme-toggle:hover, .theme-toggle:focus-visible { opacity: 1; }
 @media (min-width: 900px) { :root[data-theme='night'] .stage[data-state='page'] .stamps[data-mode='mini'] .stamp .tag, :root[data-theme='night'] .stage[data-state='page'] .stamp .tag { color: #ece9e2; -webkit-text-fill-color: #ece9e2; } }
+
+/* ---------- review fixes (overnight reviews, 2026-11-09) ---------- */
+/* Close X below 900px: it lives in the dark title band, never over the stamp row, with a soft disc so it also reads over photos. */
+@media (max-width: 899px) {
+  .stage[data-state='page'] .home, .stage[data-state='page'] .home:hover {
+    top: calc(var(--row-h) + 6px); right: 12px; width: 44px; height: 44px;
+    color: #fff; mix-blend-mode: normal; background: rgba(14,14,14,.55); border-radius: 50%;
+    -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px);
+  }
+}
+/* Mini stamp nav: tap targets of at least 44px tall (the art stays small), labels never under 10px. */
+@media (max-width: 899px) {
+  .stamps[data-mode='mini'] .stamp::before { content: ''; position: absolute; left: -8px; right: -8px; top: -10px; bottom: -28px; }
+  .stamps[data-mode='mini'] .stamp .tag { pointer-events: auto; } /* the label is part of the tap target */
+}
+@media (max-width: 640px) { .stamps[data-mode='mini'] .stamp .tag { font-size: 10px; } }
+@media (max-width: 360px) { .stamps[data-mode='mini'] .stamp .tag { font-size: 10px; letter-spacing: .02em; } }
+/* Faded tracked labels become solid ink at a readable size. */
+.stack dt, .series-year, .todo { opacity: 1; color: color-mix(in srgb, var(--ink) 78%, var(--paper)); }
+.stack dt { font-size: 12px; letter-spacing: .1em; }
+.series-year { font-size: 14px; }
+.fs-no, .fs-lbl { font-size: 11px; }
+@media (max-width: 640px) { .timeline .meta { font-size: 12px; } }
+/* Project detail: prev/next live in a solid bar below the scroller, so they never sit on top of the text or the "built with" list. */
+.detail-steps { padding: 9px clamp(16px, 3vw, 40px) calc(9px + env(safe-area-inset-bottom, 0px)); background: var(--paper); border-top: 1px solid color-mix(in srgb, var(--ink) 25%, transparent); pointer-events: auto; }
+.detail-step { min-height: 42px; padding: 8px 20px; }
+.detail:has(.detail-steps) { bottom: calc(61px + env(safe-area-inset-bottom, 0px)); }
+.detail-inner { padding-bottom: 56px; }
+.detail-gallery { padding-bottom: 72px; }
+.detail-gallery:not(:last-child) { padding-bottom: clamp(40px, 6vw, 80px); }
+.detail-extra { padding-bottom: 72px; }
+.detail-close { min-height: 44px; }
+.detail-sum { font-size: 20px; line-height: 1.5; max-width: 62ch; }
+/* Card titles stay readable on busy photos. */
+.card:not(.no-img) .card-over { background: linear-gradient(to top, rgba(14,14,14,.84), rgba(14,14,14,.4) 40%, rgba(14,14,14,0) 66%); }
+.card:not(.no-img):hover .card-over, .card:not(.no-img):focus-visible .card-over { background: linear-gradient(to top, rgba(14,14,14,.88), rgba(14,14,14,.45) 55%, rgba(14,14,14,.1) 90%); }
+.card:not(.no-img) .card-name { text-shadow: 0 1px 8px rgba(0,0,0,.55); }
+/* Card covers are real lazy images now: shimmer sits behind, the photo fades in over it. */
+.card .card-img.has-img { overflow: hidden; background-image: none; animation: none; }
+.card .card-img.has-img::before { content: ''; position: absolute; inset: 0; background: var(--sk-grad); background-size: 200% 100%; animation: sk-shimmer-1 1.6s ease-in-out infinite; }
+.card .card-img.ld::before { display: none; }
+.card-photo { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity .35s ease; }
+.card-img.ld .card-photo { opacity: 1; }
+@media (prefers-reduced-motion: reduce) { .card .card-img.has-img::before { animation: none; } .card-photo { transition: none; } }
+/* Photography: rolls far off screen are skipped until near, so 270 photos are not decoded at once. */
+.roll { content-visibility: auto; contain-intrinsic-size: auto 5200px; }
+/* About links get a 44px touch target on small screens. */
+@media (max-width: 899px) { .links a { display: inline-block; padding-block: 13px; } }

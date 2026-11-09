@@ -3,7 +3,6 @@
 import { useEffect, useRef } from 'react';
 import { initPortfolio } from '@/lib/engine';
 import { initDrawing } from '@/lib/draw';
-import { initFontSwitcher } from '@/lib/fontSwitcher';
 import { initIconCursor } from '@/lib/iconCursor';
 import { initLightbox } from '@/lib/lightbox';
 import { initNightMode } from '@/lib/nightmode';
@@ -14,7 +13,13 @@ export default function Portfolio({ content }: { content: SiteContent }) {
   const sendRef = useRef<HTMLButtonElement>(null);
   useEffect(() => initPortfolio(content), [content]);
   useEffect(() => initDrawing(canvasRef.current as HTMLCanvasElement, sendRef.current as HTMLButtonElement), []);
-  useEffect(() => initFontSwitcher(), []);
+  // ?fonts dev tool: only loaded when asked for, so it stays out of the normal bundle.
+  useEffect(() => {
+    if (!/[?&]fonts\b/.test(location.search)) return;
+    let stop = () => {}, gone = false;
+    import('@/lib/fontSwitcher').then((m) => { if (!gone) stop = m.initFontSwitcher(); });
+    return () => { gone = true; stop(); };
+  }, []);
   useEffect(() => initIconCursor(), []);
   useEffect(() => initLightbox(), []);
   useEffect(() => initNightMode(), []);
