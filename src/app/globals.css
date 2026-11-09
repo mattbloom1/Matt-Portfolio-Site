@@ -616,3 +616,10 @@ html, body, .panel, .footer { transition: background-color .5s ease, color .5s e
 @media (max-width: 760px) { .kit-grid.c2, .kit-mix { grid-template-columns: minmax(0, 1fr); } .kit-grid.c3, .kit-grid.c4 { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 .kit-sec .kit-head { padding-top: 8px; }
 .kit-grid.c1 .kit-fig:only-child img { max-height: 90vh; width: auto; max-width: 100%; margin: 0 auto; }
+
+/* Work page: filter chips above the grid */
+.filters { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 24px; }
+.filter { font: 500 12px var(--mono); letter-spacing: .14em; text-transform: lowercase; padding: 8px 14px; min-height: 36px; border: 1px solid var(--ink); border-radius: 999px; background: none; color: var(--ink); cursor: pointer; }
+.filter:hover { background: rgba(14,14,14,.08); }
+.filter[aria-pressed='true'] { background: var(--ink); color: var(--paper, #e8e5de); }
+.cards .card[hidden] { display: none; }

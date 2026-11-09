@@ -55,26 +55,22 @@ let logoCleanup = () => {};
 
 /* ---------- stamps ---------- */
 const stampEls = new Map<SectionId, HTMLButtonElement>();
-const tilt: Record<SectionId, number> = { websites: -4, projects: 3, posters: 2, experience: 3, about: -2, crafts: 4, photography: -3 };
+const tilt: Record<SectionId, number> = { work: -4, posters: 2, experience: 3, about: -2, photography: -3 };
 
 interface NavSpot { x: number; y: number; w: number }
 const navDesktop: Record<SectionId, NavSpot> = {
-  websites: { x: 0.14, y: 0.3, w: 0.2 },
-  projects: { x: 0.38, y: 0.26, w: 0.2 },
-  posters: { x: 0.62, y: 0.32, w: 0.2 },
-  experience: { x: 0.86, y: 0.27, w: 0.2 },
-  crafts: { x: 0.24, y: 0.7, w: 0.2 },
-  photography: { x: 0.5, y: 0.73, w: 0.2 },
-  about: { x: 0.77, y: 0.68, w: 0.2 },
+  work: { x: 0.2, y: 0.32, w: 0.22 },
+  posters: { x: 0.5, y: 0.27, w: 0.22 },
+  experience: { x: 0.8, y: 0.34, w: 0.22 },
+  photography: { x: 0.34, y: 0.72, w: 0.22 },
+  about: { x: 0.68, y: 0.68, w: 0.22 },
 };
 const navMobile: Record<SectionId, NavSpot> = {
-  websites: { x: 0.25, y: 0.14, w: 0.4 },
-  projects: { x: 0.75, y: 0.12, w: 0.4 },
-  posters: { x: 0.25, y: 0.34, w: 0.4 },
-  experience: { x: 0.75, y: 0.37, w: 0.4 },
-  crafts: { x: 0.25, y: 0.58, w: 0.4 },
-  photography: { x: 0.75, y: 0.61, w: 0.4 },
-  about: { x: 0.5, y: 0.84, w: 0.4 },
+  work: { x: 0.25, y: 0.2, w: 0.4 },
+  posters: { x: 0.75, y: 0.17, w: 0.4 },
+  experience: { x: 0.25, y: 0.5, w: 0.4 },
+  photography: { x: 0.75, y: 0.53, w: 0.4 },
+  about: { x: 0.5, y: 0.82, w: 0.4 },
 };
 /* Phones: a slight random tilt for each stamp (2 to 5 degrees, either way), fresh on every load. */
 if (window.innerWidth < 640) for (const id of Object.keys(tilt) as SectionId[]) tilt[id] = (Math.random() < 0.5 ? -1 : 1) * (2 + Math.random() * 3);
@@ -221,7 +217,7 @@ function miniSlots() {
 }
 function placeMini(id: SectionId, slot: number) {
   if (isSplit()) {
-    // One column down the left of the dark panel, all seven stamps in fixed slots, above the heading.
+    // One column down the left of the dark panel, all five stamps in fixed slots, above the heading.
     const cw = colWidth(), H = stage.clientHeight;
     const pad = Math.min(44, Math.max(24, stage.clientWidth * 0.03));
     const top = 48, bottom = 210, label = 14;
@@ -374,7 +370,7 @@ async function navToPage(id: SectionId) {
   gsap.killTweensOf([...stampEls.values()]);
   gsap.set([...stampEls.values()], { x: (_i: number, t: Element) => offsetOf((t as HTMLElement).dataset.id as SectionId).x, y: (_i: number, t: Element) => offsetOf((t as HTMLElement).dataset.id as SectionId).y, rotation: (_i: number, t: Element) => tilt[(t as HTMLElement).dataset.id as SectionId] });
   active = id;
-  order = SECTIONS.map((s) => s.id); // all seven stamps stay, in fixed slots
+  order = SECTIONS.map((s) => s.id); // all five stamps stay, in fixed slots
   const flipState = Flip.getState([...stampEls.values()]);
   state = 'page';
   stage.dataset.state = 'page'; // the footer leaves and the stage fills the screen before the column is laid out
@@ -447,6 +443,8 @@ function fanIn() {
 
 /* ---------- routing ---------- */
 /** Real URLs: /projects/ for a section, /projects/gearbook/ for one open project. */
+/** Earlier section URLs (and the old Crafts stamp) now live under Work. */
+const LEGACY: Record<string, string> = { websites: 'work', projects: 'work', crafts: 'work' };
 const BASE = process.env.NEXT_PUBLIC_BASE_PATH || '';
 const routePath = (id: SectionId | null, slug?: string | null) => `${BASE}/${id ? id + '/' : ''}${id && slug ? slug + '/' : ''}`;
 /** Old links used #/projects/gearbook; rewrite them to the real URL without adding a history entry. */
@@ -459,7 +457,7 @@ function parseRoute(): { id: SectionId | null; slug: string | null } {
   migrateHash();
   const path = location.pathname.slice(BASE.length);
   const m = path.match(/^\/([a-z]+)(?:\/([a-z0-9-]+))?\/?$/);
-  const id = m?.[1] as SectionId | undefined;
+  const id = (LEGACY[m?.[1] || ''] || m?.[1]) as SectionId | undefined;
   return id && SECTIONS.some((s) => s.id === id) ? { id, slug: m![2] || null } : { id: null, slug: null };
 }
 const parseHash = () => parseRoute().id;
@@ -582,6 +580,13 @@ const onPop = () => {
 };
 const onContentClick = (e: MouseEvent) => {
   const t = e.target as HTMLElement;
+  const chip = t.closest<HTMLElement>('[data-filter]');
+  if (chip) {
+    const tag = chip.dataset.filter || '';
+    contentEl.querySelectorAll<HTMLElement>('.filter').forEach((b) => b.setAttribute('aria-pressed', String(b === chip)));
+    contentEl.querySelectorAll<HTMLElement>('.cards .card').forEach((c) => { c.hidden = !!tag && c.dataset.tag !== tag; });
+    return;
+  }
   const card = t.closest<HTMLElement>('[data-detail]');
   if (card) {
     const d = contentEl.querySelector<HTMLElement>(`#${CSS.escape(card.dataset.detail!)}`);

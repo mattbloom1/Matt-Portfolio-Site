@@ -1,7 +1,7 @@
 import { urlFor } from './sanity';
 import { SEED_PHOTOGRAPHY, PROFILE_PHOTO, BIO_SHORT, EDUCATION, FUN_NOTE, SEED_CRAFTS, SEED_EXPERIENCE, SEED_POSTERS, SEED_PROJECTS } from './seed';
 
-export type SectionId = 'websites' | 'projects' | 'posters' | 'experience' | 'about' | 'crafts' | 'photography';
+export type SectionId = 'work' | 'posters' | 'experience' | 'about' | 'photography';
 
 export interface Section {
   id: SectionId;
@@ -39,6 +39,8 @@ export interface Project {
   videoUrl?: string; href?: string; linkLabel?: string;
   /** Kept in the data but not shown anywhere until it has content. */
   hidden?: boolean;
+  /** Filter chip on the Work page; defaults to the first discipline. */
+  tag?: string;
   stack?: Partial<Record<StackGroup, string[]>>;
   /** Optional case-study extras, rendered the same way on any project detail page. */
   extras?: ProjectExtras;
@@ -148,7 +150,7 @@ function workViews(items: Project[], noun: string, defaultMeta: string) {
   ].filter(Boolean).join(' · ');
   const cardCover = (p: Project) => safeUrl(p.cover || p.heroImage);
   const card = (p: Project, i: number) => `
-    <button type="button" class="card${cardCover(p) ? '' : ' no-img'}" data-detail="d-${esc(p.slug)}">
+    <button type="button" class="card${cardCover(p) ? '' : ' no-img'}" data-detail="d-${esc(p.slug)}" data-tag="${esc(tagOf(p))}">
       <span class="card-img${cardCover(p) ? ' has-img' : ''}" style="--c:${safeColor(p.accent) || accents[i % accents.length]}">${cardCover(p) ? `<img class="card-photo" src="${esc(encodeURI(cardCover(p)))}" alt="" loading="lazy" decoding="async">` : ''}</span>
       <span class="card-over"><span class="card-name">${esc(p.title)}</span><span class="card-sub">${esc([p.role, p.year].filter(Boolean).join(' · '))}</span></span>
     </button>`;
@@ -182,14 +184,21 @@ function workViews(items: Project[], noun: string, defaultMeta: string) {
     </div>`;
   return { card, detail };
 }
-/** Websites and Projects are separate stamps: a site is a Project whose first discipline is "Websites". */
-export const isSite = (p: Project) => (p.disciplines || [])[0] === 'Websites';
-function worksHtml(items: Project[], noun: string, defaultMeta: string, note: string) {
-  const { card, detail } = workViews(items, noun, defaultMeta);
-  return `<section><div class="cards">${items.map(card).join('')}</div></section>${items.map(detail).join('')}${todo(note)}`;
+/** Everything on the Work page: projects, websites and crafts as one list, ordered by filter tag. */
+const TAG_ORDER = ['Developments', 'Websites', 'Branding', 'Hardware', 'Community', 'Crafts'];
+export const tagOf = (p: Project) => p.tag || (p.disciplines || [])[0] || 'Work';
+export function workItems(c: SiteContent): Project[] {
+  const crafts: Project[] = c.crafts.map((k) => ({ title: k.title, slug: k.slug, summary: k.summary, year: k.year, role: k.role, cover: k.cover, heroImage: k.heroImage || k.image, images: k.images, imageAlts: k.imageAlts, disciplines: ['Crafts'], tag: 'Crafts' }));
+  const rank = (p: Project) => { const i = TAG_ORDER.indexOf(tagOf(p)); return i < 0 ? TAG_ORDER.length : i; };
+  return [...c.projects, ...crafts].map((p, i) => ({ p, i })).sort((x, y) => rank(x.p) - rank(y.p) || x.i - y.i).map(({ p }) => p);
 }
-const websitesHtml = (c: SiteContent) => worksHtml(c.projects.filter(isSite), 'website', 'Website', 'More sites are on the way.');
-const projectsHtml = (c: SiteContent) => worksHtml(c.projects.filter((p) => !isSite(p)), 'project', 'Project', 'More projects are on the way.');
+function workHtml(c: SiteContent) {
+  const items = workItems(c);
+  const { card, detail } = workViews(items, 'project', 'Project');
+  const tags = [...new Set(items.map(tagOf))];
+  const chips = tags.length > 1 ? `<div class="filters" role="group" aria-label="Filter work by topic">${['All', ...tags].map((t, i) => `<button type="button" class="filter" data-filter="${i ? esc(t) : ''}" aria-pressed="${i ? 'false' : 'true'}">${esc(t)}</button>`).join('')}</div>` : '';
+  return `${chips}<section><div class="cards">${items.map(card).join('')}</div></section>${items.map(detail).join('')}${todo('More work is on the way.')}`;
+}
 const MONTHS = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'];
 /** "August 2025" -> a sortable number; missing or unreadable dates give -1. */
 const when = (d = '') => { const m = d.match(/([a-z]{3})[a-z]*\.?\s+(\d{4})/i); const y = d.match(/\d{4}/); return m ? +m[2] * 12 + Math.max(0, MONTHS.indexOf(m[1].toLowerCase())) : y ? +y[0] * 12 : -1; };
@@ -207,11 +216,6 @@ function experienceHtml(c: SiteContent) {
   const doc = RESUME_DOC_ID ? `https://docs.google.com/document/d/${RESUME_DOC_ID}` : '';
   const resume = doc ? `<section class="resume"><div class="resume-head"><p class="meta">Resume</p><span><a href="${doc}/export?format=pdf" target="_blank" rel="noopener">Download PDF</a><a href="${doc}/edit" target="_blank" rel="noopener">Open in Google Docs</a></span></div><iframe class="resume-frame" src="${doc}/preview" title="Matthew Bloomfield resume" loading="lazy" referrerpolicy="no-referrer"></iframe></section>` : '';
   return `<ol class="timeline">${items}</ol>${edu}${resume}${c.placeholder.experience ? todo('Placeholder timeline. Experience content has not been supplied.') : ''}`;
-}
-function craftsHtml(c: SiteContent) {
-  const items: Project[] = c.crafts.map((k) => ({ title: k.title, slug: k.slug, summary: k.summary, year: k.year, role: k.role, cover: k.cover, heroImage: k.heroImage || k.image, images: k.images, imageAlts: k.imageAlts, disciplines: ['Crafts'] }));
-  const { card, detail } = workViews(items, 'craft', 'Craft');
-  return `<section><div class="cards">${items.map(card).join('')}</div></section>${items.map(detail).join('')}${todo('More crafts are coming. Photos and notes for the rest are still to come.')}`;
 }
 function photographyHtml(c: SiteContent) {
   const series = c.photography.map((s) => {
@@ -266,10 +270,8 @@ export function outlineHtml(all: SiteContent): string {
   const li = (t: string, d?: string) => `<li><strong>${esc(t)}</strong>${d ? ` ${esc(d)}` : ''}</li>`;
   return `<h1>${esc(SITE.name)}, ${esc(SITE.role)}</h1>
 <h2>About</h2>${BIO_SHORT.map((t) => `<p>${esc(t)}</p>`).join('')}
-<h2>Websites</h2><ul>${c.projects.filter(isSite).map((p) => li(p.title, [p.role, p.year].filter(Boolean).join(', '))).join('')}</ul>
-<h2>Projects</h2><ul>${c.projects.filter((p) => !isSite(p)).map((p) => li(p.title, [p.role, p.year].filter(Boolean).join(', '))).join('')}</ul>
+<h2>Work</h2><ul>${workItems(c).map((p) => li(p.title, [tagOf(p), p.role, p.year].filter(Boolean).join(', '))).join('')}</ul>
 <h2>Experience</h2><ul>${[...c.experience].sort(byEnd).map((e) => li(`${e.role}, ${e.organization}`, dates(e))).join('')}</ul>
-<h2>Crafts</h2><ul>${c.crafts.map((k) => li(k.title, k.role)).join('')}</ul>
 <h2>Elsewhere</h2><ul>${SITE.links.map((l) => `<li><a href="${esc(l.href)}">${esc(l.label)}</a></li>`).join('')}<li><a href="mailto:${SITE.email}">${SITE.email}</a></li></ul>`;
 }
 
@@ -277,13 +279,11 @@ export function buildSections(all: SiteContent): Section[] {
   const c = visible(all);
   const L = (id: SectionId, no: string, label: string, stampName: string, art: string, html: string): Section => ({ id, no, label, stampName, orientation: 'landscape', ratio: 1658 / 1130, alt: `${stampName} stamp, ${art}`, html });
   return [
-    L('websites', '01', 'Websites', 'Websites', 'a vintage computer', websitesHtml(c)),
-    L('projects', '02', 'Projects', 'Projects', 'a stack of project work', projectsHtml(c)),
-    L('posters', '03', 'Posters', 'Posters', 'two printed posters', postersHtml(c)),
-    L('experience', '04', 'Experience', 'Experience', 'a vintage suitcase', experienceHtml(c)),
-    L('crafts', '05', 'Crafts', 'Crafts', 'six pieces of pottery', craftsHtml(c)),
-    L('photography', '06', 'Photography', 'Photography', 'a Minolta X-700 film camera', photographyHtml(c)),
-    L('about', '07', 'About', 'About', 'a halftone portrait of Matt', aboutHtml()),
+    L('work', '01', 'Work', 'Work', 'a vintage computer', workHtml(c)),
+    L('posters', '02', 'Posters', 'Posters', 'two printed posters', postersHtml(c)),
+    L('experience', '03', 'Experience', 'Experience', 'a vintage suitcase', experienceHtml(c)),
+    L('photography', '04', 'Photography', 'Photography', 'a Minolta X-700 film camera', photographyHtml(c)),
+    L('about', '05', 'About', 'About', 'a halftone portrait of Matt', aboutHtml()),
   ];
 }
 

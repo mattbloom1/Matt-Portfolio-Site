@@ -256,6 +256,7 @@ export const SEED_PROJECTS: Project[] = [
   p('Opus', 'Branding', { summary: 'In progress.', hidden: true }),
   p('Essays In Bloom', 'Branding', { summary: 'In progress.', hidden: true }),
   p('CU Skate Forge', 'Projects', {
+    tag: 'Community',
     role: 'Founder & President',
     year: 2023,
     summary: 'A makers and skaters club at CU Boulder whose mission is to build skateboarding obstacles from sustainable materials and make skateboarding more accessible to students on campus. As founder and president I managed the budget, navigated university approvals and training, pitched the idea to administrators, police and fire officials, handled insurance, led marketing and tabling, and cold-called sponsors. I also ran the social accounts, designed the graphics, recruited members, and built ramps and a full-sized half-pipe. In its first year the club grew to 300+ members, 200+ people attended its campus events, and it gathered 8+ sponsors, including Red Bull, Yerba Mate, 303 Boards, Satellite Boardshop, Square State Skate and Loco Skateshop.',
@@ -265,6 +266,7 @@ export const SEED_PROJECTS: Project[] = [
     linkLabel: 'Instagram',
   }),
   p('Bloc CNC', 'Projects', {
+    tag: 'Hardware',
     role: 'Product designer & project manager',
     year: 2025,
     summary: 'A compact CNC machine for DIYers and makers, designed with a multidisciplinary team. It pairs gamified joystick controls with a sustainable enclosure. I led the CAD modeling, software integration and UX design, and wrote a user-friendly instructional workbook, the Bloc Innovation Guide.',
@@ -272,6 +274,7 @@ export const SEED_PROJECTS: Project[] = [
     images: ['02', '03', '04'].map((n) => asset(`/projects/bloc-cnc/${n}.webp`)),
   }),
   p('Topomaps', 'Projects', {
+    tag: 'Hardware',
     role: 'Computational fabrication: Rhino, Grasshopper & fabrication',
     year: 2023,
     summary: 'Topographical maps translated into 3D structures using Grasshopper and Rhino. I turned the geographic variability of a map into a 3D model, with two deliverables: the model itself and a laser-cut template for it to sit in. In Grasshopper I laid out a grid of points, sampled the map image and sorted each point by its nearest swatch color, then extruded cylinders to matching heights. I applied a Delaunay mesh to the top points, smoothed it, turned it into a Brep solid and unioned it with a cube underneath. I finished by making custom coasters with the related topography for my family. My one change would be to 3D print the models in a color like white so the shadows and contours are more visible. My biggest problems were scope creep, trying to do more than was feasible, and list ordering in Grasshopper.',
