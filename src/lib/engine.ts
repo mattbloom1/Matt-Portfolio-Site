@@ -548,36 +548,14 @@ const hideDetail = () => {
   opener?.focus({ preventScroll: true });
   return true;
 };
-let revealIO: IntersectionObserver | null = null;
-/** Gallery images and text blocks rise into place as they scroll into view inside the open project. */
-function revealOnScroll(d: HTMLElement) {
-  revealIO?.disconnect(); revealIO = null;
-  if (reduce || typeof IntersectionObserver === 'undefined') return;
-  const items = [...d.querySelectorAll<HTMLElement>('.detail-gallery .gimg, .detail-text > *')];
-  const io = new IntersectionObserver((entries) => {
-    entries.forEach((en) => {
-      if (!en.isIntersecting) return;
-      io.unobserve(en.target);
-      gsap.to(en.target, { opacity: 1, y: 0, duration: 0.9, ease: 'power3.out', clearProps: 'opacity,transform' });
-    });
-  }, { root: d, rootMargin: '0px 0px -8% 0px', threshold: 0.05 });
-  items.forEach((el) => { gsap.set(el, { opacity: 0, y: 28 }); io.observe(el); });
-  revealIO = io;
-}
-const showDetail = (d: HTMLElement, from?: HTMLElement | null) => {
+const showDetail = (d: HTMLElement) => {
   gsap.set(contentEl, { clearProps: 'transform' });
   d.hidden = false;
   setModal(true);
   stage.dataset.detailOpen = '1';
   document.title = `${d.getAttribute('aria-label')} · ${sectionTitle()}`;
   d.scrollTop = 0;
-  const r = from && !reduce ? from.getBoundingClientRect() : null;
-  if (r) {
-    // The project opens out of the card it was clicked from.
-    gsap.fromTo(d, { clipPath: `inset(${r.top}px ${innerWidth - r.right}px ${innerHeight - r.bottom}px ${r.left}px)`, opacity: 0.6 },
-      { clipPath: 'inset(0px 0px 0px 0px)', opacity: 1, duration: 0.85, ease: 'power3.inOut', clearProps: 'clipPath' });
-  } else gsap.fromTo(d, { opacity: 0 }, { opacity: 1, duration: T(0.35) });
-  revealOnScroll(d);
+  gsap.fromTo(d, { opacity: 0 }, { opacity: 1, duration: T(0.35) });
   d.querySelector<HTMLElement>('h2')?.focus({ preventScroll: true });
 };
 /** Make the open project match a URL slug (null = none). */
@@ -600,6 +578,7 @@ const onPop = () => {
   const r = parseRoute();
   if (r.id === active) syncDetail(r.slug);
 };
+let filterTl: gsap.core.Timeline | null = null;
 const onContentClick = (e: MouseEvent) => {
   const t = e.target as HTMLElement;
   const chip = t.closest<HTMLElement>('[data-filter]');
@@ -607,16 +586,32 @@ const onContentClick = (e: MouseEvent) => {
     const tag = chip.dataset.filter || '';
     contentEl.querySelectorAll<HTMLElement>('.filter').forEach((b) => b.setAttribute('aria-pressed', String(b === chip)));
     const cards = [...contentEl.querySelectorAll<HTMLElement>('.cards .card')];
-    const fs = reduce ? null : Flip.getState(cards);
-    cards.forEach((c) => { c.hidden = !!tag && c.dataset.tag !== tag; });
-    // Cards that stay glide to their new spot; newly shown ones rise in via CSS.
-    if (fs) Flip.from(fs, { duration: 0.8, ease: 'power3.inOut', absolute: false, nested: false });
+    const grid = contentEl.querySelector<HTMLElement>('.cards');
+    const show = (c: HTMLElement) => !tag || c.dataset.tag === tag;
+    if (reduce || !grid) { cards.forEach((c) => { c.hidden = !show(c); }); return; }
+    // 1) cards that go fade out, 2) the rest glide into their new spots, 3) cards that come back fade in.
+    filterTl?.kill(); gsap.killTweensOf(cards);
+    grid.classList.add('filtering');
+    const leaving = cards.filter((c) => !c.hidden && !show(c));
+    const entering = cards.filter((c) => c.hidden && show(c));
+    const finish = () => { grid.classList.remove('filtering'); gsap.set(cards, { clearProps: 'opacity,transform' }); };
+    filterTl = gsap.timeline({ onComplete: finish, onInterrupt: finish });
+    filterTl.to(leaving, { opacity: 0, scale: 0.96, duration: 0.25, ease: 'power2.out' });
+    filterTl.add(() => {
+      const fs = Flip.getState(cards.filter((c) => !c.hidden && show(c)));
+      leaving.forEach((c) => { c.hidden = true; });
+      entering.forEach((c) => { c.hidden = false; gsap.set(c, { opacity: 0, y: 16 }); });
+      gsap.set(cards, { clearProps: 'scale' });
+      Flip.from(fs, { duration: 0.7, ease: 'power3.inOut', absolute: false });
+      gsap.to(entering, { opacity: 1, y: 0, duration: 0.6, delay: 0.3, ease: 'power3.out', stagger: 0.05 });
+    });
+    filterTl.to({}, { duration: 1 });
     return;
   }
   const card = t.closest<HTMLElement>('[data-detail]');
   if (card) {
     const d = contentEl.querySelector<HTMLElement>(`#${CSS.escape(card.dataset.detail!)}`);
-    if (d) { history.pushState({ detail: d.id }, '', detailHash(d)); showDetail(d, card); }
+    if (d) { history.pushState({ detail: d.id }, '', detailHash(d)); showDetail(d); }
     return;
   }
   const step = t.closest<HTMLElement>('[data-step]');
