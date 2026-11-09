@@ -173,35 +173,28 @@ export const SEED_PROJECTS: Project[] = [
 ];
 
 const craftSlug = (t: string) => t.toLowerCase().replace(/[^a-z0-9]+/g, '-');
-const SKATE_RING_FRAMES: { w: number; h: number; alt: string }[] = [
-  { w: 1263, h: 1800, alt: 'Stripped skateboard decks and cut yellow and teal plywood pieces on a workbench' },
-  { w: 1800, h: 1200, alt: 'Close-up of the colored plywood layers in a sanded skateboard deck' },
-  { w: 1800, h: 1200, alt: 'Three finished skate rings and a pendant on a striped teal display block' },
-  { w: 1800, h: 1200, alt: 'A skate ring worn by a small cream-colored duck figure' },
-  { w: 1800, h: 1200, alt: 'A skate ring on a plaster hand' },
-  { w: 1800, h: 1335, alt: 'Pencil sketches of ring shapes on grid paper' },
-];
+const craftImg = (slug: string, n: string) => asset(`/crafts/${slug}/${n}.webp`);
 export const SEED_CRAFTS: Craft[] = [
   {
-    title: 'Bloom Coffee Table', slug: 'bloom-coffee-table', year: 2023,
-    summary: 'A modular folding table with a built-in lazy susan, made for everyday use and compact storage. The flower shape was inspired by Tyler, The Creator’s GOLF WANG flower. The tabletop was laser cut and jigsawed, the parts were 3D printed and prototyped, and the main challenge was engineering a stable folding leg mechanism.',
-    notes: 'University of Colorado Boulder. 3D modeling and physical fabrication.',
-    images: [
-      { src: asset('/crafts/bloom-coffee-table/03.webp'), alt: 'The flower tabletop with a black lazy susan tray holding a yellow boot planter', w: 500, h: 282 },
-      { src: asset('/crafts/bloom-coffee-table/04.webp'), alt: 'The table folding and unfolding on its legs', w: 500, h: 282 },
-      { src: asset('/crafts/bloom-coffee-table/01.webp'), alt: 'Three dark wooden legs beside the green flower tabletop, seen from below', w: 1600, h: 1143 },
-      { src: asset('/crafts/bloom-coffee-table/02.webp'), alt: 'The 3D printed leg mount with a yellow flower-shaped knob under the tabletop', w: 1600, h: 1142 },
-    ],
+    title: 'Bloom Coffee Table', slug: 'bloom-coffee-table', year: 2023, role: '3D modeling & physical fabrication',
+    summary: 'A modular folding table with a built-in lazy susan, made for everyday use and compact storage. The flower shape was inspired by Tyler, The Creator’s GOLF WANG flower. The tabletop was laser cut and jigsawed, the parts were 3D printed and prototyped, and the main challenge was engineering a stable folding leg mechanism. Made at the University of Colorado Boulder.',
+    cover: craftImg('bloom-coffee-table', 'cover'),
+    heroImage: craftImg('bloom-coffee-table', '01'),
+    images: ['03', '04', '02'].map((n) => craftImg('bloom-coffee-table', n)),
+    imageAlts: ['The flower tabletop with a black lazy susan tray holding a yellow boot planter', 'The table folding and unfolding on its legs', 'The 3D printed leg mount with a yellow flower-shaped knob under the tabletop'],
+  },
+  {
+    title: 'Skate Rings', slug: 'skate-rings', year: 2025, role: 'Sketching & fabrication',
+    summary: 'Old skateboard decks turned into rings, inspired by Bauhaus and De Stijl: geometric shapes, sharp lines and bold color contrast. Each deck was stripped of grip tape, paint and stickers, then sanded to 300 grit to reveal its layers of colored veneer. Made for Aesthetics in Design, in the BTU lab at ATLAS.',
+    cover: craftImg('skate-rings', 'cover'),
+    heroImage: craftImg('skate-rings', '04'),
+    images: ['01', '02', '03', '05', '06'].map((n) => craftImg('skate-rings', n)),
+    imageAlts: ['Stripped skateboard decks and cut yellow and teal plywood pieces on a workbench', 'Close-up of the colored plywood layers in a sanded skateboard deck', 'Three finished skate rings and a pendant on a striped teal display block', 'A skate ring on a plaster hand', 'Pencil sketches of ring shapes on grid paper'],
   },
   { title: 'Pottery', slug: 'pottery' },
-  {
-    title: 'Skate Rings', slug: 'skate-rings', year: 2025,
-    summary: 'Old skateboard decks turned into rings, inspired by Bauhaus and De Stijl: geometric shapes, sharp lines and bold color contrast. Each deck was stripped of grip tape, paint and stickers, then sanded to 300 grit to reveal its layers of colored veneer.',
-    notes: 'Made for Aesthetics in Design, in the BTU lab at ATLAS. Sketching and fabrication.',
-    images: SKATE_RING_FRAMES.map((f, i) => ({ src: asset(`/crafts/skate-rings/${String(i + 1).padStart(2, '0')}.webp`), ...f })),
-  },
   { title: 'Recycled Climbing Rope Crafts', slug: craftSlug('Recycled Climbing Rope Crafts') },
 ];
+
 
 /** One 35mm roll per month, newest first. Photos are produced by scripts/process-film.py into public/photography/<slug>/NN.webp. */
 const ROLLS: { slug: string; month: string; year: number }[] = [

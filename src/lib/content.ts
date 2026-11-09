@@ -33,7 +33,7 @@ export const STACK_GROUPS = ['Framework', 'Styling', 'Data', 'Hosting', 'Integra
 export type StackGroup = typeof STACK_GROUPS[number];
 export interface Project {
   title: string; slug: string; summary?: string; featured?: boolean; year?: number;
-  disciplines?: string[]; role?: string; heroImage?: string; /** Card cover; falls back to heroImage */ cover?: string; images?: string[]; accent?: string;
+  disciplines?: string[]; role?: string; heroImage?: string; /** Card cover; falls back to heroImage */ cover?: string; images?: string[]; imageAlts?: string[]; accent?: string;
   videoUrl?: string; href?: string; linkLabel?: string;
   stack?: Partial<Record<StackGroup, string[]>>;
   /** Optional case-study extras, rendered the same way on any project detail page. */
@@ -50,8 +50,10 @@ export interface ProjectExtras {
   cursorIcons?: string[];
 }
 export interface Craft {
-  title: string; slug: string; summary?: string; year?: number; image?: string; notes?: string;
-  images?: { src: string; alt: string; w?: number; h?: number }[];
+  title: string; slug: string; summary?: string; year?: number; role?: string;
+  /** Card cover: one animated image (gif or animated webp). */
+  cover?: string; /** Large image on the detail page. */ heroImage?: string; image?: string; notes?: string;
+  images?: string[]; imageAlts?: string[];
 }
 export interface Experience {
   organization: string; role: string; startDate?: string; endDate?: string; description?: string;
@@ -100,7 +102,9 @@ function extrasHtml(p: Project) {
   return `<div class="detail-extra">${figs ? `<div class="xfigs">${figs}</div>` : ''}${stats ? `<dl class="xstats">${stats}</dl>` : ''}${notes ? `<div class="xnotes">${notes}</div>` : ''}</div>`;
 }
 const GROUPS = ['Websites', 'Branding', 'Projects', 'Ignite Adaptive Sports'];
-function projectsHtml(c: SiteContent) {
+/** Cards plus full-screen detail pages, shared by Projects and Crafts. */
+function workViews(items: Project[], noun: string, defaultMeta: string) {
+  const c = { projects: items };
   const bg = (p: Project, i: number) => `--c:${safeColor(p.accent) || accents[i % accents.length]};${safeUrl(p.heroImage) ? `background-image:url('${encodeURI(safeUrl(p.heroImage))}'),var(--sk-grad);background-size:cover,200% 100%;background-position:center,0 0` : ''}`;
   const links = (p: Project) => [
     safeUrl(p.videoUrl) ? `<a href="${esc(safeUrl(p.videoUrl))}" target="_blank" rel="noopener">Watch</a>` : '',
@@ -117,7 +121,7 @@ function projectsHtml(c: SiteContent) {
     if (sib.length < 2) return '';
     const k = sib.findIndex((q) => q.slug === p.slug);
     const prev = sib[(k - 1 + sib.length) % sib.length], next = sib[(k + 1) % sib.length];
-    return `<nav class="detail-steps" aria-label="Other projects"><button type="button" class="detail-step prev" data-step="d-${esc(prev.slug)}" aria-label="Previous project: ${esc(prev.title)}"><span class="step-dir">previous</span></button><button type="button" class="detail-step next" data-step="d-${esc(next.slug)}" aria-label="Next project: ${esc(next.title)}"><span class="step-dir">next</span></button></nav>`;
+    return `<nav class="detail-steps" aria-label="Other ${noun}s"><button type="button" class="detail-step prev" data-step="d-${esc(prev.slug)}" aria-label="Previous ${noun}: ${esc(prev.title)}"><span class="step-dir">previous</span></button><button type="button" class="detail-step next" data-step="d-${esc(next.slug)}" aria-label="Next ${noun}: ${esc(next.title)}"><span class="step-dir">next</span></button></nav>`;
   };
   const detail = (p: Project, i: number) => `
     <div class="detail" id="d-${esc(p.slug)}"${(p.extras?.cursorIcons || []).length ? ` data-icon-cursor="${esc(JSON.stringify(p.extras!.cursorIcons!.filter((u) => safeUrl(u)).map((u) => encodeURI(safeUrl(u)))))}"` : ''} role="dialog" aria-modal="true" aria-label="${esc(p.title)}" hidden>
@@ -126,17 +130,21 @@ function projectsHtml(c: SiteContent) {
       <div class="detail-inner">
         <div class="detail-img${safeUrl(p.heroImage) ? ' has-img' : ''}" style="${bg(p, i)}"></div>
         <div class="detail-text">
-          <p class="meta">${esc((p.disciplines || [])[0] || 'Project')}</p>
+          <p class="meta">${esc((p.disciplines || [])[0] || defaultMeta)}</p>
           <h2 tabindex="-1">${esc(p.title)}</h2>
           <p class="meta">${esc([p.role, p.year].filter(Boolean).join(' · '))}</p>
-          ${p.summary ? `<p class="detail-sum">${esc(p.summary)}</p>` : '<p class="todo">The story, images and details for this project are still to come.</p>'}
+          ${p.summary ? `<p class="detail-sum">${esc(p.summary)}</p>` : `<p class="todo">The story, images and details for this ${noun} are still to come.</p>`}
           ${stackHtml(p)}
           ${links(p) ? `<p class="meta detail-links">${links(p)}</p>` : ''}
         </div>
       </div>
-      ${(p.images || []).filter((u) => safeUrl(u)).length ? `<div class="detail-gallery">${(p.images || []).filter((u) => safeUrl(u)).map((u) => `<figure class="gimg"><img onload="this.parentNode.classList.add('ld')" onerror="this.parentNode.classList.add('ld')" src="${esc(encodeURI(safeUrl(u)))}" alt="${esc(p.title)} mockup" loading="lazy" decoding="async"></figure>`).join('')}</div>` : ''}
+      ${(p.images || []).filter((u) => safeUrl(u)).length ? `<div class="detail-gallery">${(p.images || []).map((u, k) => ({ u, k })).filter(({ u }) => safeUrl(u)).map(({ u, k }) => `<figure class="gimg"><img onload="this.parentNode.classList.add('ld')" onerror="this.parentNode.classList.add('ld')" src="${esc(encodeURI(safeUrl(u)))}" alt="${esc((p.imageAlts || [])[k] || `${p.title} mockup`)}" loading="lazy" decoding="async"></figure>`).join('')}</div>` : ''}
       ${extrasHtml(p)}
     </div>`;
+  return { card, detail };
+}
+function projectsHtml(c: SiteContent) {
+  const { card, detail } = workViews(c.projects, 'project', 'Project');
   const groups = [...new Set([...GROUPS, ...c.projects.flatMap((p) => p.disciplines || [])])];
   const html = groups.map((g) => {
     const items = c.projects.filter((p) => (p.disciplines || [])[0] === g);
@@ -155,16 +163,9 @@ function experienceHtml(c: SiteContent) {
   return `<ol class="timeline">${items}</ol>${edu}${c.placeholder.experience ? todo('Placeholder timeline. Experience content has not been supplied.') : ''}`;
 }
 function craftsHtml(c: SiteContent) {
-  const done = c.crafts.filter((k) => k.images?.length);
-  const rest = c.crafts.filter((k) => !k.images?.length);
-  const sections = done.map((k) => {
-    const imgs = (k.images || []).filter((f) => safeUrl(f.src)).map((f) => `<figure class="gimg"><img onload="this.parentNode.classList.add('ld')" onerror="this.parentNode.classList.add('ld')" src="${esc(encodeURI(safeUrl(f.src)))}" alt="${esc(f.alt)}"${f.w && f.h ? ` width="${f.w}" height="${f.h}"` : ''} loading="lazy" decoding="async"></figure>`).join('');
-    return `<section class="roll"><h3 class="series">${esc(k.title)}${k.year ? ` <span class="series-year">${k.year}</span>` : ''}</h3>${k.summary ? `<p>${esc(k.summary)}</p>` : ''}${k.notes ? `<p class="meta">${esc(k.notes)}</p>` : ''}<div class="detail-gallery roll-gallery">${imgs}</div></section>`;
-  }).join('');
-  const tiles = rest.map((k, i) => `
-    <figure class="shot${safeUrl(k.image) ? ' has-img' : ''}" style="--c:${accents[i % accents.length]};${safeUrl(k.image) ? `background-image:url('${encodeURI(safeUrl(k.image))}'),var(--sk-grad);background-size:cover,200% 100%;background-position:center,0 0` : ''}">
-      <figcaption>${esc(k.title)}${k.year ? ` · ${k.year}` : ''}</figcaption></figure>`).join('');
-  return `${sections}${tiles ? `<div class="gallery">${tiles}</div>` : ''}${rest.length ? todo('More crafts are coming. Photos and notes for the rest are still to come.') : ''}`;
+  const items: Project[] = c.crafts.map((k) => ({ title: k.title, slug: k.slug, summary: k.summary, year: k.year, role: k.role, cover: k.cover, heroImage: k.heroImage || k.image, images: k.images, imageAlts: k.imageAlts, disciplines: ['Crafts'] }));
+  const { card, detail } = workViews(items, 'craft', 'Craft');
+  return `<section><div class="cards">${items.map(card).join('')}</div></section>${items.map(detail).join('')}${todo('More crafts are coming. Photos and notes for the rest are still to come.')}`;
 }
 function photographyHtml(c: SiteContent) {
   const series = c.photography.map((s) => {
