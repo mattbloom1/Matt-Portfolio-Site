@@ -570,46 +570,38 @@ html, body, .panel, .footer { transition: background-color .5s ease, color .5s e
 .letter-send, .letter-again { font: 500 18px var(--mono); letter-spacing: .12em; text-transform: lowercase; background: var(--ink); color: var(--paper); border: 0; padding: 0 22px; min-height: 44px; cursor: pointer; }
 .letter-send:disabled { opacity: .5; cursor: default; }
 .letter-status { min-height: 1.5em; margin: 10px 0 0; font-style: italic; }
-.letter-done { display: none; }
-.letter.sent .letter-form { display: none; }
-.letter.sending .letter-done { display: block; position: absolute; left: 0; top: 0; width: 100%; pointer-events: none; }
-.letter.sending .letter-note, .letter.sending .letter-again { visibility: hidden; }
-.letter.sent .letter-done { display: block; }
-.contact:has(.letter.sent) .letter-label { visibility: hidden; }
-.letter.sent .letter-note, .letter.sent .letter-again { animation: note-in .5s .25s cubic-bezier(.2,.7,.2,1) both; }
-.letter.sent .letter-again { animation-delay: .35s; }
-@keyframes note-in { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
-.letter-note { font: 500 24px/1.2 var(--serif); margin: 0 0 14px; }
-/* Envelope: fixed paper and ink in both modes, like the sheet. Back side takes the folded letter, front side gets the stamp and stays as the receipt. */
-.env { --p: #f3f0e9; --i: #15171c; position: relative; width: min(100%, 400px); aspect-ratio: 9 / 5; margin: 8px 0 34px; color: var(--i); container-type: inline-size; }
-.letter.sent .env { transform: rotate(-2deg); }
-.env-back, .env-front { position: absolute; inset: 0; }
-.env[data-side='back'] .env-front, .env[data-side='front'] .env-back { visibility: hidden; }
-.env-back { perspective: 900px; }
-.env-base, .env-front { background-color: var(--p); border: 1px solid var(--i); box-shadow: 3px 4px 0 rgba(20,20,20,.12); }
-.env-base { position: absolute; inset: 0; }
-.env-flap { position: absolute; left: 0; top: 0; width: 100%; height: 58%; transform-origin: 50% 0; z-index: 1; }
-.env-slot { position: absolute; inset: 0; z-index: 2; }
-.env-pocket { position: absolute; inset: 0; z-index: 3; }
-.env-flap svg, .env-pocket svg { display: block; width: 100%; height: 100%; overflow: visible; }
-.env-flap path, .env-pocket path { fill: none; stroke: var(--i); stroke-width: 1; vector-effect: non-scaling-stroke; stroke-linejoin: round; }
-.env-flap .fill, .env-pocket .fill { fill: var(--p); stroke: none; }
-.env-flap.inside .fill { fill: #e4dfd4; }
-.env-letter { position: absolute; left: 0; top: 0; transform-origin: 0 0; background-color: var(--p); border: 1px solid var(--i); }
-.env-letter::after { content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 30%; background: linear-gradient(to bottom, transparent, rgba(20,20,20,.07)); }
-.env-from { position: absolute; left: 6%; top: 8%; max-width: 44%; font: italic 400 3.6cqw/1.2 var(--body); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; opacity: .8; }
-.env-to { position: absolute; left: 30%; top: 52%; display: grid; gap: .8cqw; }
-.env-to span:first-child { font: 500 6cqw/1.1 var(--serif); }
-.env-to span:last-child { font: 500 3.9cqw/1.2 var(--mono); letter-spacing: .1em; text-transform: lowercase; }
-.env-stamp { position: absolute; right: 5%; top: 8%; width: 25%; height: auto; transform: rotate(2deg); filter: drop-shadow(0 1px 1px rgba(0,0,0,.3)); }
-.env-mark { position: absolute; right: 17%; top: 4%; width: 42%; height: auto; aspect-ratio: 180 / 84; transform: rotate(-7deg); opacity: .72; mix-blend-mode: multiply; }
-.env-mark * { fill: none; stroke: var(--i); stroke-width: 1.4; }
-.env-mark text { fill: var(--i); stroke: none; font: 600 11px var(--mono); letter-spacing: .08em; text-anchor: middle; }
-.fold { position: absolute; left: 0; top: 0; perspective: 1400px; pointer-events: none; }
-.fold-panel { position: absolute; left: 0; width: 100%; overflow: hidden; background-color: #f3f0e9; border: 1px solid #15171c; border-width: 0 1px; }
-.fold-panel:first-child { border-top-width: 1px; } .fold-panel:last-child { border-bottom-width: 1px; }
-.fold-shade { position: absolute; inset: 0; background: #15171c; opacity: 0; pointer-events: none; }
-@media (prefers-reduced-motion: reduce) { .fold { display: none; } .letter.sent .letter-note, .letter.sent .letter-again { animation: none; } }
+/* Sending turns the sheet over like a postcard: same footprint, one motion. The back carries the address, stamp and postmark and stays as the receipt. */
+.letter-form { perspective: 1600px; }
+.card { position: relative; transform-style: preserve-3d; }
+.card > .sheet, .card-back { backface-visibility: hidden; -webkit-backface-visibility: hidden; }
+.letter.sent .card { rotate: y 180deg; }
+.card-back { position: absolute; inset: 0; rotate: y 180deg; box-shadow: -3px 4px 0 rgba(20,20,20,.12); container-type: inline-size; display: grid; grid-template-columns: 1fr 1fr; padding: 26px; }
+.pc-left, .pc-right { display: flex; flex-direction: column; min-width: 0; min-height: 0; }
+.pc-left { justify-content: space-between; align-items: flex-start; padding-right: 22px; }
+.pc-right { border-left: 1px solid rgba(20,20,20,.35); padding-left: 22px; justify-content: space-between; }
+.pc-from { margin: 0; font: 500 15px var(--mono); letter-spacing: .12em; text-transform: lowercase; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.pc-note { margin: 0; font: 500 clamp(22px, 5.4cqw, 30px)/1.15 var(--serif); text-wrap: balance; }
+.pc-post { position: relative; align-self: flex-end; width: min(150px, 62%); }
+.pc-stamp { display: block; width: 100%; height: auto; rotate: 2deg; filter: drop-shadow(0 1px 1px rgba(0,0,0,.3)); }
+.pc-mark { position: absolute; right: 52%; top: -14%; width: 150%; height: auto; overflow: visible; rotate: -7deg; opacity: 0; mix-blend-mode: multiply; }
+.pc-mark * { fill: none; stroke: #15171c; stroke-width: 1.3; }
+.pc-mark text { fill: #15171c; stroke: none; font: 600 11px var(--mono); letter-spacing: .08em; text-anchor: middle; }
+.pc-to { display: grid; margin-bottom: 8%; }
+.pc-to span { border-bottom: 1px solid rgba(20,20,20,.35); min-height: 2.1em; padding: .5em 2px .2em; font: 400 17px/1.3 var(--body); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.pc-to span:first-child { font: 500 20px/1.2 var(--serif); }
+.pc-note, .card-back .letter-again { opacity: 0; translate: 0 6px; transition: opacity .45s cubic-bezier(.2,.7,.2,1), translate .45s cubic-bezier(.2,.7,.2,1); }
+.letter.posted .pc-note, .letter.posted .letter-again { opacity: 1; translate: none; }
+.letter.posted .letter-again { transition-delay: .12s; }
+.letter.posted .pc-mark { opacity: .72; }
+.letter.sent ~ .letter-status { opacity: 0; } /* still announced to screen readers; the card says it for everyone else */
+@media (max-width: 560px) {
+  .card-back { grid-template-columns: 1fr; grid-template-rows: auto 1fr; padding: 20px; gap: 16px; }
+  .pc-right { order: -1; border-left: 0; padding-left: 0; gap: 12px; }
+  .pc-left { padding-right: 0; justify-content: flex-end; gap: 12px; }
+  .pc-post { width: 112px; } .pc-to { margin-bottom: 0; }
+  .pc-to span:last-child { display: none; }
+}
+@media (prefers-reduced-motion: reduce) { .pc-note, .card-back .letter-again { transition: none; } }
 
 .kit-sec { max-width: 1400px; margin: 0 auto; padding: 0 clamp(20px, 4vw, 64px) clamp(24px, 4vw, 56px); }
 .kit-sec .kit-head { padding-left: 0; padding-right: 0; max-width: none; }

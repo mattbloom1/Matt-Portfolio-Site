@@ -276,27 +276,21 @@ function aboutHtml() {
     ${paras(BIO_SHORT)}</div></div>
     <p class="fun">${esc(FUN_NOTE)}</p>
     <section class="contact"><p class="meta letter-label">Write me a letter</p>
-    <div class="letter"><form class="letter-form" novalidate><div class="sheet">
+    <div class="letter"><form class="letter-form" novalidate><div class="card"><div class="sheet">
       <label>Your name<input name="name" type="text" required maxlength="100" autocomplete="name"></label>
       <label>Your email<input name="email" type="email" required maxlength="200" autocomplete="email"></label>
       <label>Message<textarea name="message" required minlength="2" maxlength="5000" rows="6"></textarea></label>
       <input class="hp" name="website" type="text" tabindex="-1" autocomplete="off" aria-hidden="true">
       <button type="submit" class="letter-send">Send</button>
-    </div></form>
-    <div class="letter-done">
-      <div class="env" data-side="front" aria-hidden="true">
-        <div class="env-back"><div class="env-base"></div>
-          <div class="env-flap"><svg viewBox="0 0 100 100" preserveAspectRatio="none"><path class="fill" d="M0 0H100L50 100Z"/><path d="M0 0L50 100L100 0"/></svg></div>
-          <div class="env-slot"></div>
-          <div class="env-pocket"><svg viewBox="0 0 100 100" preserveAspectRatio="none"><path class="fill" d="M0 0L50 57L100 0V100H0Z"/><path d="M0 0L50 57L100 0M0 100L50 57L100 100"/></svg></div>
-        </div>
-        <div class="env-front"><span class="env-from"></span>
-          <div class="env-to"><span>${esc(SITE.name)}</span><span>matthewsbloomfield.com</span></div>
-          <img class="env-stamp" src="${base}/stamps/about-600.webp" alt="" width="600" height="409" loading="lazy" decoding="async">
-          <svg class="env-mark" viewBox="0 0 180 84"><circle cx="42" cy="42" r="34"/><circle cx="42" cy="42" r="30"/><text class="env-day" x="42" y="40"></text><text class="env-year" x="42" y="54"></text><path d="M82 22q8-7 16 0t16 0 16 0 16 0 16 0 16 0M82 35q8-7 16 0t16 0 16 0 16 0 16 0 16 0M82 48q8-7 16 0t16 0 16 0 16 0 16 0 16 0M82 61q8-7 16 0t16 0 16 0 16 0 16 0 16 0"/></svg>
-        </div>
+    </div>
+    <div class="sheet card-back" inert>
+      <div class="pc-left"><p class="pc-from"></p><p class="pc-note">Your letter is on its way.</p><button type="button" class="letter-again">Write another</button></div>
+      <div class="pc-right" aria-hidden="true">
+        <div class="pc-post"><img class="pc-stamp" src="${base}/stamps/about-600.webp" alt="" width="600" height="409" loading="lazy" decoding="async">
+          <svg class="pc-mark" viewBox="0 0 180 84"><circle cx="42" cy="42" r="34"/><circle cx="42" cy="42" r="30"/><text class="pc-day" x="42" y="40"></text><text class="pc-year" x="42" y="54"></text><path d="M82 22q8-7 16 0t16 0 16 0 16 0 16 0 16 0M82 35q8-7 16 0t16 0 16 0 16 0 16 0 16 0M82 48q8-7 16 0t16 0 16 0 16 0 16 0 16 0M82 61q8-7 16 0t16 0 16 0 16 0 16 0 16 0"/></svg></div>
+        <div class="pc-to"><span>${esc(SITE.name)}</span><span>matthewsbloomfield.com</span><span></span></div>
       </div>
-      <p class="letter-note">Your letter is on its way.</p><button type="button" class="letter-again">Write another</button></div></div>
+    </div></div></form></div>
     <p class="letter-status" role="status" aria-live="polite"></p></section>
     <p class="meta">Elsewhere</p><ul class="links">${links}<li><a href="mailto:${SITE.email}">${SITE.email}</a></li></ul>`;
 }
