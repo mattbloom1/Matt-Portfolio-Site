@@ -218,15 +218,27 @@ function miniSlots() {
 }
 function placeMini(id: SectionId, slot: number) {
   if (isSplit()) {
-    // One column down the left of the dark panel, all five stamps in fixed slots, above the heading.
-    const cw = colWidth(), H = stage.clientHeight;
+    // Stamps sit in the dark column above the heading. Pick 1, 2 or 3 columns, whichever gives the biggest stamps for this viewport.
+    const cw = colWidth(), H = stage.clientHeight, n = order.length;
     const pad = Math.min(44, Math.max(24, stage.clientWidth * 0.03));
-    const top = 48, bottom = 210, label = 30;
-    const slotH = Math.max(70, (H - top - bottom) / order.length);
-    const r = byId(id).ratio;
-    const w = Math.min((cw - pad * 2) * 0.8, (slotH - label) * r);
-    const h = w / r;
-    gsap.set(stampEls.get(id)!, { left: pad, top: top + slot * slotH + (slotH - label - h) / 2, width: w, rotation: 0, x: 0, y: 0, scale: 1 });
+    const hoverOnly = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+    const label = hoverOnly ? 22 : 30;
+    const top = 48;
+    const no = contentEl.querySelector<HTMLElement>('.panel-head .no');
+    const bottom = no && no.offsetParent ? Math.max(90, stage.getBoundingClientRect().bottom - no.getBoundingClientRect().top + 20) : 210;
+    const r = byId(id).ratio, avail = Math.max(60, H - top - bottom), gap = 14;
+    let best = { cols: 1, w: 0 };
+    for (let cols = 1; cols <= 3; cols++) {
+      const rows = Math.ceil(n / cols);
+      const colW = (cw - pad * 2 - gap * (cols - 1)) / cols;
+      const w = Math.min(colW * (cols === 1 ? 0.8 : 1), (avail / rows - label) * r, 150 * r);
+      if (w > best.w * 1.15) best = { cols, w };
+    }
+    const rows = Math.ceil(n / best.cols), slotH = avail / rows;
+    const w = Math.max(28, best.w), h = w / r;
+    const colW = (cw - pad * 2 - gap * (best.cols - 1)) / best.cols;
+    const col = slot % best.cols, row = Math.floor(slot / best.cols);
+    gsap.set(stampEls.get(id)!, { left: pad + col * (colW + gap), top: top + row * slotH + (slotH - label - h) / 2, width: w, rotation: 0, x: 0, y: 0, scale: 1 });
     return;
   }
   const sp = miniSlots()[slot];
