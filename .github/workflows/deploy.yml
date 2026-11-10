@@ -35,10 +35,12 @@ jobs:
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url || steps.deployment-retry.outputs.page_url }}
-    timeout-minutes: 25
+    timeout-minutes: 40
     steps:
       - id: deployment
         uses: actions/deploy-pages@v4
+        with:
+          timeout: 1500000 # 25 min: with ~110 MB of full-size images GitHub can keep a deploy queued past the 10 min default
         continue-on-error: true
       # A Pages deployment that hangs in "syncing_files" stays "in progress" on GitHub's side and every later
       # deployment is refused ("Please cancel <sha> first"). Deployment ids are commit shas, so cancel the recent ones and try again.
