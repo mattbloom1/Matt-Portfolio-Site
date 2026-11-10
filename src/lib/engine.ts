@@ -625,7 +625,7 @@ const onContentClick = (e: MouseEvent) => {
     if (d) { history.replaceState({ detail: d.id }, '', detailHash(d)); hideDetail(); showDetail(d); }
     return;
   }
-  if (t.closest('[data-close]') || t.classList.contains('detail')) closeDetail();
+  if (t.closest('[data-close]')) closeDetail();
 };
 const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape' && state === 'page' && !closeDetail()) goHome(); };
 const onImgDone = (e: Event) => { if (e.target instanceof HTMLImageElement) e.target.closest('.gimg, .card-img')?.classList.add('ld'); };
