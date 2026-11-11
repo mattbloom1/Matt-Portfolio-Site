@@ -165,9 +165,8 @@ function workViews(items: Project[], noun: string, defaultMeta: string) {
     safeUrl(p.href) ? `<a href="${esc(safeUrl(p.href))}" target="_blank" rel="noopener">${esc(p.linkLabel || 'Visit')}</a>` : '',
   ].filter(Boolean).join(' · ');
   const cardCover = (p: Project) => safeUrl(p.cover || p.heroImage);
-  // Layout: the developments lead the grid (two half-width tiles, then one full-width), everything else runs three across.
-  const devs = items.filter((p) => tagOf(p) === 'Developments').map((p) => p.slug);
-  const lead = (p: Project) => { const k = devs.indexOf(p.slug); return k < 0 || devs.length < 3 ? '' : k === 2 ? ' lead lead-wide' : ' lead'; };
+  // Layout: everything runs three across; the three developments come first, so they fill the first row.
+  const lead = (_p: Project) => '';
   const photo = (p: Project) => {
     const src = cardCover(p), wide = safeUrl(p.coverWide);
     if (!src) return '';

@@ -684,8 +684,8 @@ html, body, .panel, .footer { transition: background-color .5s ease, color .5s e
 
 /* ---------- Large screens: cap media by viewport height so nothing runs off the bottom ---------- */
 @media (min-width: 900px) {
-  /* Work grid: the two lead cards (4:5) stay within one viewport height */
-  .stage[data-state='page'] .cards, .stage[data-state='page'] .filters { max-width: max(900px, min(1500px, calc(1.6 * (100vh - 260px) + 28px))); margin-inline: auto; }
+  /* Work grid: a row of three 4:5 cards stays within one viewport height */
+  .stage[data-state='page'] .cards, .stage[data-state='page'] .filters { max-width: max(900px, min(1500px, calc(2.4 * (100vh - 260px) + 56px))); margin-inline: auto; }
 }
 /* Full-width gallery images that are portrait never grow taller than the window */
 .roll-gallery .gimg:nth-child(3n), .roll-gallery .gimg:last-child:nth-child(3n + 1),
