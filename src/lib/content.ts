@@ -196,7 +196,7 @@ function workViews(items: Project[], noun: string, defaultMeta: string) {
         <div class="detail-img${safeUrl(p.heroImage) ? ' has-img' : ''}" style="${bg(p, i)}"></div>
         <div class="detail-text">
           <p class="meta">${esc((p.disciplines || [])[0] || defaultMeta)}</p>
-          <h2 tabindex="-1">${esc(p.title)}</h2>
+          <h1 tabindex="-1">${esc(p.title)}</h1>
           <p class="meta">${esc([p.role, p.year].filter(Boolean).join(' · '))}</p>
           ${p.summary ? `<p class="detail-sum">${esc(p.summary)}</p>` : `<p class="todo">The story, images and details for this ${noun} are still to come.</p>`}
           ${p.kit?.credits?.length ? `<dl class="kit-credits">${p.kit.credits.map((c) => `<div><dt>${esc(c.label)}</dt><dd>${esc(c.value)}</dd></div>`).join('')}</dl>` : ''}
@@ -261,7 +261,7 @@ function photographyHtml(c: SiteContent) {
   // Sticky film strip: one frame per roll, in order. engine.ts wires up the scroll tracking and the jump-to-roll clicks.
   const strip = rolls.length > 1 ? `<nav class="filmstrip" aria-label="Film rolls"><div class="fs-holes" aria-hidden="true"></div><ol class="fs-track">${rolls.map((s, i) => {
     const thumb = encodeURI(safeUrl((s.frames || [])[0].image)).replace(/\/[^/]+\.webp$/, '/thumb.webp');
-    return `<li><a class="fs-frame" href="#roll-${esc(s.slug)}" data-roll="roll-${esc(s.slug)}" aria-label="${esc(s.title)}${s.year ? ' ' + s.year : ''}, roll ${i + 1}"><span class="fs-no" aria-hidden="true">${frameNo(i)}</span><span class="fs-img"><img src="${esc(thumb)}" alt="" width="120" height="80" loading="lazy" decoding="async"></span><span class="fs-lbl" aria-hidden="true">${esc(s.title.slice(0, 3))}${s.year ? ` ’${String(s.year).slice(2)}` : ''}</span></a></li>`;
+    return `<li><a class="fs-frame" href="#roll-${esc(s.slug)}" data-roll="roll-${esc(s.slug)}"><span class="fs-no">${frameNo(i)}</span><span class="fs-img"><img src="${esc(thumb)}" alt="" width="120" height="80" loading="lazy" decoding="async"></span><span class="fs-lbl">${esc(s.title.slice(0, 3))}${s.year ? ` ’${String(s.year).slice(2)}` : ''}</span><span class="sr-only">, ${esc(s.title)}${s.year ? ' ' + s.year : ''}</span></a></li>`;
   }).join('')}</ol><div class="fs-holes fs-holes-b" aria-hidden="true"></div></nav>` : '';
   return `${series}${c.placeholder.photography ? todo('Placeholder. Photography content has not been supplied.') : ''}${strip}`;
 }

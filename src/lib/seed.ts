@@ -85,7 +85,7 @@ export const SEED_PROJECTS: Project[] = [
     href: 'https://www.gearbook.shop/',
     linkLabel: 'Visit site',
   }),
-  p('Le Reve', 'Developments', {
+  p('Le Rêve', 'Developments', { slug: 'le-reve',
     role: 'Design, development & content',
     year: 2025,
     summary: 'Le Rêve is the marketing site for five luxury townhomes in downtown Boca Raton, built for the Gasdaska Verdiglione Conlon Team at Douglas Elliman. It needed to capture leads and inquiries while showing off the finishes, the available residences, and the teams behind the development: Advanced Development Group, Netta Architects and EAJ Services. Details came from several parties, so the hardest part was keeping every spec and claim accurate. Leads go straight to the MLS, and the site has brought in 23 leads so far on roughly $5 million residences. I handled the design, development and content, including the homepage hero video and the on-brand stylized elements, and edited the photography.',

@@ -72,7 +72,7 @@ body {
   background: rgba(236,233,226,.78); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
 }
 .panel .no { font: 500 16px var(--mono); letter-spacing: .18em; text-transform: lowercase; }
-.panel h1 { font: 500 clamp(40px, 7vw, 76px)/1 var(--serif); margin: 6px 0 24px; }
+.panel-head h1 { font: 500 clamp(40px, 7vw, 76px)/1 var(--serif); margin: 6px 0 24px; }
 .lead { font: 400 28px/1.25 var(--serif); }
 .meta { font: 500 16px var(--mono); letter-spacing: .14em; text-transform: lowercase; margin: 0; }
 .todo { font: 500 16px var(--mono); letter-spacing: .08em; opacity: .65; border-top: 1px dashed var(--ink); padding-top: 12px; margin-top: 28px; }
@@ -145,7 +145,7 @@ body {
 }
 @media (prefers-reduced-motion: reduce) { .stamp img { filter: drop-shadow(0 6px 8px rgba(0,0,0,.25)); } }
 [hidden] { display: none !important; }
-.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; }
 
 .replay { font: inherit; letter-spacing: inherit; text-transform: inherit; background: none; border: 0; color: inherit; cursor: pointer; text-decoration: underline; text-underline-offset: 3px; padding: 0; }
 .links { list-style: none; padding: 0; margin: 8px 0 0; display: flex; flex-wrap: wrap; gap: 8px 24px; }
@@ -228,7 +228,7 @@ body:has(#stage[data-state='page']) .draw-hint { opacity: 0; pointer-events: non
   .stage[data-state='page'] .content { inset: 0; }
   .stage[data-state='page'] .panel { display: grid; grid-template-columns: minmax(240px, 22%) minmax(0, 1fr); }
   .stage[data-state='page'] .panel-head { container-type: inline-size; position: sticky; top: 0; align-self: start; height: 100vh; height: 100dvh; background: var(--ink); color: var(--paper); padding: clamp(24px, 2.4vw, 44px); display: flex; flex-direction: column; justify-content: flex-end; }
-  .stage[data-state='page'] .panel h1 { font-size: clamp(30px, 17cqi, 72px); margin: 12px 0 0; overflow-wrap: normal; }
+  .stage[data-state='page'] .panel-head h1 { font-size: clamp(30px, 17cqi, 72px); margin: 12px 0 0; overflow-wrap: normal; }
   .stage[data-state='page'] .panel-body { padding: clamp(28px, 4vw, 64px) clamp(24px, 5vw, 88px) 72px; }
   .stage[data-state='page'] .home { top: 20px; right: 28px; }
   .stage[data-state='page'] .stamp .tag { color: var(--paper); }
@@ -236,7 +236,7 @@ body:has(#stage[data-state='page']) .draw-hint { opacity: 0; pointer-events: non
 /* narrow screens: title block on top, the stamps stay in a row under it */
 @media (max-width: 899px) {
   .stage[data-state='page'] .panel-head { background: var(--ink); color: var(--paper); padding: 28px 20px 24px; }
-  .stage[data-state='page'] .panel h1 { font-size: clamp(44px, 14vw, 80px); margin: 6px 0 0; }
+  .stage[data-state='page'] .panel-head h1 { font-size: clamp(44px, 14vw, 80px); margin: 6px 0 0; }
   .stage[data-state='page'] .panel-body { padding: 24px 20px 64px; }
 }
 @media (max-width: 640px) {
@@ -258,7 +258,7 @@ body:has(#stage[data-state='page']) .draw-hint { opacity: 0; pointer-events: non
 .detail-close:hover { background: var(--ink); color: var(--paper); }
 .detail-inner { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(280px, 1fr); gap: clamp(24px, 4vw, 64px); max-width: 1400px; margin: 0 auto; padding: 88px clamp(20px, 4vw, 64px) 140px; align-items: start; }
 .detail-img { aspect-ratio: 4 / 5; background: color-mix(in srgb, var(--c, var(--ochre)) 85%, white); }
-.detail-text h2 { font: 500 clamp(36px, 4.5vw, 64px)/1.05 var(--serif); margin: 10px 0 12px; outline: none; }
+.detail-text h1 { font: 500 clamp(36px, 4.5vw, 64px)/1.05 var(--serif); margin: 10px 0 12px; outline: none; }
 .detail-sum { font: 400 22px/1.4 var(--serif); margin: 24px 0; }
 .stack { margin: 28px 0; display: grid; gap: 10px; }
 .stack dl { margin: 0; display: grid; gap: 10px; }
@@ -391,7 +391,7 @@ body:has(#stage[data-state='page']) .draw-hint { opacity: 0; pointer-events: non
 }
 
 /* programmatic focus on the section heading shouldn't draw a box (it is not a control) */
-.panel h1:focus, .panel h1:focus-visible, .detail-text h2:focus-visible { outline: none; box-shadow: none; }
+.panel-head h1:focus, .panel-head h1:focus-visible, .detail-text h1:focus-visible { outline: none; box-shadow: none; }
 /* small stamp nav labels use the site ink, not the browser's default button/link colour */
 .stage[data-state='page'] .stamps[data-mode='mini'] .stamp .tag { color: var(--ink); -webkit-text-fill-color: var(--ink); }
 @media (min-width: 900px) { .stage[data-state='page'] .stamps[data-mode='mini'] .stamp .tag { color: var(--paper); -webkit-text-fill-color: var(--paper); } }
@@ -703,3 +703,7 @@ html, body, .panel, .footer { transition: background-color .5s ease, color .5s e
 @media (hover: none), (pointer: coarse) {
   .stamps .stamp .tag { display: block; opacity: 1; }
 }
+
+/* About "Elsewhere" links: keep the look, grow the tap area to 24px+. */
+ul.links a { position: relative; }
+ul.links a::after { content: ''; position: absolute; inset: -4px -2px; }

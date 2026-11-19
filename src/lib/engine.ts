@@ -571,7 +571,7 @@ const showDetail = (d: HTMLElement) => {
   document.title = `${d.getAttribute('aria-label')} · ${sectionTitle()}`;
   d.scrollTop = 0;
   gsap.fromTo(d, { opacity: 0 }, { opacity: 1, duration: T(0.35) });
-  d.querySelector<HTMLElement>('h2')?.focus({ preventScroll: true });
+  d.querySelector<HTMLElement>('h1')?.focus({ preventScroll: true });
 };
 /** Make the open project match a URL slug (null = none). */
 function syncDetail(slug: string | null) {
