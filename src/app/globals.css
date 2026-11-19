@@ -203,7 +203,7 @@ body {
 .fontsw-status { margin: 8px 0; font-size: 11px; line-height: 1.4; text-transform: none; letter-spacing: 0; }
 .stamp .tag { user-select: none; }
 
-@media (max-width: 640px) { .stamps[data-mode='mini'] .stamp .tag { font-size: 9px; } }
+@media (max-width: 640px) { .stamps[data-mode='mini'] .stamp .tag { font-size: 10px; } }
 @media (max-width: 360px) { .stamps[data-mode='mini'] .stamp .tag { font-size: 7.5px; letter-spacing: .06em; } }
 html { font-synthesis-weight: none; }
 
@@ -367,7 +367,7 @@ body:has(#stage[data-state='page']) .draw-hint { opacity: 0; pointer-events: non
 
 /* Touch devices have no hover, so the home stamp labels are always shown there. */
 @media (hover: none), (pointer: coarse) {
-  .stamps[data-mode='nav'] .stamp .tag { opacity: 1; font-size: 10px; letter-spacing: .1em; transform: translate(-50%, 4px); pointer-events: none; }
+  .stamps[data-mode='nav'] .stamp .tag { opacity: 1; font-size: 12px; letter-spacing: .1em; transform: translate(-50%, 4px); pointer-events: none; }
 }
 
 /* phones: prev/next sit in a solid bottom bar so they never cover the text behind them */
@@ -447,7 +447,7 @@ body:has(#stage[data-state='page']) .draw-hint { opacity: 0; pointer-events: non
 .lb { position: fixed; inset: 0; z-index: 200; display: grid; grid-template-columns: 64px minmax(0, 1fr) 64px; grid-template-rows: auto minmax(0, 1fr); background: #0a0a0c; color: #ece9e2; animation: lb-in .2s ease both; }
 .lb[hidden] { display: none; }
 @keyframes lb-in { from { opacity: 0; } }
-html.lb-open, html.lb-open body { overflow: hidden; }
+html.lb-open, html.lb-open body { overflow: clip; }
 .lb-top { grid-column: 1 / -1; display: flex; justify-content: space-between; align-items: center; padding: 14px 18px; font: 500 16px var(--mono); letter-spacing: .16em; text-transform: lowercase; }
 .lb-close { font: inherit; letter-spacing: inherit; background: none; color: inherit; border: 1px solid currentColor; padding: 8px 14px; cursor: pointer; }
 .lb-close:hover, .lb-close:focus-visible { background: #ece9e2; color: #0a0a0c; outline: none; }
@@ -707,3 +707,12 @@ html, body, .panel, .footer { transition: background-color .5s ease, color .5s e
 /* About "Elsewhere" links: keep the look, grow the tap area to 24px+. */
 ul.links a { position: relative; }
 ul.links a::after { content: ''; position: absolute; inset: -4px -2px; }
+
+/* Review fixes (2026-11-19) */
+.sheet textarea { border-color: rgba(21,23,28,.62); }
+.sheet input:not(.hp) { border-bottom-color: rgba(21,23,28,.62); }
+.fs-frame:focus-visible .fs-img, .resume-page:focus-visible img { transition: none; }
+.tool:disabled, .letter-send:disabled { cursor: not-allowed; filter: grayscale(1); }
+.filter:active, .detail-step:active, .detail-close:active, .tool:not(:disabled):active, .letter-send:not(:disabled):active, .lb-nav:active { transform: translateY(1px); }
+@media (pointer: coarse) { .filter { min-height: 44px; } }
+h1, h2 { text-wrap: balance; }
