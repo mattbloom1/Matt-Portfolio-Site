@@ -1,11 +1,6 @@
 {
   "redirects": [
     {
-      "source": "/work/gvc-brand-motion(/)?",
-      "destination": "/work/",
-      "permanent": false
-    },
-    {
       "source": "/:sec(work|projects|websites|crafts)/the-gvc-team(/)?",
       "destination": "/work/gvc-team/",
       "permanent": true

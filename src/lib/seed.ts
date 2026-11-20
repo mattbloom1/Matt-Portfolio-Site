@@ -38,7 +38,7 @@ export const PROFILE_PHOTO = { src: asset('/about/profile.webp'), alt: 'Portrait
 
 const p = (title: string, group: string, extra: Partial<Project> = {}): Project => ({ title, slug: title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, ''), disciplines: [group], ...extra });
 
-const MOTION_CLIPS = [['Facade', 'facade'], ['G and C Arcs', 'g-and-c-arcs'], ['Monogram Lattice', 'monogram-lattice'], ['Team Colours', 'team-colours'], ['Light Sweep', 'light-sweep'], ['Light Trails', 'light-trails'], ['Places and Capabilities', 'places-and-capabilities'], ['States Line', 'states-line'], ['Panels', 'panels'], ['Quarter Turns', 'quarter-turns'], ['Reeded Glass', 'reeded-glass'], ['Halftone', 'halftone'], ['Tide', 'tide']].map(([title, k]) => ({ title, src: asset(`/projects/gvc-brand-motion/clips/${k}.mp4`), poster: asset(`/projects/gvc-brand-motion/kit/${k}.webp`) }));
+const MOTION_CLIPS = [['Facade', 'facade'], ['Monogram Lattice', 'monogram-lattice'], ['Team Colours', 'team-colours'], ['Light Sweep', 'light-sweep'], ['Light Trails', 'light-trails'], ['Places and Capabilities', 'places-and-capabilities'], ['States Line', 'states-line'], ['Panels', 'panels'], ['Quarter Turns', 'quarter-turns'], ['Reeded Glass', 'reeded-glass'], ['Halftone', 'halftone'], ['Tide', 'tide']].map(([title, k]) => ({ title, src: asset(`/projects/gvc-brand-motion/clips/${k}.mp4`), poster: asset(`/projects/gvc-brand-motion/kit/${k}.webp`) }));
 
 export const SEED_PROJECTS: Project[] = [
   p('GearBook', 'Websites', {
@@ -389,20 +389,20 @@ export const SEED_PROJECTS: Project[] = [
       ],
     },
   }),
-  p('GVC Brand Motion', 'Branding', { slug: 'gvc-brand-motion', last: true, hidden: true,
+  p('GVC Brand Motion', 'Branding', { slug: 'gvc-brand-motion', last: true,
     role: 'Motion design',
     year: 2026,
-    summary: 'A set of thirteen looping brand animations for the Gasdaska Verdiglione Conlon Team at Douglas Elliman, made in October 2026 and delivered in both landscape and portrait. They run from simple pattern loops (Panels, Quarter Turns, Tide, Reeded Glass) to animated logo and monogram pieces and illustrated scenes (Facade, Places and Capabilities, Light Trails), all in the team’s navy and sky-blue palette. The stills here are single frames from the landscape versions.',
-    heroImage: asset('/projects/gvc-brand-motion/kit/g-and-c-arcs.webp'),
+    summary: 'A set of twelve looping brand animations for the Gasdaska Verdiglione Conlon Team at Douglas Elliman, made in October 2026 and delivered in both landscape and portrait. They run from simple pattern loops (Panels, Quarter Turns, Tide, Reeded Glass) to animated logo and monogram pieces and illustrated scenes (Facade, Places and Capabilities, Light Trails), all in the team’s navy and sky-blue palette. The stills here are single frames from the landscape versions.',
+    heroImage: asset('/projects/gvc-brand-motion/kit/team-colours.webp'),
     cover: asset('/websites/covers/gvc-brand-motion.webp'),
     kit: {
       credits: [
         { label: 'Client', value: 'Gasdaska Verdiglione Conlon Team at Douglas Elliman' },
-        { label: 'Scope', value: '13 looping brand animations, landscape and portrait' },
+        { label: 'Scope', value: '12 looping brand animations, landscape and portrait' },
         { label: 'Year', value: 'October 2026' },
       ],
     },
-    motion: { note: 'Thirteen loops, each one a channel. The screen flips through them on its own until you pick one. These are short six-second clips of the landscape versions.', clips: MOTION_CLIPS },
+    motion: { note: 'Twelve loops, each one a channel. The screen flips through them on its own until you pick one. These are short six-second clips of the landscape versions.', clips: MOTION_CLIPS },
   }),
   p('Trimble Business Systems', 'Branding', { slug: 'trimble',
     role: 'Brand identity & intranet design',
