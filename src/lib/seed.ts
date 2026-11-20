@@ -120,6 +120,12 @@ export const SEED_PROJECTS: Project[] = [
         { title: 'Trifold and Art Basel', note: 'Generic and event versions of the trifold for the Art Basel Comes to Boca event on December 7, 2026, which also had an invitation, a postcard and a parking map. Phone numbers are blurred.', cols: 1, images: [
           { src: asset('/projects/le-reve/kit/trifold-mockup.webp'), alt: 'Le Rêve trifold mockup' },
         ] },
+        { title: 'Site signage', note: 'Four signs for the sales site, October 2025, designed with Ilin Graves: sold units, agents, pool lifestyle and living lifestyle. Agent photos, names and phone numbers are blurred.', cols: 2, images: [
+          { src: asset('/projects/le-reve/kit/sign-sold.webp'), alt: 'Le Rêve sold units sign' },
+          { src: asset('/projects/le-reve/kit/sign-agents.webp'), alt: 'Le Rêve agents sign' },
+          { src: asset('/projects/le-reve/kit/sign-pool.webp'), alt: 'Le Rêve pool lifestyle sign' },
+          { src: asset('/projects/le-reve/kit/sign-living.webp'), alt: 'Le Rêve living lifestyle sign' },
+        ] },
         { title: 'Brand guidelines', cols: 1, images: [
           { src: asset('/projects/le-reve/kit/brand-guide.webp'), alt: 'Le Rêve branding guide: colours, typography and logo' },
         ] },
@@ -186,6 +192,18 @@ export const SEED_PROJECTS: Project[] = [
         ] },
         { title: 'Groundbreaking event', note: 'The event banner and folded brochure for the April 30, 2026 groundbreaking ceremony.', cols: 1, images: [
           { src: asset('/projects/casa-avenida/kit/groundbreaking-mockup.webp'), alt: 'Casa Avenida groundbreaking brochure mockup' },
+          { src: asset('/projects/casa-avenida/kit/groundbreaking-banner.webp'), alt: 'The Casa Avenida groundbreaking banner on the day, April 30, 2026' },
+          { src: asset('/projects/casa-avenida/kit/groundbreaking-site.webp'), alt: 'The groundbreaking banner in front of the site and excavator' },
+        ] },
+        { title: 'Rendering boards', note: 'Large-format boards built from the developer’s renderings, 2026.', cols: 2, images: [
+          { src: asset('/projects/casa-avenida/kit/board-pool.webp'), alt: 'Casa Avenida pool rendering board' },
+          { src: asset('/projects/casa-avenida/kit/board-living.webp'), alt: 'Casa Avenida living room rendering board' },
+          { src: asset('/projects/casa-avenida/kit/board-lounge.webp'), alt: 'Casa Avenida lounge rendering board' },
+          { src: asset('/projects/casa-avenida/kit/board-bedroom.webp'), alt: 'Casa Avenida primary bedroom rendering board' },
+          { src: asset('/projects/casa-avenida/kit/board-terrace.webp'), alt: 'Casa Avenida terrace rendering board' },
+        ] },
+        { title: 'Fence wrap', note: 'One panel of the construction fence wrap, March 2026, designed with Ilin Graves. Agent photos and contact details are blurred.', cols: 1, images: [
+          { src: asset('/projects/casa-avenida/kit/fence-wrap.webp'), alt: 'Casa Avenida fence wrap panel' },
         ] },
         { title: 'Brand guidelines', cols: 1, images: [
           { src: asset('/projects/casa-avenida/kit/brand-guide.webp'), alt: 'Casa Avenida final brand guidelines: logo, colours, typography and design elements' },
