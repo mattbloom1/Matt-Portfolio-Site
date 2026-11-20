@@ -5,6 +5,7 @@ import { initPortfolio } from '@/lib/engine';
 import { initDrawing } from '@/lib/draw';
 import { initIconCursor } from '@/lib/iconCursor';
 import { initLightbox } from '@/lib/lightbox';
+import { initMotionWall } from '@/lib/motionWall';
 import { initNightMode } from '@/lib/nightmode';
 import type { SiteContent } from '@/lib/content';
 
@@ -22,6 +23,7 @@ export default function Portfolio({ content }: { content: SiteContent }) {
   }, []);
   useEffect(() => initIconCursor(), []);
   useEffect(() => initLightbox(), []);
+  useEffect(() => initMotionWall(), []);
   useEffect(() => initNightMode(), []);
 
   return (

@@ -38,6 +38,8 @@ export const PROFILE_PHOTO = { src: asset('/about/profile.webp'), alt: 'Portrait
 
 const p = (title: string, group: string, extra: Partial<Project> = {}): Project => ({ title, slug: title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, ''), disciplines: [group], ...extra });
 
+const MOTION_CLIPS = [['Facade', 'facade'], ['G and C Arcs', 'g-and-c-arcs'], ['Monogram Lattice', 'monogram-lattice'], ['Team Colours', 'team-colours'], ['Light Sweep', 'light-sweep'], ['Light Trails', 'light-trails'], ['Places and Capabilities', 'places-and-capabilities'], ['States Line', 'states-line'], ['Panels', 'panels'], ['Quarter Turns', 'quarter-turns'], ['Reeded Glass', 'reeded-glass'], ['Halftone', 'halftone'], ['Tide', 'tide']].map(([title, k]) => ({ title, src: asset(`/projects/gvc-brand-motion/clips/${k}.mp4`), poster: asset(`/projects/gvc-brand-motion/kit/${k}.webp`) }));
+
 export const SEED_PROJECTS: Project[] = [
   p('GearBook', 'Websites', {
     role: 'Co-founder & CMO: design, development & marketing',
@@ -275,7 +277,7 @@ export const SEED_PROJECTS: Project[] = [
       ],
     },
   }),
-  p('619 Bradley Ave', 'Developments', { slug: '619-bradley',
+  p('619 Bradley Ave', 'Developments', { slug: '619-bradley', last: true,
     role: 'Marketing design',
     year: 2026,
     summary: 'A new single-family home in Brielle, New Jersey, from South Street Development, sold by the Gasdaska Verdiglione Conlon Team at Douglas Elliman. For the November 21, 2026 open house, hard hat tour and meet-the-developer day I designed the property trifold, which exists in twenty versions, and the HTML invitation email.',
@@ -367,7 +369,7 @@ export const SEED_PROJECTS: Project[] = [
     href: 'https://livpolani.com',
     linkLabel: 'Visit site',
   }),
-  p('NYC Real Talk Podcast', 'Branding', { slug: 'nyc-real-talk',
+  p('NYC Real Talk Podcast', 'Branding', { slug: 'nyc-real-talk', last: true,
     role: 'Logo revamp',
     year: 2026,
     summary: 'A new logo for The Real Talk, the NYC real estate podcast with John and Jonathan, made for the Gasdaska Verdiglione Conlon Team at Douglas Elliman. The earlier mark was a one-colour line logo of a house outline with a microphone. The revamp is a full-colour illustrated badge: a skyline and bridge under sunburst rays, with a banner and for-sale and sold signs across the bottom. I also made the supporting logo assets, a version for motion graphics and a vertical video outro.',
@@ -387,7 +389,7 @@ export const SEED_PROJECTS: Project[] = [
       ],
     },
   }),
-  p('GVC Brand Motion', 'Branding', { slug: 'gvc-brand-motion',
+  p('GVC Brand Motion', 'Branding', { slug: 'gvc-brand-motion', last: true,
     role: 'Motion design',
     year: 2026,
     summary: 'A set of thirteen looping brand animations for the Gasdaska Verdiglione Conlon Team at Douglas Elliman, made in October 2026 and delivered in both landscape and portrait. They run from simple pattern loops (Panels, Quarter Turns, Tide, Reeded Glass) to animated logo and monogram pieces and illustrated scenes (Facade, Places and Capabilities, Light Trails), all in the team’s navy and sky-blue palette. The stills here are single frames from the landscape versions.',
@@ -399,24 +401,8 @@ export const SEED_PROJECTS: Project[] = [
         { label: 'Scope', value: '13 looping brand animations, landscape and portrait' },
         { label: 'Year', value: 'October 2026' },
       ],
-      sections: [
-        { title: 'Frames from the loops', cols: 2, images: [
-          { src: asset('/projects/gvc-brand-motion/kit/facade.webp'), alt: 'Frame from the Facade motion loop' },
-          { src: asset('/projects/gvc-brand-motion/kit/g-and-c-arcs.webp'), alt: 'Frame from the G and C Arcs motion loop' },
-          { src: asset('/projects/gvc-brand-motion/kit/monogram-lattice.webp'), alt: 'Frame from the Monogram Lattice motion loop' },
-          { src: asset('/projects/gvc-brand-motion/kit/team-colours.webp'), alt: 'Frame from the Team Colours motion loop' },
-          { src: asset('/projects/gvc-brand-motion/kit/light-sweep.webp'), alt: 'Frame from the Light Sweep motion loop' },
-          { src: asset('/projects/gvc-brand-motion/kit/light-trails.webp'), alt: 'Frame from the Light Trails motion loop' },
-          { src: asset('/projects/gvc-brand-motion/kit/places-and-capabilities.webp'), alt: 'Frame from the Places and Capabilities motion loop' },
-          { src: asset('/projects/gvc-brand-motion/kit/states-line.webp'), alt: 'Frame from the States Line motion loop' },
-          { src: asset('/projects/gvc-brand-motion/kit/panels.webp'), alt: 'Frame from the Panels motion loop' },
-          { src: asset('/projects/gvc-brand-motion/kit/quarter-turns.webp'), alt: 'Frame from the Quarter Turns motion loop' },
-          { src: asset('/projects/gvc-brand-motion/kit/reeded-glass.webp'), alt: 'Frame from the Reeded Glass motion loop' },
-          { src: asset('/projects/gvc-brand-motion/kit/halftone.webp'), alt: 'Frame from the Halftone motion loop' },
-          { src: asset('/projects/gvc-brand-motion/kit/tide.webp'), alt: 'Frame from the Tide motion loop' },
-        ] },
-      ],
     },
+    motion: { note: 'Thirteen loops, each one a channel. The screen flips through them on its own until you pick one. These are short six-second clips of the landscape versions.', clips: MOTION_CLIPS },
   }),
   p('Trimble Business Systems', 'Branding', { slug: 'trimble',
     role: 'Brand identity & intranet design',

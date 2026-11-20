@@ -42,6 +42,8 @@ export interface Project {
   videoUrl?: string; href?: string; linkLabel?: string;
   /** Kept in the data but not shown anywhere until it has content. */
   hidden?: boolean;
+  /** Sorts to the very end of the Work grid, whatever its tag. */
+  last?: boolean;
   /** Filter chip on the Work page; defaults to the first discipline. */
   tag?: string;
   stack?: Partial<Record<StackGroup, string[]>>;
@@ -49,6 +51,8 @@ export interface Project {
   extras?: ProjectExtras;
   /** Full project kit (credits, brand identity) rendered above the website mockups, in the style of a studio case study. */
   kit?: ProjectKit;
+  /** A bank of short muted looping clips shown as a channel-surfing screen wall. */
+  motion?: { note?: string; clips: { title: string; src: string; poster: string }[] };
 }
 export interface ProjectKit {
   /** Credit lines shown beside the story, e.g. Location, Architecture. */
@@ -134,6 +138,15 @@ function stackHtml(p: Project) {
 }
 /** Black or white text, whichever reads better on a #rrggbb swatch. */
 const inkOn = (hex: string) => { const h = hex.replace('#', ''); const f = h.length === 3 ? h.replace(/./g, '$&$&') : h; const [r, g, b] = [0, 2, 4].map((i) => parseInt(f.slice(i, i + 2), 16) || 0); return (r * 299 + g * 587 + b * 114) / 1000 > 140 ? '#111' : '#fff'; };
+function motionHtml(p: Project) {
+  const clips = (p.motion?.clips || []).filter((c) => safeUrl(c.src) && safeUrl(c.poster));
+  if (!clips.length) return '';
+  const u = (v: string) => esc(encodeURI(safeUrl(v)));
+  const n = (i: number) => String(i + 1).padStart(2, '0');
+  const first = clips[0];
+  const bank = clips.map((c, i) => `<li><button type="button" class="tv-tile" data-i="${i}" data-src="${u(c.src)}" data-poster="${u(c.poster)}" data-title="${esc(c.title)}" aria-label="Tune to channel ${n(i)}, ${esc(c.title)}"${i === 0 ? ' aria-pressed="true"' : ' aria-pressed="false"'}><video src="${u(c.src)}" poster="${u(c.poster)}" muted loop autoplay playsinline preload="metadata" tabindex="-1" aria-hidden="true"></video><span class="tv-no">${n(i)}</span></button></li>`).join('');
+  return `<section class="kit-sec motion" data-motion><div class="kit-head"><p class="meta">Channel surfing</p><p>${esc(p.motion?.note || 'Pick a channel. It flips through the loops on its own until you do.')}</p></div><div class="tv"><video class="tv-main" src="${u(first.src)}" poster="${u(first.poster)}" muted loop autoplay playsinline preload="metadata" aria-label="Now playing"></video><span class="tv-hud"><span class="tv-ch">CH ${n(0)}</span><span class="tv-name">${esc(first.title)}</span></span><span class="tv-snow" aria-hidden="true"></span></div><ul class="tv-bank" aria-label="Channels">${bank}</ul></section>`;
+}
 function kitHtml(p: Project) {
   const b = p.kit?.brand;
   const brand = b ? (() => {
@@ -146,7 +159,7 @@ function kitHtml(p: Project) {
     return `<section class="kit-sec"><div class="kit-head"><p class="meta">${esc(sec.title)}</p>${sec.note ? `<p>${esc(sec.note)}</p>` : ''}</div><div class="kit-grid ${sec.mix ? 'kit-mix' : `c${sec.cols || 2}`}">${figs}</div></section>`;
   }).join('');
   const web = p.images?.length ? `<div class="kit-head kit-web"><p class="meta">Website</p>${p.kit?.websiteNote ? `<p>${esc(p.kit.websiteNote)}</p>` : ''}</div>` : '';
-  return `${brand}${secs}${web}`;
+  return `${brand}${motionHtml(p)}${secs}${web}`;
 }
 function extrasHtml(p: Project) {
   const x = p.extras;
@@ -216,7 +229,7 @@ export const allTags = (p: Project) => [tagOf(p), ...(p.alsoTags || [])];
 export const tagOf = (p: Project) => p.tag || (p.disciplines || [])[0] || 'Work';
 export function workItems(c: SiteContent): Project[] {
   const crafts: Project[] = c.crafts.map((k) => ({ title: k.title, slug: k.slug, summary: k.summary, year: k.year, role: k.role, cover: k.cover, heroImage: k.heroImage || k.image, images: k.images, imageAlts: k.imageAlts, extras: k.extras, disciplines: ['Crafts'], tag: 'Crafts' }));
-  const rank = (p: Project) => { const i = TAG_ORDER.indexOf(tagOf(p)); return i < 0 ? TAG_ORDER.length : i; };
+  const rank = (p: Project) => { const i = TAG_ORDER.indexOf(tagOf(p)); return (p.last ? 100 : 0) + (i < 0 ? TAG_ORDER.length : i); };
   return [...c.projects, ...crafts].map((p, i) => ({ p, i })).sort((x, y) => rank(x.p) - rank(y.p) || x.i - y.i).map(({ p }) => p);
 }
 function workHtml(c: SiteContent) {
