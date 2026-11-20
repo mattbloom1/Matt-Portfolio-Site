@@ -22,7 +22,7 @@ export const EDUCATION = { year: '’25', school: 'University of Colorado Boulde
 export const FUN_NOTE = 'Owner of a 2003 Eurovan!';
 
 export const SEED_EXPERIENCE: Experience[] = [
-  { organization: 'GVC', role: 'Graphic Design, 3D Modelling, Web Design', startDate: 'August 2025', endDate: 'Present', description: 'Full-time graphic designer on the Gasdaska Verdiglione Conlon Team at Douglas Elliman. Designs and builds marketing websites for new developments, including Le Rêve and Casa Avenida, alongside graphic design and 3D modelling for the team.' },
+  { organization: 'GVC', role: 'Creative Design Assistant', startDate: 'August 2025', endDate: 'Present', description: 'Half of a two-person design team (with Ilin Graves) for the Gasdaska Verdiglione Conlon Team at Douglas Elliman, which serves New York, New Jersey and Florida. Designs print and digital marketing for new developments, including websites, brochures, floor plans, events, ads and motion, 3D models, and internal tools such as GVC Workspace.' },
   { organization: 'GearBook, Boulder, CO', role: 'Co-founder & CMO', startDate: 'May 2025', endDate: 'Present', description: 'Co-founded an affiliate gear catalog for outdoor professionals with Luke Wong. Handles design, development, content, marketing, partner integrations and the legal side, and has signed up 15 members so far.' },
   { organization: 'Trimble', role: 'Business Systems Management & Design', startDate: 'May 2025', endDate: 'August 2025', description: 'Created intranet pages for the DevOps, Change Management and Business Systems teams, and wrote posts that kept stakeholders up to date on Trimble’s software development cycle. Designed a brand identity for the Business Systems team, including a logo, marketing assets and a voice.' },
   { organization: 'Environmental Center, University of Colorado Boulder', role: 'Graphic Designer', startDate: 'May 2022', endDate: 'August 2025', description: 'Designed social posts promoting sustainability and an eco-conscious mindset across the campus community. Grew engagement by 10% and helped build the largest audience the account has had in its ten years, reaching 52,886 people in a single month.' },
@@ -86,13 +86,13 @@ export const SEED_PROJECTS: Project[] = [
     linkLabel: 'Visit site',
   }),
   p('Le Rêve', 'Developments', { slug: 'le-reve',
-    role: 'Design, development & content',
+    role: 'Website, brochure & collateral',
     year: 2025,
-    summary: 'Le Rêve is the marketing site for five luxury townhomes in downtown Boca Raton, built for the Gasdaska Verdiglione Conlon Team at Douglas Elliman. It needed to capture leads and inquiries while showing off the finishes, the available residences, and the teams behind the development: Advanced Development Group, Netta Architects and EAJ Services. Details came from several parties, so the hardest part was keeping every spec and claim accurate. Leads go straight to the MLS, and the site has brought in 23 leads so far on roughly $5 million residences. I handled the design, development and content, including the homepage hero video and the on-brand stylized elements, and edited the photography.',
-    heroImage: asset('/websites/le-reve-macbook-1.webp'),
+    summary: 'Le Rêve is the marketing site for five luxury townhomes in downtown Boca Raton, built for the Gasdaska Verdiglione Conlon Team at Douglas Elliman. It needed to capture leads and inquiries while showing off the finishes, the available residences, and the teams behind the development: Advanced Development Group, Netta Architects and EAJ Services. Details came from several parties, so the hardest part was keeping every spec and claim accurate. Leads go straight to the MLS, and the site has brought in 23 leads so far on roughly $5 million residences. The Le Rêve brand identity predates my time on the team (2024); I joined in August 2025 and applied and extended it. In 2026 I designed and built the current website in Next.js, replacing the earlier Framer site, and designed the 11x17 brochure, the fact sheet and floor plans, a trifold, and signage for the site with Ilin Graves.',
+    heroImage: asset('/websites/le-reve-website.webp'),
     cover: asset('/websites/covers/le-reve.webp'),
-    images: ['macbook-2', 'macbook-3', 'macbook-4', 'phones'].map((n) => asset(`/websites/le-reve-${n}.webp`)),
-    stack: { Framework: ['Next.js', 'React'], Hosting: ['Vercel'], Integrations: ['MLS lead capture', 'Vercel Analytics', 'Vercel Speed Insights'] },
+    images: ['macbook-1', 'macbook-2', 'macbook-3', 'macbook-4', 'phones'].map((n) => asset(`/websites/le-reve-${n}.webp`)),
+    stack: { Framework: ['Next.js 16', 'React', 'TypeScript'], Styling: ['Tailwind CSS v4'], Hosting: ['Vercel'], Integrations: ['Resend lead form', 'Vercel Analytics', 'Vercel Speed Insights'] },
     kit: {
       credits: [
         { label: 'Location', value: 'Boca Raton, FL' },
@@ -100,16 +100,26 @@ export const SEED_PROJECTS: Project[] = [
         { label: 'Developer', value: 'Advanced Development Group' },
         { label: 'Architecture', value: 'Netta Architects' },
         { label: 'Construction', value: 'EAJ Services' },
-        { label: 'Scope', value: 'Brand identity, stationery, brochures, website design, development and content, homepage video' },
+        { label: 'Scope', value: 'Website design and development (2026), brochure, fact sheet and floor plans, trifold, Art Basel event pieces, site signage' },
         { label: 'Team', value: 'Two designers, including me' },
+        { label: 'Renderings', value: 'Developer and architect assets, shown with credit' },
       ],
       brand: {
         logos: [{ src: asset('/projects/le-reve/wordmark.svg'), alt: 'Le Rêve Boca Raton wordmark', bg: '#ebf1f9', w: 34 }],
         palette: ['#38496a|Navy', '#4c5f84|Slate blue', '#d7d2cb|Warm gray'],
         fonts: ['Roquila (heading)', 'Novecento Sans Light (subheading)', 'Avenir Next (text)', 'Acumin Pro Thin'],
-        note: 'A hand-lettered script wordmark in deep navy, paired with a quiet sans and a restrained navy and warm gray palette.',
+        note: 'The identity predates my work. A hand-lettered script wordmark in deep navy, paired with a quiet sans and a restrained navy and warm gray palette; I applied and extended it across the collateral below.',
       },
       sections: [
+        { title: 'Brochure, 2026', note: 'The 11x17 folded brochure.', cols: 1, images: [
+          { src: asset('/projects/le-reve/kit/brochure-mockup.webp'), alt: 'Le Rêve 11x17 brochure mockup' },
+        ] },
+        { title: 'Fact sheet and floor plans', cols: 1, images: [
+          { src: asset('/projects/le-reve/kit/factsheet-floorplan-mockup.webp'), alt: 'Le Rêve fact sheet and unit floor plan mockup' },
+        ] },
+        { title: 'Trifold and Art Basel', note: 'Generic and event versions of the trifold for the Art Basel Comes to Boca event on December 7, 2026, which also had an invitation, a postcard and a parking map. Phone numbers are blurred.', cols: 1, images: [
+          { src: asset('/projects/le-reve/kit/trifold-mockup.webp'), alt: 'Le Rêve trifold mockup' },
+        ] },
         { title: 'Brand guidelines', cols: 1, images: [
           { src: asset('/projects/le-reve/kit/brand-guide.webp'), alt: 'Le Rêve branding guide: colours, typography and logo' },
         ] },
@@ -136,12 +146,12 @@ export const SEED_PROJECTS: Project[] = [
     linkLabel: 'Visit site',
   }),
   p('Casa Avenida', 'Developments', {
-    role: 'Design, development & content',
+    role: 'Website updates & collateral',
     year: 2025,
-    summary: 'Casa Avenida is the marketing site for eight luxury townhome-style condominiums one block from Atlantic Avenue in downtown Delray Beach. I built it in early 2025 for the Gasdaska Verdiglione Conlon Team at Douglas Elliman, with the developers Kastelo Development and 4TRO Development and Capital and RWB/Linares Architecture. The site captures inquiries and leads while presenting the residences, finishes, renderings and a 360 virtual tour. It was my first real client website, so I learned a lot on the fly. I handled the design, development and content, and assisted on the renderings. Three of the eight residences have sold so far. It is public and still maintained.',
-    heroImage: asset('/websites/casa-avenida-macbook-1.webp'),
+    summary: 'Casa Avenida is the marketing site for eight luxury townhome-style condominiums one block from Atlantic Avenue in downtown Delray Beach. The brand identity and the first website assets were in place before I joined the team in August 2025. From then on I updated the Framer site and extended the identity across the sales materials, working with the developers Kastelo Development and 4TRO Development and Capital and RWB/Linares Architecture. The site captures inquiries and leads while presenting the residences, finishes, renderings and a 360 virtual tour, and in November 2026 I added a /tour landing page for Meta ads. Three of the eight residences have sold so far. It is public and still maintained.',
+    heroImage: asset('/websites/casa-avenida-website-tour.webp'),
     cover: asset('/websites/covers/casa-avenida.webp'),
-    images: ['macbook-2', 'macbook-3', 'macbook-4', 'phones'].map((n) => asset(`/websites/casa-avenida-${n}.webp`)),
+    images: ['macbook-1', 'macbook-2', 'macbook-3', 'macbook-4', 'phones'].map((n) => asset(`/websites/casa-avenida-${n}.webp`)),
     stack: { Framework: ['Framer'], Hosting: ['Framer'], Integrations: ['Google Analytics', 'Meta Pixel'] },
     kit: {
       credits: [
@@ -150,8 +160,9 @@ export const SEED_PROJECTS: Project[] = [
         { label: 'Developers', value: 'Kastelo Development, 4TRO Development and Capital' },
         { label: 'Architecture', value: 'RWB/Linares Architecture' },
         { label: 'Interiors', value: 'Stef Leonel Interior Design, Ava Gray Interiors' },
-        { label: 'Scope', value: 'Brand identity, stationery, brochures, website design, development and content; assisted on renderings' },
+        { label: 'Scope', value: 'Website updates and /tour landing page, sales brochure, tear sheet and fact sheet, email campaign, Haven magazine ads, rendering boards, fence wrap, groundbreaking event pieces' },
         { label: 'Team', value: 'Two designers, including me' },
+        { label: 'Renderings', value: 'Developer and architect assets, shown with credit' },
       ],
       brand: {
         logos: [
@@ -161,9 +172,21 @@ export const SEED_PROJECTS: Project[] = [
         ],
         palette: ['#4f2c1d|Saddle', '#373a36|Lunar', '#006a8e|Bahama Blue', '#dfd1a7|Sapling', '#ffffff|Pure White'],
         fonts: ['Quake (display)', 'Nunito Sans Light (heading)', 'Helvetica Bold (subheading)', 'Afacad Flux Light (text)'],
-        note: 'A high-contrast serif wordmark with a spaced CASA above it, a bold A monogram, and a palette of saddle brown, lunar charcoal, Bahama blue and sapling gold, used as flat colour and as gradients.',
+        note: 'The identity predates my work. A high-contrast serif wordmark with a spaced CASA above it, a bold A monogram, and a palette of saddle brown, lunar charcoal, Bahama blue and sapling gold, used as flat colour and as gradients; I extended it across the materials below.',
       },
       sections: [
+        { title: 'Sales brochure', cols: 1, images: [
+          { src: asset('/projects/casa-avenida/kit/brochure-mockup.webp'), alt: 'Casa Avenida sales brochure spread mockup' },
+        ] },
+        { title: 'Tear sheet and fact sheet', cols: 1, images: [
+          { src: asset('/projects/casa-avenida/kit/tear-sheet-mockup.webp'), alt: 'Casa Avenida fact sheet and finishes tear sheet mockup' },
+        ] },
+        { title: 'Email campaign', note: 'Six emails from November 2025 to January 2026. Agent photos are blurred.', cols: 1, images: [
+          { src: asset('/projects/casa-avenida/kit/email-mockup.webp'), alt: 'Casa Avenida email campaign on three phones' },
+        ] },
+        { title: 'Groundbreaking event', note: 'The event banner and folded brochure for the April 30, 2026 groundbreaking ceremony.', cols: 1, images: [
+          { src: asset('/projects/casa-avenida/kit/groundbreaking-mockup.webp'), alt: 'Casa Avenida groundbreaking brochure mockup' },
+        ] },
         { title: 'Brand guidelines', cols: 1, images: [
           { src: asset('/projects/casa-avenida/kit/brand-guide.webp'), alt: 'Casa Avenida final brand guidelines: logo, colours, typography and design elements' },
         ] },
@@ -193,22 +216,26 @@ export const SEED_PROJECTS: Project[] = [
     linkLabel: 'Visit site',
   }),
   p('The Edge Delray', 'Developments', {
-    role: 'Design, development & content',
+    role: 'Floor plans & 3D modelling',
     year: 2026,
-    summary: 'The Edge is the marketing site for seven luxury townhomes in two four-story buildings in Delray Beach, built for the Gasdaska Verdiglione Conlon Team at Douglas Elliman, with Advanced Development Group as developer and Netta Architects as architect. It presents the floor plans, the location and the teams behind the project, and captures inquiries ahead of launch. The site is built but not live yet. I handled the design, development and content.',
-    heroImage: asset('/websites/the-edge-delray-macbook-1.webp'),
+    summary: 'The Edge at Pineapple Grove is a seven-townhome project in two four-story buildings in Delray Beach, designed by Netta Architects and sold by the Gasdaska Verdiglione Conlon Team at Douglas Elliman. Its branding, brochures, stationery, website and social have not been produced yet. So far my work is the branded unit and floor plans, from January 2026, and a 3D model of the site that I rebuilt in Cinema 4D from the architect’s model.',
+    heroImage: asset('/projects/the-edge-delray/kit/floorplan-book-mockup.webp'),
     cover: asset('/websites/covers/the-edge-delray.webp'),
     coverWide: asset('/websites/covers/the-edge-delray-wide.webp'),
-    images: ['macbook-2', 'macbook-3', 'macbook-4', 'phones'].map((n) => asset(`/websites/the-edge-delray-${n}.webp`)),
     kit: {
       credits: [
-        { label: 'Location', value: '602 NE 2nd St, Delray Beach, FL' },
+        { label: 'Location', value: '246 NE 6th Ave, Delray Beach, FL' },
         { label: 'Client', value: 'Gasdaska Verdiglione Conlon Team at Douglas Elliman' },
         { label: 'Developer', value: 'Advanced Development Group' },
         { label: 'Architecture', value: 'Netta Architects' },
         { label: 'Residences', value: '7 townhomes in two four-story buildings' },
+        { label: 'Scope', value: 'Branded unit and floor plans, 3D site model (Cinema 4D)' },
+        { label: 'Renderings', value: 'Developer and architect assets, shown with credit' },
       ],
       sections: [
+        { title: 'Floor plan book', note: 'Branded plans for each of the seven units and for the floors and roof of both buildings.', cols: 1, images: [
+          { src: asset('/projects/the-edge-delray/kit/floorplan-book-mockup.webp'), alt: 'The Edge branded floor plan book mockup' },
+        ] },
         { title: 'Renderings', mix: true, images: [
           { src: asset('/projects/the-edge-delray/kit/rendering-1.webp'), alt: 'The Edge rendering at dusk from the street corner' },
           { src: asset('/projects/the-edge-delray/kit/rendering-2.webp'), alt: 'The Edge rendering of the two buildings and the walkway between them' },
@@ -219,7 +246,27 @@ export const SEED_PROJECTS: Project[] = [
         ] },
       ],
     },
-    stack: { Framework: ['Framer'] },
+  }),
+  p('619 Bradley Ave', 'Developments', { slug: '619-bradley',
+    role: 'Marketing design',
+    year: 2026,
+    summary: 'A new single-family home in Brielle, New Jersey, from South Street Development, sold by the Gasdaska Verdiglione Conlon Team at Douglas Elliman. For the November 21, 2026 open house, hard hat tour and meet-the-developer day I designed the property trifold, which exists in twenty versions, and the HTML invitation email.',
+    heroImage: asset('/projects/619-bradley/kit/trifold-mockup.webp'),
+    cover: asset('/websites/covers/619-bradley.webp'),
+    kit: {
+      credits: [
+        { label: 'Location', value: '619 Bradley Ave, Brielle, NJ' },
+        { label: 'Client', value: 'Gasdaska Verdiglione Conlon Team at Douglas Elliman' },
+        { label: 'Developer', value: 'South Street Development' },
+        { label: 'Scope', value: 'Property trifold (20 versions), HTML invitation email' },
+        { label: 'Team', value: 'Design by me' },
+      ],
+      sections: [
+        { title: 'Trifold', note: 'Team photos, contact details and team figures are blurred.', cols: 1, images: [
+          { src: asset('/projects/619-bradley/kit/trifold-mockup.webp'), alt: '619 Bradley Ave property trifold mockup' },
+        ] },
+      ],
+    },
   }),
   p('Pictorial Symbols Library', 'Websites', { slug: 'pictorial-symbols',
     role: 'Design & development',
@@ -260,7 +307,15 @@ export const SEED_PROJECTS: Project[] = [
     heroImage: asset('/websites/gvc-team-mockup.webp'),
     cover: asset('/websites/covers/the-gvc-team.webp'),
     images: ['macbook-1', 'macbook-2', 'macbook-3', 'macbook-4', 'phones-navy'].map((n) => asset(`/websites/gvc-team/${n}.webp`)),
-    stack: { Framework: ['Framer'], Data: ['Framer CMS'] },
+    stack: { Framework: ['Framer'], Data: ['Framer CMS', 'Property Sync automation'] },
+    kit: {
+      sections: [
+        { title: 'Haven magazine ad', note: 'A full-page ad from September 2025, designed with Ilin Graves. Faces, contact details and team figures are blurred.', cols: 1, images: [
+          { src: asset('/projects/the-gvc-team/kit/haven-ad-mockup.webp'), alt: 'The GVC Team Haven magazine ad mockup' },
+        ] },
+      ],
+      websiteNote: 'The team site also has a Property Sync script that pulls every listing from the Douglas Elliman team page into the Framer CMS on a schedule and logs price changes.',
+    },
     href: 'https://gvcrealestateteam.com/',
     linkLabel: 'Visit site',
   }),
