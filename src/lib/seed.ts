@@ -117,10 +117,10 @@ export const SEED_PROJECTS: Project[] = [
         { title: 'Fact sheet and floor plans', cols: 1, images: [
           { src: asset('/projects/le-reve/kit/factsheet-floorplan-mockup.webp'), alt: 'Le Rêve fact sheet and unit floor plan mockup' },
         ] },
-        { title: 'Trifold and Art Basel', note: 'Generic and event versions of the trifold for the Art Basel Comes to Boca event on December 7, 2026, which also had an invitation, a postcard and a parking map. Phone numbers are blurred.', cols: 1, images: [
+        { title: 'Trifold and Art Basel', note: 'Generic and event versions of the trifold for the Art Basel Comes to Boca event on December 7, 2026, which also had an invitation, a postcard and a parking map.', cols: 1, images: [
           { src: asset('/projects/le-reve/kit/trifold-mockup.webp'), alt: 'Le Rêve trifold mockup' },
         ] },
-        { title: 'Site signage', note: 'Four signs for the sales site, October 2025, designed with Ilin Graves: sold units, agents, pool lifestyle and living lifestyle. Agent photos, names and phone numbers are blurred.', cols: 2, images: [
+        { title: 'Site signage', note: 'Four signs for the sales site, October 2025, designed with Ilin Graves: sold units, agents, pool lifestyle and living lifestyle.', cols: 2, images: [
           { src: asset('/projects/le-reve/kit/sign-sold.webp'), alt: 'Le Rêve sold units sign' },
           { src: asset('/projects/le-reve/kit/sign-agents.webp'), alt: 'Le Rêve agents sign' },
           { src: asset('/projects/le-reve/kit/sign-pool.webp'), alt: 'Le Rêve pool lifestyle sign' },
@@ -187,8 +187,18 @@ export const SEED_PROJECTS: Project[] = [
         { title: 'Tear sheet and fact sheet', cols: 1, images: [
           { src: asset('/projects/casa-avenida/kit/tear-sheet-mockup.webp'), alt: 'Casa Avenida fact sheet and finishes tear sheet mockup' },
         ] },
-        { title: 'Email campaign', note: 'Six emails from November 2025 to January 2026. Agent photos are blurred.', cols: 1, images: [
+        { title: 'Email campaign', note: 'Six emails from November 2025 to January 2026.', cols: 1, images: [
           { src: asset('/projects/casa-avenida/kit/email-mockup.webp'), alt: 'Casa Avenida email campaign on three phones' },
+        ] },
+        { title: 'Haven magazine ads', note: 'Full-page ads in Haven magazine for October 2025, November 2025 and January 2026.', cols: 1, images: [
+          { src: asset('/projects/casa-avenida/kit/haven-ads.webp'), alt: 'Casa Avenida Haven magazine ads' },
+          { src: asset('/projects/casa-avenida/kit/haven-ad-jan.webp'), alt: 'Casa Avenida Haven magazine ad, January 2026' },
+        ] },
+        { title: 'Floor plan book', note: 'A book of branded floor plans for the residences, February 2026.', cols: 1, images: [
+          { src: asset('/projects/casa-avenida/kit/floorplan-book.webp'), alt: 'Casa Avenida floor plan book mockup' },
+        ] },
+        { title: 'Instagram', note: 'Behind the Build stories featuring the architect and the developer, February 2026.', cols: 1, images: [
+          { src: asset('/projects/casa-avenida/kit/instagram.webp'), alt: 'Casa Avenida Behind the Build Instagram stories on three phones' },
         ] },
         { title: 'Groundbreaking event', note: 'The event banner and folded brochure for the April 30, 2026 groundbreaking ceremony.', cols: 1, images: [
           { src: asset('/projects/casa-avenida/kit/groundbreaking-mockup.webp'), alt: 'Casa Avenida groundbreaking brochure mockup' },
@@ -202,7 +212,7 @@ export const SEED_PROJECTS: Project[] = [
           { src: asset('/projects/casa-avenida/kit/board-bedroom.webp'), alt: 'Casa Avenida primary bedroom rendering board' },
           { src: asset('/projects/casa-avenida/kit/board-terrace.webp'), alt: 'Casa Avenida terrace rendering board' },
         ] },
-        { title: 'Fence wrap', note: 'One panel of the construction fence wrap, March 2026, designed with Ilin Graves. Agent photos and contact details are blurred.', cols: 1, images: [
+        { title: 'Fence wrap', note: 'One panel of the construction fence wrap, March 2026, designed with Ilin Graves.', cols: 1, images: [
           { src: asset('/projects/casa-avenida/kit/fence-wrap.webp'), alt: 'Casa Avenida fence wrap panel' },
         ] },
         { title: 'Brand guidelines', cols: 1, images: [
@@ -280,7 +290,7 @@ export const SEED_PROJECTS: Project[] = [
         { label: 'Team', value: 'Design by me' },
       ],
       sections: [
-        { title: 'Trifold', note: 'Team photos, contact details and team figures are blurred.', cols: 1, images: [
+        { title: 'Trifold', cols: 1, images: [
           { src: asset('/projects/619-bradley/kit/trifold-mockup.webp'), alt: '619 Bradley Ave property trifold mockup' },
         ] },
       ],
@@ -328,7 +338,7 @@ export const SEED_PROJECTS: Project[] = [
     stack: { Framework: ['Framer'], Data: ['Framer CMS', 'Property Sync automation'] },
     kit: {
       sections: [
-        { title: 'Haven magazine ad', note: 'A full-page ad from September 2025, designed with Ilin Graves. Faces, contact details and team figures are blurred.', cols: 1, images: [
+        { title: 'Haven magazine ad', note: 'A full-page ad from September 2025, designed with Ilin Graves.', cols: 1, images: [
           { src: asset('/projects/the-gvc-team/kit/haven-ad-mockup.webp'), alt: 'The GVC Team Haven magazine ad mockup' },
         ] },
       ],

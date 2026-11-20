@@ -264,7 +264,7 @@ function swapBackground(id: SectionId) {
 function renderContent(id: SectionId) {
   const s = byId(id);
   contentEl.hidden = false;
-  contentEl.innerHTML = `<div class="panel"><header class="panel-head"><div class="no">${s.stampName}</div><h1 tabindex="-1">${s.label}</h1></header><div class="panel-body">${s.html}</div></div>`;
+  contentEl.innerHTML = `<div class="panel"><header class="panel-head"><div class="no">${s.no}</div><h1 tabindex="-1">${s.label}</h1></header><div class="panel-body">${s.html}</div></div>`;
   contentEl.scrollTop = 0;
   document.title = `${s.label} · ${SITE.name}`;
   stopFilmStrip();
