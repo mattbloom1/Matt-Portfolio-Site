@@ -389,7 +389,7 @@ export const SEED_PROJECTS: Project[] = [
       ],
     },
   }),
-  p('GVC Brand Motion', 'Branding', { slug: 'gvc-brand-motion', last: true,
+  p('GVC Brand Motion', 'Branding', { slug: 'gvc-brand-motion', last: true, hidden: true,
     role: 'Motion design',
     year: 2026,
     summary: 'A set of thirteen looping brand animations for the Gasdaska Verdiglione Conlon Team at Douglas Elliman, made in October 2026 and delivered in both landscape and portrait. They run from simple pattern loops (Panels, Quarter Turns, Tide, Reeded Glass) to animated logo and monogram pieces and illustrated scenes (Facade, Places and Capabilities, Light Trails), all in the team’s navy and sky-blue palette. The stills here are single frames from the landscape versions.',
