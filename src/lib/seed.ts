@@ -197,8 +197,8 @@ export const SEED_PROJECTS: Project[] = [
         { title: 'Floor plan book', note: 'A book of branded floor plans for the residences, February 2026.', cols: 1, images: [
           { src: asset('/projects/casa-avenida/kit/floorplan-book.webp'), alt: 'Casa Avenida floor plan book mockup' },
         ] },
-        { title: 'Instagram', note: 'Behind the Build stories featuring the architect and the developer, February 2026.', cols: 1, images: [
-          { src: asset('/projects/casa-avenida/kit/instagram.webp'), alt: 'Casa Avenida Behind the Build Instagram stories on three phones' },
+        { title: 'Instagram', note: 'Behind the Build posts featuring the architect and the developer, February 2026.', cols: 1, images: [
+          { src: asset('/projects/casa-avenida/kit/instagram.webp'), alt: 'Casa Avenida Behind the Build Instagram posts on three phones' },
         ] },
         { title: 'Groundbreaking event', note: 'The event banner and folded brochure for the April 30, 2026 groundbreaking ceremony.', cols: 1, images: [
           { src: asset('/projects/casa-avenida/kit/groundbreaking-mockup.webp'), alt: 'Casa Avenida groundbreaking brochure mockup' },
