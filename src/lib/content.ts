@@ -158,7 +158,9 @@ function kitHtml(p: Project) {
     const figs = sec.images.filter((i) => safeUrl(i.src)).map((i) => `<figure class="kit-fig"><img src="${esc(encodeURI(safeUrl(i.src)))}" alt="${esc(i.alt)}" loading="lazy" decoding="async"></figure>`).join('');
     return `<section class="kit-sec"><div class="kit-head"><p class="meta">${esc(sec.title)}</p>${sec.note ? `<p>${esc(sec.note)}</p>` : ''}</div><div class="kit-grid ${sec.mix ? 'kit-mix' : `c${sec.cols || 2}`}">${figs}</div></section>`;
   }).join('');
-  const web = p.images?.length ? `<div class="kit-head kit-web"><p class="meta">Website</p>${p.kit?.websiteNote ? `<p>${esc(p.kit.websiteNote)}</p>` : ''}</div>` : '';
+  // only a site's screenshots are a "Website"; floor plans, crafts and hardware get a plain gallery label
+  const galleryLabel = allTags(p).includes('Websites') || p.kit?.websiteNote ? 'Website' : 'Gallery';
+  const web = p.images?.length ? `<div class="kit-head kit-web"><p class="meta">${galleryLabel}</p>${p.kit?.websiteNote ? `<p>${esc(p.kit.websiteNote)}</p>` : ''}</div>` : '';
   return `${brand}${motionHtml(p)}${secs}${web}`;
 }
 function extrasHtml(p: Project) {
@@ -166,7 +168,7 @@ function extrasHtml(p: Project) {
   if (!x) return '';
   const figs = (x.figures || []).filter((f) => safeUrl(f.src)).map((f) => `<figure class="xfig"><img src="${esc(encodeURI(safeUrl(f.src)))}" alt="${esc(f.alt)}" loading="lazy" decoding="async">${f.caption ? `<figcaption>${esc(f.caption)}</figcaption>` : ''}</figure>`).join('');
   const stats = (x.stats || []).map((s) => `<div class="xstat"><dt>${esc(s.label)}</dt><dd>${esc(s.value)}</dd></div>`).join('');
-  const notes = (x.notes || []).map((n) => `<div class="xnote"><h3>${esc(n.heading)}</h3>${n.body.split('\n\n').map((t) => `<p>${esc(t)}</p>`).join('')}</div>`).join('');
+  const notes = (x.notes || []).map((n) => `<div class="xnote"><h3>${esc(n.heading)}</h3><div class="xnote-body">${n.body.split('\n\n').map((t) => `<p>${esc(t)}</p>`).join('')}</div></div>`).join('');
   return `<div class="detail-extra">${figs ? `<div class="xfigs">${figs}</div>` : ''}${stats ? `<dl class="xstats">${stats}</dl>` : ''}${notes ? `<div class="xnotes">${notes}</div>` : ''}</div>`;
 }
 /** Cards plus full-screen detail pages, shared by Projects and Crafts. */
