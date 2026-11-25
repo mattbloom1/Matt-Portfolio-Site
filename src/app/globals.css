@@ -325,6 +325,7 @@ body:has(#stage[data-state='page']) .draw-hint { opacity: 0; pointer-events: non
 .xnote { display: grid; grid-template-columns: var(--detail-cols); gap: var(--detail-gap); padding: 22px 0; border-top: 1px solid color-mix(in srgb, var(--ink) 18%, transparent); }
 .xnote h3 { font: 500 clamp(22px, 2.4vw, 30px)/1.15 var(--serif); margin: 0; }
 .xnote p { font: 400 18px/1.5 var(--serif); margin: 0; max-width: 62ch; }
+.xnote-body p + p { margin-top: 0.9em; } /* paragraphs stay together in the text column */
 @media (max-width: 760px) { .xfigs { grid-template-columns: minmax(0, 1fr); } .xnote p { font-size: 17px; } }
 @media (max-width: 899px) { .xnote { grid-template-columns: minmax(0, 1fr); gap: 8px; } }
 .icon-cursor { position: fixed; top: 0; left: 0; width: 48px; height: 48px; object-fit: contain; pointer-events: none; z-index: 60; opacity: 0; will-change: translate; }
