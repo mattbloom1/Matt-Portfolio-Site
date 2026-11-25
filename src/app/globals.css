@@ -550,12 +550,9 @@ html, body, .panel, .footer { transition: background-color .5s ease, color .5s e
 .resume-head { display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 8px 20px; }
 .resume-head span { display: flex; gap: 20px; flex-wrap: wrap; }
 .resume-head a { color: inherit; text-underline-offset: 3px; min-height: 44px; display: inline-flex; align-items: center; }
-/* The two resume pages sit on the desk like sheets of paper; each one opens the PDF. */
-.resume-pages { display: grid; gap: clamp(20px, 3vw, 36px); max-width: 820px; margin-top: 16px; }
-.resume-page { display: block; }
-.resume-page img { display: block; width: 100%; height: auto; background: #fff; border: 1px solid color-mix(in srgb, var(--ink) 30%, transparent); box-shadow: 3px 4px 0 rgba(20,20,20,.12); transition: transform .4s cubic-bezier(.2,.7,.2,1), box-shadow .4s; }
-.resume-page:hover img, .resume-page:focus-visible img { transform: translate(-1px, -2px); box-shadow: 5px 7px 0 rgba(20,20,20,.14); }
-.resume-page:focus-visible { outline: 3px solid var(--ink); outline-offset: 4px; }
+/* The live Google Doc sits on the desk like a sheet of paper, tall enough for both pages. */
+.resume-doc { max-width: 820px; margin-top: 16px; background: #fff; border: 1px solid color-mix(in srgb, var(--ink) 30%, transparent); box-shadow: 3px 4px 0 rgba(20,20,20,.12); }
+.resume-doc iframe { display: block; width: 100%; height: min(2200px, 260vw); border: 0; }
 
 /* Letter contact form (About) */
 .contact { margin-top: 44px; max-width: 560px; }
@@ -715,7 +712,7 @@ ul.links a::after { content: ''; position: absolute; inset: -4px -2px; }
 /* Review fixes (2026-11-19) */
 .sheet textarea { border-color: rgba(21,23,28,.62); }
 .sheet input:not(.hp) { border-bottom-color: rgba(21,23,28,.62); }
-.fs-frame:focus-visible .fs-img, .resume-page:focus-visible img { transition: none; }
+.fs-frame:focus-visible .fs-img { transition: none; }
 .tool:disabled, .letter-send:disabled { cursor: not-allowed; filter: grayscale(1); }
 .filter:active, .detail-step:active, .detail-close:active, .tool:not(:disabled):active, .letter-send:not(:disabled):active, .lb-nav:active { transform: translateY(1px); }
 @media (pointer: coarse) { .filter { min-height: 44px; } }
