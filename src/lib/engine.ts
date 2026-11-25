@@ -199,19 +199,21 @@ const ROW_GAP = { min: 0.15, max: 0.35 }; // space between rows, as a share of a
 const EDGE = 10; // px kept clear at the stage edges
 const taglineEl = stage.querySelector<HTMLElement>('.tagline');
 const hoverLabels = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+/** Touch screens show every stamp's label under it all the time (see the CSS), so each row needs room for one. */
+const labelRow = window.matchMedia('(hover: none), (pointer: coarse)').matches ? 24 : 0;
 /** The last home layout; drag clamping reads it. */
 let nav: { rects: Record<SectionId, Rect>; top: number } | null = null;
 
 /** Lay one arrangement out in the band [top, bottom]: the widest stamps its spots allow, shrunk if the band is too short. */
 function arrange(a: Arrangement, W: number, top: number, bottom: number) {
-  const bandH = Math.max(1, bottom - top);
+  const bandH = Math.max(1, bottom - top - a.rows * labelRow); // the stamps' share of the band, after the labels under each row
   // Each stamp's box at width 1 once it is tilted (the height also leaves room for the hover lift).
   const box = (id: SectionId) => {
     const t = (Math.abs(tilt[id]) * Math.PI) / 180, r = byId(id).ratio;
     return { w: Math.cos(t) + Math.sin(t) / r, h: (Math.cos(t) / r + Math.sin(t)) * 1.04 };
   };
   const rowH = Math.max(...SECTIONS.map((s) => box(s.id).h));
-  const centreY = (sp: NavSpot, gap: number) => (sp.row * (1 + gap) + sp.dy) * rowH; // at width 1
+  const centreY = (sp: NavSpot, gap: number) => (sp.row * (1 + gap) + sp.dy) * rowH; // at width 1, labels left out
   // Top and height of the whole group at width 1, for a given gap between rows.
   const extent = (gap: number) => {
     const tops = SECTIONS.map((s) => centreY(a.spots[s.id], gap) - box(s.id).h / 2);
@@ -226,7 +228,7 @@ function arrange(a: Arrangement, W: number, top: number, bottom: number) {
   const g = extent(gap), y0 = top + (bandH - g.height * w) / 2 - g.top * w;
   const rects = {} as Record<SectionId, Rect>;
   for (const s of SECTIONS) {
-    const sp = a.spots[s.id], h = w / byId(s.id).ratio, cy = y0 + centreY(sp, gap) * w;
+    const sp = a.spots[s.id], h = w / byId(s.id).ratio, cy = y0 + centreY(sp, gap) * w + sp.row * labelRow;
     rects[s.id] = { left: sp.x * W - w / 2, top: cy - h / 2, w, h };
   }
   return { w, score: w * a.weight, rects };
