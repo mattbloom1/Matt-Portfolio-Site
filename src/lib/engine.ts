@@ -50,29 +50,41 @@ const imgTiny = (id: SectionId) => `${process.env.NEXT_PUBLIC_BASE_PATH || ''}/s
 function mountLogo() {
   homeBtn.innerHTML = '<svg class="x-icon" viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" aria-hidden="true"><path d="M5 5l14 14M19 5L5 19"/></svg>';
   homeBtn.setAttribute('aria-label', 'Close');
-  logoCleanup = () => {};
 }
-let logoCleanup = () => {};
 
 /* ---------- stamps ---------- */
 const stampEls = new Map<SectionId, HTMLButtonElement>();
 const tilt: Record<SectionId, number> = { work: -4, posters: 2, experience: 3, about: -2, photography: -3 };
 
-interface NavSpot { x: number; y: number; w: number }
-const navDesktop: Record<SectionId, NavSpot> = {
-  work: { x: 0.2, y: 0.32, w: 0.22 },
-  posters: { x: 0.5, y: 0.27, w: 0.22 },
-  experience: { x: 0.8, y: 0.34, w: 0.22 },
-  photography: { x: 0.34, y: 0.72, w: 0.22 },
-  about: { x: 0.68, y: 0.68, w: 0.22 },
-};
-const navMobile: Record<SectionId, NavSpot> = {
-  work: { x: 0.25, y: 0.2, w: 0.4 },
-  posters: { x: 0.75, y: 0.17, w: 0.4 },
-  experience: { x: 0.25, y: 0.5, w: 0.4 },
-  photography: { x: 0.75, y: 0.53, w: 0.4 },
-  about: { x: 0.5, y: 0.82, w: 0.4 },
-};
+/* Home stamps: three arrangements, each laid out in the open area under the headline.
+   A spot is a column centre (fraction of the width), a row, and a small nudge (in row heights) for the scattered look.
+   Whichever arrangement gives the biggest stamps for the viewport is used (two columns has to win clearly, as it
+   looks sparse on landscape screens), so phones and portrait tablets get two columns, landscape screens three over
+   two, and short wide screens a single row. */
+interface NavSpot { x: number; row: number; dy: number }
+interface Arrangement { rows: number; maxW: number; weight: number; spots: Record<SectionId, NavSpot> }
+const ROW: Arrangement = { rows: 1, maxW: 0.17, weight: 1, spots: {
+  work: { x: 0.1, row: 0, dy: 0.05 },
+  posters: { x: 0.3, row: 0, dy: -0.05 },
+  experience: { x: 0.5, row: 0, dy: 0.06 },
+  photography: { x: 0.7, row: 0, dy: -0.03 },
+  about: { x: 0.9, row: 0, dy: 0.04 },
+} };
+const WIDE: Arrangement = { rows: 2, maxW: 0.26, weight: 1, spots: {
+  work: { x: 0.2, row: 0, dy: 0.06 },
+  posters: { x: 0.5, row: 0, dy: -0.06 },
+  experience: { x: 0.8, row: 0, dy: 0.1 },
+  photography: { x: 0.34, row: 1, dy: 0.04 },
+  about: { x: 0.68, row: 1, dy: -0.02 },
+} };
+const STACKED: Arrangement = { rows: 3, maxW: 0.44, weight: 0.87, spots: {
+  work: { x: 0.26, row: 0, dy: 0.04 },
+  posters: { x: 0.74, row: 0, dy: -0.04 },
+  experience: { x: 0.26, row: 1, dy: -0.02 },
+  photography: { x: 0.74, row: 1, dy: 0.06 },
+  about: { x: 0.5, row: 2, dy: 0 },
+} };
+const ARRANGEMENTS = [ROW, WIDE, STACKED];
 /* Phones: a slight random tilt for each stamp (2 to 5 degrees, either way), fresh on every load. */
 if (window.innerWidth < 640) for (const id of Object.keys(tilt) as SectionId[]) tilt[id] = (Math.random() < 0.5 ? -1 : 1) * (2 + Math.random() * 3);
 
@@ -108,15 +120,13 @@ const moved: Partial<Record<SectionId, { fx: number; fy: number }>> = (() => {
   try { return JSON.parse(localStorage.getItem(POS_KEY) || '{}'); } catch { return {}; }
 })();
 const savePositions = () => { try { localStorage.setItem(POS_KEY, JSON.stringify(moved)); } catch { /* private mode: positions last for the visit only */ } };
-/** Keep a (dragged) home stamp fully inside the stage, whatever the viewport or the saved position. */
+/** Keep a (dragged) home stamp fully inside the stage and below the headline, whatever the viewport or the saved position. */
 function clampOffset(id: SectionId, x: number, y: number) {
-  const sp = (isMobile() ? navMobile : navDesktop)[id];
-  const W = stage.clientWidth, H = stage.clientHeight;
-  const { w, h } = sizeOf(id, sp.w * W);
-  const pad = 10;
-  const left = sp.x * W - w / 2, top = sp.y * H - h / 2;
+  const W = stage.clientWidth, H = stage.clientHeight, pad = 10;
+  const { rects, top: areaTop } = nav ?? measureNav();
+  const { left, top, w, h } = rects[id];
   const cl = (v: number, lo: number, hi: number) => (lo > hi ? (lo + hi) / 2 : Math.max(lo, Math.min(hi, v)));
-  return { x: cl(x, pad - left, W - pad - (left + w)), y: cl(y, pad - top, H - pad - (top + h)) };
+  return { x: cl(x, pad - left, W - pad - (left + w)), y: cl(y, areaTop - top, H - pad - (top + h)) };
 }
 const offsetOf = (id: SectionId) => clampOffset(id, (moved[id]?.fx || 0) * stage.clientWidth, (moved[id]?.fy || 0) * stage.clientHeight);
 function enableDrag(el: HTMLButtonElement, id: SectionId) {
@@ -183,17 +193,63 @@ function unnudge(el: HTMLElement, id: SectionId) {
   gsap.to(el, { x: o.x, y: o.y, rotation: tilt[id], duration: 0.6, ease: 'elastic.out(1, 0.5)', overwrite: 'auto' });
 }
 
-function sizeOf(id: SectionId, w: number) {
-  return { w, h: w / byId(id).ratio };
-}
+/* ---------- home layout ---------- */
+type Rect = { left: number; top: number; w: number; h: number };
+const ROW_GAP = { min: 0.15, max: 0.35 }; // space between rows, as a share of a row's height
+const EDGE = 10; // px kept clear at the stage edges
+const taglineEl = stage.querySelector<HTMLElement>('.tagline');
+const hoverLabels = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+/** Touch screens show every stamp's label under it all the time (see the CSS), so each row needs room for one. */
+const labelRow = window.matchMedia('(hover: none), (pointer: coarse)').matches ? 24 : 0;
+/** The last home layout; drag clamping reads it. */
+let nav: { rects: Record<SectionId, Rect>; top: number } | null = null;
 
-function placeNav(id: SectionId) {
-  const spots = isMobile() ? navMobile : navDesktop;
-  const sp = spots[id];
-  const W = stage.clientWidth, H = stage.clientHeight;
-  const { w, h } = sizeOf(id, sp.w * W);
-  gsap.set(stampEls.get(id)!, { left: sp.x * W - w / 2, top: sp.y * H - h / 2, width: w, rotation: tilt[id], x: offsetOf(id).x, y: offsetOf(id).y, opacity: 1, scale: 1 });
-  gsap.set(stampEls.get(id)!.querySelector('img'), { opacity: 1 });
+/** Lay one arrangement out in the band [top, bottom]: the widest stamps its spots allow, shrunk if the band is too short. */
+function arrange(a: Arrangement, W: number, top: number, bottom: number) {
+  const bandH = Math.max(1, bottom - top - a.rows * labelRow); // the stamps' share of the band, after the labels under each row
+  // Each stamp's box at width 1 once it is tilted (the height also leaves room for the hover lift).
+  const box = (id: SectionId) => {
+    const t = (Math.abs(tilt[id]) * Math.PI) / 180, r = byId(id).ratio;
+    return { w: Math.cos(t) + Math.sin(t) / r, h: (Math.cos(t) / r + Math.sin(t)) * 1.04 };
+  };
+  const rowH = Math.max(...SECTIONS.map((s) => box(s.id).h));
+  const centreY = (sp: NavSpot, gap: number) => (sp.row * (1 + gap) + sp.dy) * rowH; // at width 1, labels left out
+  // Top and height of the whole group at width 1, for a given gap between rows.
+  const extent = (gap: number) => {
+    const tops = SECTIONS.map((s) => centreY(a.spots[s.id], gap) - box(s.id).h / 2);
+    const bottoms = SECTIONS.map((s) => centreY(a.spots[s.id], gap) + box(s.id).h / 2);
+    return { top: Math.min(...tops), height: Math.max(...bottoms) - Math.min(...tops) };
+  };
+  const tight = extent(ROW_GAP.min).height;
+  const fitsWidth = Math.min(...SECTIONS.map((s) => { const x = a.spots[s.id].x; return ((Math.min(x, 1 - x) * W - EDGE) * 2) / box(s.id).w; }));
+  const w = Math.max(24, Math.min(a.maxW * W, fitsWidth, bandH / tight));
+  // Spare height opens the rows up (the group grows by rows - 1 row heights per unit of gap); what is left is split above and below.
+  const gap = a.rows > 1 ? Math.min(ROW_GAP.max, ROW_GAP.min + (bandH / w - tight) / ((a.rows - 1) * rowH)) : 0;
+  const g = extent(gap), y0 = top + (bandH - g.height * w) / 2 - g.top * w;
+  const rects = {} as Record<SectionId, Rect>;
+  for (const s of SECTIONS) {
+    const sp = a.spots[s.id], h = w / byId(s.id).ratio, cy = y0 + centreY(sp, gap) * w + sp.row * labelRow;
+    rects[s.id] = { left: sp.x * W - w / 2, top: cy - h / 2, w, h };
+  }
+  return { w, score: w * a.weight, rects };
+}
+/** Measure the open area under the headline and lay the stamps out in it, using whichever arrangement fits them biggest. */
+function measureNav() {
+  const W = stage.clientWidth;
+  const top = taglineEl ? taglineEl.offsetTop + taglineEl.offsetHeight + (isMobile() ? 14 : 24) : EDGE;
+  const bottom = stage.clientHeight - (hoverLabels ? 32 : EDGE); // room for the hover label under the bottom row
+  const best = ARRANGEMENTS.map((a) => arrange(a, W, top, bottom)).reduce((b, x) => (x.score > b.score ? x : b));
+  nav = { rects: best.rects, top };
+  return nav;
+}
+function layoutNav() {
+  const { rects } = measureNav();
+  for (const s of SECTIONS) {
+    const el = stampEls.get(s.id)!, { left, top, w } = rects[s.id], o = offsetOf(s.id);
+    gsap.set(el, { left, top, width: w, rotation: tilt[s.id], x: o.x, y: o.y, opacity: 1, scale: 1 });
+    gsap.set(el.querySelector('img'), { opacity: 1 });
+  }
+  stampsEl.dataset.mode = 'nav';
 }
 /** Label font size (px) and the width a slot needs so neighbouring labels never collide. */
 const labelPx = () => (isMobile() ? 10 : 12);
@@ -221,8 +277,7 @@ function placeMini(id: SectionId, slot: number) {
     // Stamps sit in the dark column above the heading. Pick 1, 2 or 3 columns, whichever gives the biggest stamps for this viewport.
     const cw = colWidth(), H = stage.clientHeight, n = order.length;
     const pad = Math.min(44, Math.max(24, stage.clientWidth * 0.03));
-    const hoverOnly = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
-    const label = hoverOnly ? 22 : 30;
+    const label = hoverLabels ? 22 : 30;
     const top = 48;
     const no = contentEl.querySelector<HTMLElement>('.panel-head .no');
     const bottom = no && no.offsetParent ? Math.max(90, stage.getBoundingClientRect().bottom - no.getBoundingClientRect().top + 20) : 210;
@@ -244,7 +299,6 @@ function placeMini(id: SectionId, slot: number) {
   const sp = miniSlots()[slot];
   gsap.set(stampEls.get(id)!, { left: sp.left, top: isMobile() ? 14 : 18, width: sp.sw, rotation: 0, x: 0, y: 0, opacity: 1, scale: 1 });
 }
-function layoutNav() { SECTIONS.forEach((s) => placeNav(s.id)); stampsEl.dataset.mode = 'nav'; }
 function layoutMini() {
   stampsEl.dataset.mode = 'mini';
   order.forEach((id, i) => placeMini(id, i));
@@ -387,12 +441,14 @@ async function navToPage(id: SectionId) {
   const flipState = Flip.getState([...stampEls.values()]);
   state = 'page';
   stage.dataset.state = 'page'; // the footer leaves and the stage fills the screen before the column is laid out
+  // Put the (still invisible) page in first: the stamp column is sized from where its heading sits.
+  gsap.set(contentEl, { opacity: 0 });
+  renderContent(id);
   layoutMini();
   Flip.from(flipState, { duration: T(0.8), ease: 'power3.inOut', stagger: reduce ? 0 : 0.04, absolute: false });
   homeBtn.hidden = false;
   gsap.fromTo(homeBtn, { opacity: 0 }, { opacity: 1, duration: T(0.5), delay: T(0.5) });
   await wait(T(0.35));
-  renderContent(id);
   showContent(true);
   done();
 }
@@ -413,7 +469,7 @@ async function pageSwap(id: SectionId) {
   done();
 }
 
-async function goHome(replay = true) {
+async function goHome() {
   if (busy || state !== 'page') return;
   busy = true;
   gsap.to(contentEl, { opacity: 0, duration: T(0.25), onComplete: () => { contentEl.hidden = true; stopFilmStrip(); } });
@@ -432,7 +488,6 @@ async function goHome(replay = true) {
   Flip.from(flipState, { duration: T(0.9), ease: 'power3.inOut', stagger: reduce ? 0 : 0.04, absolute: false });
   document.title = HOME_TITLE;
   setPath(routePath(null));
-  if (!replay) { /* reserved */ }
   await new Promise((r) => setTimeout(r, T(1) * 1000));
   done();
 }
@@ -475,7 +530,6 @@ function parseRoute(): { id: SectionId | null; slug: string | null } {
   const id = (LEGACY[m?.[1] || ''] || m?.[1]) as SectionId | undefined;
   return id && SECTIONS.some((s) => s.id === id) ? { id, slug: (m![2] && SLUG_ALIAS[m![2]]) || m![2] || null } : { id: null, slug: null };
 }
-const parseHash = () => parseRoute().id;
 function enterInstant(id: SectionId | null, slug: string | null = null) {
   delete stage.dataset.detailOpen; // a leftover open project would keep the stamps hidden (blank page)
   contentEl.querySelectorAll<HTMLElement>('.detail').forEach((d) => { d.hidden = true; });
@@ -487,13 +541,13 @@ function enterInstant(id: SectionId | null, slug: string | null = null) {
     active = id;
     order = SECTIONS.map((s) => s.id);
     stage.dataset.state = 'page';
+    renderContent(id); // before layoutMini: the stamp column is sized from where the page heading sits
+    gsap.set(contentEl, { opacity: 1, y: 0 });
     layoutMini();
     homeBtn.hidden = false;
     gsap.set(homeBtn, { opacity: 1 });
     swapBackground(id);
     gsap.set(bgEl, { opacity: 0 });
-    renderContent(id);
-    gsap.set(contentEl, { opacity: 1, y: 0 });
     if (slug) syncDetail(slug);
   } else {
     state = 'nav';
@@ -649,6 +703,8 @@ window.addEventListener('hashchange', onHash);
 window.addEventListener('popstate', onPop);
 window.addEventListener('resize', onResize);
 document.addEventListener('keydown', onKey);
+// Web fonts change the headline's and the page title's height, which both layouts measure: lay out again once they load.
+document.fonts?.ready.then(() => { if (!disposed) onResize(); });
 
 {
   const route = parseRoute();
@@ -669,7 +725,6 @@ return () => {
   contentEl.removeEventListener('error', onImgDone, true);
   disposed = true;
   dragging = false; justDragged = false;
-  logoCleanup();
   gsap.killTweensOf([...stampEls.values(), contentEl, bgEl, homeBtn]);
   stampsEl.replaceChildren();
   bleedLayer.replaceChildren();
