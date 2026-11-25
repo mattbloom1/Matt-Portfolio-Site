@@ -70,7 +70,7 @@ const ROW: Arrangement = { rows: 1, maxW: 0.17, weight: 1, spots: {
   photography: { x: 0.7, row: 0, dy: -0.03 },
   about: { x: 0.9, row: 0, dy: 0.04 },
 } };
-const WIDE: Arrangement = { rows: 2, maxW: 0.24, weight: 1, spots: {
+const WIDE: Arrangement = { rows: 2, maxW: 0.26, weight: 1, spots: {
   work: { x: 0.2, row: 0, dy: 0.06 },
   posters: { x: 0.5, row: 0, dy: -0.06 },
   experience: { x: 0.8, row: 0, dy: 0.1 },
@@ -195,7 +195,7 @@ function unnudge(el: HTMLElement, id: SectionId) {
 
 /* ---------- home layout ---------- */
 type Rect = { left: number; top: number; w: number; h: number };
-const ROW_GAP = { min: 0.15, max: 0.5 }; // space between rows, as a share of a row's height
+const ROW_GAP = { min: 0.15, max: 0.35 }; // space between rows, as a share of a row's height
 const EDGE = 10; // px kept clear at the stage edges
 const taglineEl = stage.querySelector<HTMLElement>('.tagline');
 const hoverLabels = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
