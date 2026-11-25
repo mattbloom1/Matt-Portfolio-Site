@@ -59,19 +59,20 @@ const stampEls = new Map<SectionId, HTMLButtonElement>();
 const tilt: Record<SectionId, number> = { work: -4, posters: 2, experience: 3, about: -2, photography: -3 };
 
 interface NavSpot { x: number; y: number; w: number }
+/* y is a fraction of the open area under the headline (not of the whole stage), so the stamps never cover it. */
 const navDesktop: Record<SectionId, NavSpot> = {
-  work: { x: 0.2, y: 0.32, w: 0.22 },
-  posters: { x: 0.5, y: 0.27, w: 0.22 },
-  experience: { x: 0.8, y: 0.34, w: 0.22 },
-  photography: { x: 0.34, y: 0.72, w: 0.22 },
-  about: { x: 0.68, y: 0.68, w: 0.22 },
+  work: { x: 0.2, y: 0.27, w: 0.22 },
+  posters: { x: 0.5, y: 0.23, w: 0.22 },
+  experience: { x: 0.8, y: 0.3, w: 0.22 },
+  photography: { x: 0.34, y: 0.75, w: 0.22 },
+  about: { x: 0.68, y: 0.72, w: 0.22 },
 };
 const navMobile: Record<SectionId, NavSpot> = {
-  work: { x: 0.25, y: 0.2, w: 0.4 },
-  posters: { x: 0.75, y: 0.17, w: 0.4 },
+  work: { x: 0.25, y: 0.18, w: 0.4 },
+  posters: { x: 0.75, y: 0.15, w: 0.4 },
   experience: { x: 0.25, y: 0.5, w: 0.4 },
   photography: { x: 0.75, y: 0.53, w: 0.4 },
-  about: { x: 0.5, y: 0.82, w: 0.4 },
+  about: { x: 0.5, y: 0.84, w: 0.4 },
 };
 /* Phones: a slight random tilt for each stamp (2 to 5 degrees, either way), fresh on every load. */
 if (window.innerWidth < 640) for (const id of Object.keys(tilt) as SectionId[]) tilt[id] = (Math.random() < 0.5 ? -1 : 1) * (2 + Math.random() * 3);
@@ -108,15 +109,13 @@ const moved: Partial<Record<SectionId, { fx: number; fy: number }>> = (() => {
   try { return JSON.parse(localStorage.getItem(POS_KEY) || '{}'); } catch { return {}; }
 })();
 const savePositions = () => { try { localStorage.setItem(POS_KEY, JSON.stringify(moved)); } catch { /* private mode: positions last for the visit only */ } };
-/** Keep a (dragged) home stamp fully inside the stage, whatever the viewport or the saved position. */
+/** Keep a (dragged) home stamp fully inside the stage and below the headline, whatever the viewport or the saved position. */
 function clampOffset(id: SectionId, x: number, y: number) {
-  const sp = (isMobile() ? navMobile : navDesktop)[id];
   const W = stage.clientWidth, H = stage.clientHeight;
-  const { w, h } = sizeOf(id, sp.w * W);
+  const { left, top, w, h } = navRect(id);
   const pad = 10;
-  const left = sp.x * W - w / 2, top = sp.y * H - h / 2;
   const cl = (v: number, lo: number, hi: number) => (lo > hi ? (lo + hi) / 2 : Math.max(lo, Math.min(hi, v)));
-  return { x: cl(x, pad - left, W - pad - (left + w)), y: cl(y, pad - top, H - pad - (top + h)) };
+  return { x: cl(x, pad - left, W - pad - (left + w)), y: cl(y, navBand().top - top, H - pad - (top + h)) };
 }
 const offsetOf = (id: SectionId) => clampOffset(id, (moved[id]?.fx || 0) * stage.clientWidth, (moved[id]?.fy || 0) * stage.clientHeight);
 function enableDrag(el: HTMLButtonElement, id: SectionId) {
@@ -187,12 +186,38 @@ function sizeOf(id: SectionId, w: number) {
   return { w, h: w / byId(id).ratio };
 }
 
-function placeNav(id: SectionId) {
+/** The open area for the home stamps: everything under the headline (measured, so it follows the font and line wraps). */
+const taglineEl = stage.querySelector<HTMLElement>('.tagline');
+function navBand() {
+  const H = stage.clientHeight;
+  const top = taglineEl ? taglineEl.offsetTop + taglineEl.offsetHeight + (isMobile() ? 14 : 24) : 10;
+  return { top, bottom: H - 10 };
+}
+/** Home-stamp box (before drag offsets). All five share one scale, shrunk only when the area under the headline is too short for them. */
+function navScale() {
   const spots = isMobile() ? navMobile : navDesktop;
-  const sp = spots[id];
-  const W = stage.clientWidth, H = stage.clientHeight;
-  const { w, h } = sizeOf(id, sp.w * W);
-  gsap.set(stampEls.get(id)!, { left: sp.x * W - w / 2, top: sp.y * H - h / 2, width: w, rotation: tilt[id], x: offsetOf(id).x, y: offsetOf(id).y, opacity: 1, scale: 1 });
+  const W = stage.clientWidth, { top, bottom } = navBand(), bandH = Math.max(1, bottom - top);
+  let k = 1;
+  for (const s of SECTIONS) {
+    const sp = spots[s.id], { w, h } = sizeOf(s.id, sp.w * W);
+    const a = (Math.abs(tilt[s.id]) * Math.PI) / 180;
+    const hb = (h * Math.cos(a) + w * Math.sin(a)) * 1.04; // rotated height, plus room for the hover lift
+    const room = 2 * Math.min(sp.y, 1 - sp.y) * bandH;
+    k = Math.min(k, room / hb);
+  }
+  return Math.max(0.3, k);
+}
+function navRect(id: SectionId, k = navScale()) {
+  const sp = (isMobile() ? navMobile : navDesktop)[id];
+  const W = stage.clientWidth, { top, bottom } = navBand();
+  const { w, h } = sizeOf(id, sp.w * W * k);
+  const cy = top + sp.y * (bottom - top);
+  return { left: sp.x * W - w / 2, top: cy - h / 2, w, h };
+}
+
+function placeNav(id: SectionId, k = navScale()) {
+  const { left, top, w } = navRect(id, k);
+  gsap.set(stampEls.get(id)!, { left, top, width: w, rotation: tilt[id], x: offsetOf(id).x, y: offsetOf(id).y, opacity: 1, scale: 1 });
   gsap.set(stampEls.get(id)!.querySelector('img'), { opacity: 1 });
 }
 /** Label font size (px) and the width a slot needs so neighbouring labels never collide. */
@@ -244,7 +269,7 @@ function placeMini(id: SectionId, slot: number) {
   const sp = miniSlots()[slot];
   gsap.set(stampEls.get(id)!, { left: sp.left, top: isMobile() ? 14 : 18, width: sp.sw, rotation: 0, x: 0, y: 0, opacity: 1, scale: 1 });
 }
-function layoutNav() { SECTIONS.forEach((s) => placeNav(s.id)); stampsEl.dataset.mode = 'nav'; }
+function layoutNav() { const k = navScale(); SECTIONS.forEach((s) => placeNav(s.id, k)); stampsEl.dataset.mode = 'nav'; }
 function layoutMini() {
   stampsEl.dataset.mode = 'mini';
   order.forEach((id, i) => placeMini(id, i));
@@ -387,12 +412,14 @@ async function navToPage(id: SectionId) {
   const flipState = Flip.getState([...stampEls.values()]);
   state = 'page';
   stage.dataset.state = 'page'; // the footer leaves and the stage fills the screen before the column is laid out
+  // Put the (still invisible) page in first: the stamp column is sized from where its heading sits.
+  gsap.set(contentEl, { opacity: 0 });
+  renderContent(id);
   layoutMini();
   Flip.from(flipState, { duration: T(0.8), ease: 'power3.inOut', stagger: reduce ? 0 : 0.04, absolute: false });
   homeBtn.hidden = false;
   gsap.fromTo(homeBtn, { opacity: 0 }, { opacity: 1, duration: T(0.5), delay: T(0.5) });
   await wait(T(0.35));
-  renderContent(id);
   showContent(true);
   done();
 }
@@ -487,13 +514,13 @@ function enterInstant(id: SectionId | null, slug: string | null = null) {
     active = id;
     order = SECTIONS.map((s) => s.id);
     stage.dataset.state = 'page';
+    renderContent(id); // before layoutMini: the stamp column is sized from where the page heading sits
+    gsap.set(contentEl, { opacity: 1, y: 0 });
     layoutMini();
     homeBtn.hidden = false;
     gsap.set(homeBtn, { opacity: 1 });
     swapBackground(id);
     gsap.set(bgEl, { opacity: 0 });
-    renderContent(id);
-    gsap.set(contentEl, { opacity: 1, y: 0 });
     if (slug) syncDetail(slug);
   } else {
     state = 'nav';
@@ -649,6 +676,8 @@ window.addEventListener('hashchange', onHash);
 window.addEventListener('popstate', onPop);
 window.addEventListener('resize', onResize);
 document.addEventListener('keydown', onKey);
+// Web fonts change the headline's and the page title's height, which both layouts measure: lay out again once they load.
+document.fonts?.ready.then(() => { if (!disposed) onResize(); });
 
 {
   const route = parseRoute();
