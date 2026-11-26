@@ -1,4 +1,4 @@
-// Prebuild: smaller WebP variants for covers, galleries, posters and stamps, plus a manifest (width, height,
+// Prebuild: smaller WebP variants for covers, project images and stamps, plus a manifest (width, height,
 // variant widths) the markup reads for srcset, width/height and loading placeholders.
 // Runs on `npm run build` (prebuild). Safe to run again: only missing variants are written.
 import sharp from 'sharp';
@@ -17,11 +17,13 @@ const groups = [
   { files: globSync(`${PUB}/projects/*/*.webp`), widths: WIDTHS },
   { files: globSync(`${PUB}/crafts/*/*.webp`), widths: WIDTHS },
   { files: globSync(`${PUB}/stamps/*.webp`), widths: STAMP_WIDTHS },
-  // Posters, print pieces and mockups carry fine type, so their variants keep a higher quality.
-  { files: globSync(`${PUB}/posters/**/*.webp`), widths: WIDTHS, quality: 92 },
-  { files: globSync(`${PUB}/projects/*/kit/*.webp`), widths: WIDTHS, quality: 92 },
-  { files: globSync(`${PUB}/websites/*.webp`), widths: WIDTHS, quality: 92 },
-  { files: globSync(`${PUB}/websites/*/*.webp`).filter((f) => !f.includes('/covers/')), widths: WIDTHS, quality: 92 },
+  // Posters, print pieces and mockups carry fine type. Smaller copies came out visibly softer whenever the browser
+  // picked one only a little larger than its slot (tablets, 1x desktops), so these get dimensions only and keep
+  // their full-size files.
+  { files: globSync(`${PUB}/posters/**/*.webp`), widths: [] },
+  { files: globSync(`${PUB}/projects/*/kit/*.webp`), widths: [] },
+  { files: globSync(`${PUB}/websites/*.webp`), widths: [] },
+  { files: globSync(`${PUB}/websites/*/*.webp`).filter((f) => !f.includes('/covers/')), widths: [] },
 ];
 
 const prev = existsSync(OUT) ? JSON.parse(readFileSync(OUT, 'utf8')) : {};
@@ -39,7 +41,7 @@ for (const g of groups) {
       if (width >= w || skipped.includes(width)) continue; // never upscale
       const out = join(dirname(file), basename(file, '.webp') + `-${width}.webp`);
       if (!existsSync(out)) {
-        const buf = await sharp(file).resize({ width }).webp({ quality: g.quality || 82 }).toBuffer();
+        const buf = await sharp(file).resize({ width }).webp({ quality: 82 }).toBuffer();
         if (buf.length > statSync(file).size * 0.9) continue; // saves under 10%: not worth a separate request
         writeFileSync(out, buf); made++;
       }

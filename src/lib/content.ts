@@ -124,20 +124,13 @@ const ratioFor = (src: string) => { const m = variantsOf(src); return m?.h ? ` s
 /** First images on a page load straight away; the rest wait until they're near the screen. */
 const priority = (first: boolean) => (first ? 'fetchpriority="high"' : 'loading="lazy"');
 
-/* Rendered slot widths, so phones fetch a smaller file. They err wide: a slot never gets a file below its size. */
+/* Rendered slot widths, so phones fetch a smaller file. They err wide: a slot never gets a file below its size.
+ * Posters, print pieces and mockups have no srcset on purpose: they carry fine type, and a copy only a little larger
+ * than its slot came out softer than the full-size file. */
 const SIZES = {
   stamp: '(max-width: 640px) 45vw, 24vw',
   card: '(max-width: 640px) 50vw, (max-width: 899px) 33vw, 26vw',
-  poster: '(max-width: 899px) 50vw, 34vw',
-  // project pages: max 1400px wide with 4vw gutters
-  full: '(max-width: 1400px) 92vw, 1300px',
-  // phones crop gallery pairs to zoomed squares, so they need more than half the screen
-  pair: '(max-width: 560px) 90vw, (max-width: 1400px) 46vw, 650px',
-  half: '(max-width: 760px) 92vw, (max-width: 1400px) 46vw, 650px',
-  third: '(max-width: 760px) 46vw, (max-width: 1400px) 31vw, 440px',
-  quarter: '(max-width: 760px) 46vw, (max-width: 1400px) 23vw, 330px',
 };
-const KIT_SIZES = { 1: SIZES.full, 2: SIZES.half, 3: SIZES.third, 4: SIZES.quarter } as const;
 /** A gallery's 2 / 2 / 1 rhythm: every third image, and a lone last one, runs full width. */
 const isSingle = (idx: number, count: number) => idx % 3 === 2 || (idx === count - 1 && idx % 3 === 0);
 
@@ -186,8 +179,7 @@ function kitHtml(p: Project) {
     return `<section class="kit-brand"><div class="kit-head"><p class="meta">Brand identity</p>${b.note ? `<p>${esc(b.note)}</p>` : ''}</div><div class="kit-logos">${logos}</div>${sw ? `<ul class="kit-palette" aria-label="Colour palette">${sw}</ul>` : ''}${(b.fonts || []).length ? `<p class="meta kit-fonts">Type: ${(b.fonts || []).map(esc).join(' · ')}</p>` : ''}</section>`;
   })() : '';
   const secs = (p.kit?.sections || []).map((sec) => {
-    const sizes = (k: number) => (sec.mix && k === 0 ? SIZES.full : sec.mix ? SIZES.half : KIT_SIZES[sec.cols || 2]);
-    const figs = sec.images.filter((i) => safeUrl(i.src)).map((i, k) => `<figure class="kit-fig"><img src="${esc(encodeURI(safeUrl(i.src)))}"${srcsetFor(i.src, sizes(k))}${dimsFor(i.src)} alt="${esc(i.alt)}" loading="lazy" decoding="async"></figure>`).join('');
+    const figs = sec.images.filter((i) => safeUrl(i.src)).map((i) => `<figure class="kit-fig"><img src="${esc(encodeURI(safeUrl(i.src)))}"${dimsFor(i.src)} alt="${esc(i.alt)}" loading="lazy" decoding="async"></figure>`).join('');
     return `<section class="kit-sec"><div class="kit-head"><p class="meta">${esc(sec.title)}</p>${sec.note ? `<p>${esc(sec.note)}</p>` : ''}</div><div class="kit-grid ${sec.mix ? 'kit-mix' : `c${sec.cols || 2}`}">${figs}</div></section>`;
   }).join('');
   // only a site's screenshots are a "Website"; floor plans, crafts and hardware get a plain gallery label
@@ -198,7 +190,7 @@ function kitHtml(p: Project) {
 function extrasHtml(p: Project) {
   const x = p.extras;
   if (!x) return '';
-  const figs = (x.figures || []).filter((f) => safeUrl(f.src)).map((f) => `<figure class="xfig"><img src="${esc(encodeURI(safeUrl(f.src)))}"${srcsetFor(f.src, SIZES.half)}${dimsFor(f.src)} alt="${esc(f.alt)}" loading="lazy" decoding="async">${f.caption ? `<figcaption>${esc(f.caption)}</figcaption>` : ''}</figure>`).join('');
+  const figs = (x.figures || []).filter((f) => safeUrl(f.src)).map((f) => `<figure class="xfig"><img src="${esc(encodeURI(safeUrl(f.src)))}"${dimsFor(f.src)} alt="${esc(f.alt)}" loading="lazy" decoding="async">${f.caption ? `<figcaption>${esc(f.caption)}</figcaption>` : ''}</figure>`).join('');
   const stats = (x.stats || []).map((s) => `<div class="xstat"><dt>${esc(s.label)}</dt><dd>${esc(s.value)}</dd></div>`).join('');
   const notes = (x.notes || []).map((n) => `<div class="xnote"><h2>${esc(n.heading)}</h2><div class="xnote-body">${n.body.split('\n\n').map((t) => `<p>${esc(t)}</p>`).join('')}</div></div>`).join('');
   return `<div class="detail-extra">${figs ? `<div class="xfigs">${figs}</div>` : ''}${stats ? `<dl class="xstats">${stats}</dl>` : ''}${notes ? `<div class="xnotes">${notes}</div>` : ''}</div>`;
@@ -231,7 +223,7 @@ function workViews(items: Project[], noun: string, defaultMeta: string) {
   const galleryHtml = (p: Project) => {
     const shots = (p.images || []).map((u, k) => ({ u, alt: (p.imageAlts || [])[k] || `${p.title} mockup` })).filter(({ u }) => safeUrl(u));
     if (!shots.length) return '';
-    return `<div class="detail-gallery">${shots.map(({ u, alt }, k) => `<figure class="gimg"${ratioFor(u)}><img src="${esc(encodeURI(safeUrl(u)))}"${srcsetFor(u, isSingle(k, shots.length) ? SIZES.full : SIZES.pair)}${dimsFor(u)} alt="${esc(alt)}" loading="lazy" decoding="async"></figure>`).join('')}</div>`;
+    return `<div class="detail-gallery">${shots.map(({ u, alt }) => `<figure class="gimg"${ratioFor(u)}><img src="${esc(encodeURI(safeUrl(u)))}"${dimsFor(u)} alt="${esc(alt)}" loading="lazy" decoding="async"></figure>`).join('')}</div>`;
   };
   const detail = (p: Project, i: number) => `
     <div class="detail" id="d-${esc(p.slug)}"${(p.extras?.cursorIcons || []).length ? ` data-icon-cursor="${esc(JSON.stringify(p.extras!.cursorIcons!.filter((u) => safeUrl(u)).map((u) => encodeURI(safeUrl(u)))))}"` : ''} role="dialog" aria-modal="true" aria-label="${esc(p.title)}" hidden>
@@ -312,7 +304,7 @@ function photographyHtml(c: SiteContent) {
   return `${series}${strip}`;
 }
 function postersHtml(c: SiteContent) {
-  return c.posters.map((set, n) => `<section class="roll"><h2 class="series">${esc(set.title)}</h2><div class="detail-gallery poster-gallery">${set.items.filter((i) => safeUrl(i.src)).map((i, k) => `<figure class="gimg" style="--ar:${i.w}/${i.h}"><img src="${esc(encodeURI(safeUrl(i.src)))}"${srcsetFor(i.src, SIZES.poster)} alt="${esc(i.alt)}" width="${i.w}" height="${i.h}" tabindex="0" role="button" ${priority(n === 0 && k < 2)} decoding="async"></figure>`).join('')}</div></section>`).join('');
+  return c.posters.map((set, n) => `<section class="roll"><h2 class="series">${esc(set.title)}</h2><div class="detail-gallery poster-gallery">${set.items.filter((i) => safeUrl(i.src)).map((i, k) => `<figure class="gimg" style="--ar:${i.w}/${i.h}"><img src="${esc(encodeURI(safeUrl(i.src)))}" alt="${esc(i.alt)}" width="${i.w}" height="${i.h}" tabindex="0" role="button" ${priority(n === 0 && k < 2)} decoding="async"></figure>`).join('')}</div></section>`).join('');
 }
 const PORTRAIT_SRCSET = `${PROFILE_PHOTO.src.replace(/\.webp$/, '-800.webp')} 800w, ${PROFILE_PHOTO.src} 1600w`;
 const PORTRAIT_SIZES = '(max-width: 760px) 100vw, 45vw';
@@ -359,7 +351,7 @@ export function heroImages(all: SiteContent, path: string[]): HeroImage[] {
     const first = items.map((p) => safeUrl(p.cover || p.heroImage)).find(Boolean);
     return first ? [withSet(first, SIZES.card)] : [];
   }
-  if (section === 'posters') { const first = c.posters[0]?.items.find((i) => safeUrl(i.src)); return first ? [withSet(first.src, SIZES.poster)] : []; }
+  if (section === 'posters') { const first = c.posters[0]?.items.find((i) => safeUrl(i.src)); return first ? [{ href: encodeURI(first.src) }] : []; }
   if (section === 'photography') {
     const roll = c.photography.find((s) => (s.frames || []).some((f) => safeUrl(f.image)));
     const frames = (roll?.frames || []).filter((f) => safeUrl(f.image));
