@@ -313,11 +313,15 @@ function swapBackground(id: SectionId) {
 }
 
 /* ---------- content ---------- */
-/** An image's skeleton clears on its load event, but Safari doesn't always fire it for an image it already has in memory
- *  (the page's first HTML has fetched the same files), so clear any that are already complete when they are inserted. */
+/** An image's skeleton clears on its load event, but WebKit has been seen to skip that event for the first visible cards
+ *  (whose files the page's first HTML already fetched). So clear what is already complete when it is inserted, and for
+ *  the eager images still loading, also wait on decode(), which settles whether or not the event fires. */
 function markLoaded(img: HTMLImageElement) { img.closest('.gimg, .card-img')?.classList.add('ld'); }
 function clearLoadedSkeletons() {
-  contentEl.querySelectorAll<HTMLImageElement>('.gimg img, .card-img img').forEach((img) => { if (img.complete) markLoaded(img); });
+  contentEl.querySelectorAll<HTMLImageElement>('.gimg img, .card-img img').forEach((img) => {
+    if (img.complete) markLoaded(img);
+    else if (img.loading !== 'lazy') img.decode().then(() => markLoaded(img), () => markLoaded(img));
+  });
 }
 function renderContent(id: SectionId) {
   const s = byId(id);
