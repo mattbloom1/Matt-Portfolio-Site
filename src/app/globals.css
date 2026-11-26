@@ -334,11 +334,11 @@ body:has(#stage[data-state='page']) .draw-hint { opacity: 0; pointer-events: non
 @media (prefers-reduced-motion: reduce) { .card .card-img.has-img, .detail-img.has-img, .shot.has-img, .detail-gallery .gimg:not(.ld)::before { animation: none; } }
 @keyframes sk-shimmer-4 { from { background-position: center, center, center, 100% 0; } to { background-position: center, center, center, -100% 0; } }
 
-/* Posters: portraits, 2 / 2 / 1 rhythm, never cropped */
+/* Posters: portraits in two columns all the way down, never cropped (the shared galleries' every-third-image-full-width rhythm is switched off here) */
 .poster-gallery { padding: 8px 0 clamp(48px, 7vw, 96px); max-width: none; align-items: start; }
 .poster-gallery .gimg:not(.ld) { aspect-ratio: 4 / 5; }
-.poster-gallery .gimg:nth-child(3n), .poster-gallery .gimg:last-child:nth-child(3n + 1) { display: flex; justify-content: center; }
-.poster-gallery .gimg:nth-child(3n) img, .poster-gallery .gimg:last-child:nth-child(3n + 1) img { width: auto; max-width: 100%; max-height: 90vh; }
+.detail-gallery.poster-gallery .gimg:nth-child(3n), .detail-gallery.poster-gallery .gimg:last-child:nth-child(3n + 1) { grid-column: auto; display: block; }
+.detail-gallery.poster-gallery .gimg:nth-child(3n) img, .detail-gallery.poster-gallery .gimg:last-child:nth-child(3n + 1) img { width: 100%; max-height: none; }
 @media (max-width: 560px) {
   .poster-gallery .gimg:not(:nth-child(3n)):not(:last-child:nth-child(3n + 1)) { aspect-ratio: auto; overflow: visible; }
   .poster-gallery .gimg:not(:nth-child(3n)):not(:last-child:nth-child(3n + 1)) img { height: auto; object-fit: fill; transform: none; }
@@ -735,3 +735,9 @@ h1, h2 { text-wrap: balance; }
 .tv-no { position: absolute; left: 5px; bottom: 4px; color: #fff; font: 600 10px/1 'Afacad Flux', system-ui, sans-serif; letter-spacing: .1em; text-shadow: 0 1px 4px rgba(0,0,0,.7); }
 @media (max-width: 700px) { .tv-bank { grid-template-columns: repeat(4, 1fr); } .motion .tv { margin: 10px 6px 22px; box-shadow: 0 0 0 6px #151515, 0 12px 28px rgba(0,0,0,.25); } }
 @media (prefers-reduced-motion: reduce) { .motion .tv.cut .tv-snow { animation: none; } .tv-tile { transition: none; } }
+
+/* Phones: 64px from the last poster or photo of a series to the next series heading (24px gallery padding + 16px section margin + the heading's own 24px). The last series keeps its full padding above what follows. */
+@media (max-width: 640px) {
+  .roll:has(+ .roll) > .poster-gallery, .roll:has(+ .roll) > .roll-gallery { padding-bottom: 24px; }
+  .stage[data-state='page'] .roll + .roll { margin-top: 16px; }
+}
