@@ -93,7 +93,7 @@ function render(bs) {
     } else if (b.size === top && b.size >= 16 && !seenSection) {
       html.push(`<p class="r-name">${esc(tidy(b.text).trim())}</p>`); name++;
     } else if (b.rule) {
-      html.push(`<h3 class="r-sec">${esc(tidy(b.text).trim())}</h3>`); sections++; seenSection = true;
+      html.push(`<h2 class="r-sec">${esc(tidy(b.text).trim())}</h2>`); sections++; seenSection = true;
     } else if (!seenSection) {
       html.push(`<p class="r-sub">${inline(b.runs)}</p>`);
     } else if (/\S(?:\u00a0|\s){2,}\S|\t/.test(b.text.trim())) {

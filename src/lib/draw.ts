@@ -4,7 +4,6 @@ export function initDrawing(canvas: HTMLCanvasElement, sendBtn: HTMLButtonElemen
   if (!ctx) return () => {};
   const c = ctx;
   const dpr = Math.min(window.devicePixelRatio || 1, 2);
-  let drawn = false;
   let erasing = false;
   let tool: 'pencil' | 'eraser' = 'pencil';
   const pencilBtn = document.getElementById('tool-pencil');
@@ -85,13 +84,11 @@ export function initDrawing(canvas: HTMLCanvasElement, sendBtn: HTMLButtonElemen
     c.save(); c.setTransform(1, 0, 0, 1, 0, 0); c.clearRect(0, 0, canvas.width, canvas.height);
     if (prev && prev.width === canvas.width && prev.height === canvas.height) c.putImageData(prev, 0, 0);
     c.restore();
-    drawn = !isBlank();
   };
   const reset = () => {
     if (isBlank()) return;
     snapshot();
     c.save(); c.setTransform(1, 0, 0, 1, 0, 0); c.clearRect(0, 0, canvas.width, canvas.height); c.restore();
-    drawn = false;
   };
   const undoBtn = document.getElementById('tool-undo');
   const resetBtn = document.getElementById('tool-reset');
@@ -180,7 +177,7 @@ export function initDrawing(canvas: HTMLCanvasElement, sendBtn: HTMLButtonElemen
     last = { x: e.clientX, y: e.clientY, t: e.timeStamp, w: 5 };
     const p = e.pressure || 0.5;
     if (erasing) erase(e.clientX, e.clientY);
-    else { dab(e.clientX, e.clientY, 5, 0.6 + p * 0.6); drawn = true; }
+    else dab(e.clientX, e.clientY, 5, 0.6 + p * 0.6);
   };
   const move = (e: PointerEvent) => {
     if (e.pointerId !== id) return;
@@ -190,7 +187,6 @@ export function initDrawing(canvas: HTMLCanvasElement, sendBtn: HTMLButtonElemen
   const up = (e: PointerEvent) => {
     if (e.pointerId !== id) return;
     id = -1; last = null;
-    drawn = !isBlank();
   };
   const ctxMenu = (e: Event) => { if (stageOnly(e.target)) e.preventDefault(); };
 
