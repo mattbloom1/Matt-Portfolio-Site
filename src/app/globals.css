@@ -526,15 +526,18 @@ html, body, .panel, .footer { transition: background-color .5s ease, color .5s e
 .kit-brand .kit-head { padding-left: 0; padding-right: 0; max-width: none; }
 /* Resume embed (Experience) */
 .resume { margin-top: 0; container-type: inline-size; } /* the resume is the whole Experience page, so it starts where other sections' content does */
-.resume-head { display: flex; justify-content: space-between; align-items: center; gap: 20px; max-width: 820px; }
+.resume-head { display: flex; justify-content: space-between; align-items: center; gap: 20px; max-width: 790px; }
 .resume-dl { color: inherit; display: inline-grid; place-items: center; width: 44px; height: 44px; margin-right: -10px; border-radius: 50%; transition: background-color .2s; }
 .resume-dl:hover, .resume-dl:focus-visible { background: color-mix(in srgb, currentColor 14%, transparent); }
 .resume-dl:focus-visible { outline: 1px dashed currentColor; outline-offset: 2px; }
 /* Google's /preview draws each page with a grey frame and a pale margin round it. The frame is cropped off so only the white
-   pages show: the iframe is drawn wider than the box (Google keeps ~14-20px above and left of page 1 and ~29px to its right,
-   scrollbar included) and the box is cut to the Doc's own page count (US Letter, 11/8.5, with ~6px between pages). */
-.resume-doc { --pages: 2; max-width: 820px; margin-top: 12px; overflow: hidden; background: #fff; height: calc(var(--pages) * 1.294 * (min(100cqw, 820px) + 6px) + (var(--pages) - 1) * 6px - 4px); }
-.resume-doc iframe { display: block; width: calc(100% + 56px); height: calc(100% + 80px); margin: -18px 0 0 -23px; border: 0; }
+   pages show: the iframe is drawn wider than the box and pulled up and left (Google keeps ~14-20px above and left of page 1
+   and ~29px to its right, scrollbar included, so a page is the iframe's width less ~48px, more or less with the browser's
+   scrollbar). Google never draws a page wider than 816px, so the box stops at 790px, where every browser's page still covers
+   it edge to edge. The box is cut to the Doc's own page count (US Letter, 11/8.5, ~6px between pages), sized for the
+   narrowest page (a 17px scrollbar), so a wider page loses only blank bottom margin, never shows grey. */
+.resume-doc { --pages: 2; max-width: 790px; margin-top: 12px; overflow: hidden; background: #fff; height: calc(var(--pages) * 1.294 * (min(100cqw, 790px) + 9px) + (var(--pages) - 1) * 6px - 6px); }
+.resume-doc iframe { display: block; width: calc(100% + 62px); height: calc(100% + 80px); margin: -18px 0 0 -23px; border: 0; }
 /* Phones: Google's embed scales the whole page to the frame (10pt text ends up about 5px), so show the Doc's text instead. */
 .resume-text { display: none; }
 @media (max-width: 759px) {
