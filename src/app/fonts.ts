@@ -50,3 +50,11 @@ export const footer = localFont({
   variable: '--font-footer',
   display: 'swap',
 });
+
+/** Brand Motion screen labels (Afacad Flux SemiBold). Only one project page uses it, so it isn't preloaded. */
+export const label = localFont({
+  src: [{ path: './fonts/afacad-flux-latin-600-normal.woff2', weight: '600', style: 'normal' }],
+  variable: '--font-label',
+  display: 'swap',
+  preload: false,
+});
