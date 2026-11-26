@@ -19,7 +19,7 @@ export interface Section {
 
 /** The resume is one Google Doc. Wide screens embed it live; Google's embed shows the whole page scaled to fit,
  *  so on a phone its 10pt text would be about 5px. Phones get the Doc's text instead, set in the site's type
- *  (resume.generated.ts, refreshed from the Doc by the Resume sync workflow).
+ *  (resume.generated.ts, copied from the Doc on every build by scripts/resume/sync.mjs).
  *  The Doc must stay shared as "Anyone with the link: Viewer" for the embed, the PDF link and the sync to work. */
 const RESUME_DOC = 'https://docs.google.com/document/d/1tzvzp20uKMOIINX3L13xJlVhdqAGL3Aw6QenmHJZ6ZU';
 export const RESUME_PDF = `${RESUME_DOC}/export?format=pdf`;
