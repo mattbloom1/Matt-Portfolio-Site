@@ -1,5 +1,6 @@
 import { urlFor } from './sanity';
 import variants from './variants.json';
+import { RESUME_TEXT_HTML } from './resume.generated';
 import { SEED_PHOTOGRAPHY, PROFILE_PHOTO, BIO_SHORT, EDUCATION, FUN_NOTE, SEED_CRAFTS, SEED_EXPERIENCE, SEED_POSTERS, SEED_PROJECTS } from './seed';
 
 export type SectionId = 'work' | 'posters' | 'experience' | 'about' | 'photography';
@@ -16,8 +17,10 @@ export interface Section {
   html: string;
 }
 
-/** The resume is one Google Doc, embedded live so the site always shows its current text.
- *  It must stay shared as "Anyone with the link: Viewer" for the embed and the PDF link to work. */
+/** The resume is one Google Doc. Wide screens embed it live; Google's embed shows the whole page scaled to fit,
+ *  so on a phone its 10pt text would be about 5px. Phones get the Doc's text instead, set in the site's type
+ *  (resume.generated.ts, refreshed from the Doc by the Resume sync workflow).
+ *  The Doc must stay shared as "Anyone with the link: Viewer" for the embed, the PDF link and the sync to work. */
 const RESUME_DOC = 'https://docs.google.com/document/d/1tzvzp20uKMOIINX3L13xJlVhdqAGL3Aw6QenmHJZ6ZU';
 export const RESUME_PDF = `${RESUME_DOC}/export?format=pdf`;
 
@@ -255,7 +258,7 @@ function experienceHtml(c: SiteContent) {
       : `<li>${head}</li>`;
   }).join('');
   const edu = `<p class="meta">Education</p><p><strong>${esc(EDUCATION.school)}</strong>, ${esc(EDUCATION.year)}<br>${esc(EDUCATION.detail)}</p>`;
-  const resume = `<section class="resume"><div class="resume-head"><p class="meta">Resume</p><span><a href="${RESUME_PDF}">Download PDF</a><a href="${RESUME_DOC}/view" target="_blank" rel="noopener">Open full size</a></span></div><div class="resume-doc"><iframe src="${RESUME_DOC}/preview" title="Resume of Matthew Bloomfield" loading="lazy"></iframe></div></section>`;
+  const resume = `<section class="resume"><div class="resume-head"><p class="meta">Resume</p><span><a href="${RESUME_PDF}">Download PDF</a><a href="${RESUME_DOC}/view" target="_blank" rel="noopener">Open full size</a></span></div><div class="resume-doc"><iframe src="${RESUME_DOC}/preview" title="Resume of Matthew Bloomfield" loading="lazy"></iframe></div><article class="resume-text" aria-label="Resume">${RESUME_TEXT_HTML}</article></section>`;
   return `<ol class="timeline">${items}</ol>${edu}${resume}${c.placeholder.experience ? todo('Placeholder timeline. Experience content has not been supplied.') : ''}`;
 }
 function photographyHtml(c: SiteContent) {

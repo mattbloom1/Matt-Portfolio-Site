@@ -4,7 +4,7 @@
   "version": "0.1.0",
   "scripts": {
     "dev": "next dev",
-    "prebuild": "node scripts/make-variants.mjs",
+    "prebuild": "node scripts/make-variants.mjs && node scripts/resume/sync.mjs --keep-on-error",
     "build": "next build",
     "start": "npx serve out",
     "lint": "tsc --noEmit"
