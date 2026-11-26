@@ -313,10 +313,17 @@ function swapBackground(id: SectionId) {
 }
 
 /* ---------- content ---------- */
+/** An image's skeleton clears on its load event, but Safari doesn't always fire it for an image it already has in memory
+ *  (the page's first HTML has fetched the same files), so clear any that are already complete when they are inserted. */
+function markLoaded(img: HTMLImageElement) { img.closest('.gimg, .card-img')?.classList.add('ld'); }
+function clearLoadedSkeletons() {
+  contentEl.querySelectorAll<HTMLImageElement>('.gimg img, .card-img img').forEach((img) => { if (img.complete) markLoaded(img); });
+}
 function renderContent(id: SectionId) {
   const s = byId(id);
   contentEl.hidden = false;
   contentEl.innerHTML = `<div class="panel"><header class="panel-head"><h1 tabindex="-1">${s.label}</h1></header><div class="panel-body">${s.html}</div></div>`;
+  clearLoadedSkeletons();
   contentEl.scrollTop = 0;
   document.title = `${s.label} · ${SITE.name}`;
   stopFilmStrip();
@@ -692,7 +699,7 @@ const onContentClick = (e: MouseEvent) => {
   if (t.closest('[data-close]')) closeDetail();
 };
 const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape' && state === 'page' && !closeDetail()) goHome(); };
-const onImgDone = (e: Event) => { if (e.target instanceof HTMLImageElement) e.target.closest('.gimg, .card-img')?.classList.add('ld'); };
+const onImgDone = (e: Event) => { if (e.target instanceof HTMLImageElement) markLoaded(e.target); };
 contentEl.addEventListener('load', onImgDone, true);
 contentEl.addEventListener('error', onImgDone, true);
 contentEl.addEventListener('click', onContentClick);
