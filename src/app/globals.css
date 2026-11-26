@@ -526,7 +526,7 @@ html, body, .panel, .footer { transition: background-color .5s ease, color .5s e
 @media (max-width: 760px) { .kit-logos { grid-template-columns: minmax(0, 1fr); } .kit-credits > div { grid-template-columns: 7em minmax(0, 1fr); } }
 .kit-brand .kit-head { padding-left: 0; padding-right: 0; max-width: none; }
 /* Resume embed (Experience) */
-.resume { margin-top: 40px; }
+.resume { margin-top: 0; } /* the resume is the whole Experience page, so it starts where other sections' content does */
 .resume-head { display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 8px 20px; }
 .resume-head span { display: flex; gap: 20px; flex-wrap: wrap; }
 .resume-head a { color: inherit; text-underline-offset: 3px; min-height: 44px; display: inline-flex; align-items: center; }
@@ -544,9 +544,9 @@ html, body, .panel, .footer { transition: background-color .5s ease, color .5s e
   .resume-text .r-name { font: 500 26px/1.15 var(--serif); margin: 0 0 4px; }
   .resume-text .r-sub { margin: 2px 0 0; font-size: 14px; }
   .resume-text .r-sec { font: 600 13px var(--mono); letter-spacing: .14em; text-transform: lowercase; margin: 24px 0 2px; padding-bottom: 4px; border-bottom: 1px solid #15171c; }
-  .resume-text .r-entry { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 0 12px; margin-top: 14px; }
+  .resume-text .r-entry { margin-top: 14px; } /* the date always sits on its own line under the title, so every entry reads the same */
   .resume-text .r-entry strong, .resume-text .r-head { font-weight: 600; }
-  .resume-text .r-date { font: 500 13px var(--mono); letter-spacing: .06em; white-space: nowrap; }
+  .resume-text .r-date { display: block; margin-top: 1px; font: 500 13px var(--mono); letter-spacing: .06em; }
   .resume-text .r-role { margin: 1px 0 0; font-style: italic; }
   .resume-text .r-head { margin-top: 14px; }
   .resume-text ul { margin: 6px 0 0; padding-left: 18px; }
