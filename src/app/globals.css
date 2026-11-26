@@ -385,7 +385,7 @@ body:has(#stage[data-state='page']) .draw-hint { opacity: 0; pointer-events: non
   .detail-steps { padding: 10px 16px calc(10px + env(safe-area-inset-bottom, 0px)); background: var(--paper); border-top: 1px solid color-mix(in srgb, var(--ink) 25%, transparent); pointer-events: auto; }
   .detail-step { padding: 7px 14px; }
   .detail-inner { padding-bottom: 96px; }
-  .detail-gallery { padding-bottom: 104px; }
+  .detail .detail-gallery { padding-bottom: 104px; }
 }
 
 /* backdrop-filter on .panel made it the containing block for the fixed project overlay, so on phones the overlay (and its close button) sat at the panel's scrolled position instead of the viewport. Drop it while a project is open. */
@@ -512,8 +512,9 @@ html, body, .panel, .footer { transition: background-color .5s ease, color .5s e
 .detail-step { min-height: 42px; padding: 8px 20px; }
 .detail:has(.detail-steps) { bottom: calc(61px + env(safe-area-inset-bottom, 0px)); }
 .detail-inner { padding-bottom: 56px; }
-.detail-gallery { padding-bottom: 72px; }
-.detail-gallery:not(:last-child) { padding-bottom: clamp(40px, 6vw, 80px); }
+/* scoped to the project overlay so the Posters and Photography galleries keep their own, smaller section spacing */
+.detail .detail-gallery { padding-bottom: 72px; }
+.detail .detail-gallery:not(:last-child) { padding-bottom: clamp(40px, 6vw, 80px); }
 .detail-extra { padding-bottom: 72px; }
 .detail-close { min-height: 44px; }
 .detail-sum { font-size: 20px; line-height: 1.5; max-width: 62ch; }
