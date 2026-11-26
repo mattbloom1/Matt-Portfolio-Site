@@ -20,6 +20,27 @@ export function initDrawing(canvas: HTMLCanvasElement, sendBtn: HTMLButtonElemen
   pencilBtn?.addEventListener('click', pickPencil);
   eraserBtn?.addEventListener('click', pickEraser);
   setTool('pencil');
+
+  // Phones and touch screens show the tools as a panel on the right edge that folds down to a tab; the choice is remembered.
+  const toolsPanel = document.getElementById('foot-tools');
+  const toggleBtn = document.getElementById('tools-toggle');
+  const FOLD_KEY = 'drawToolsFolded';
+  const setFolded = (on: boolean) => {
+    toolsPanel?.toggleAttribute('data-folded', on);
+    toggleBtn?.setAttribute('aria-expanded', String(!on));
+    const label = on ? 'Show drawing tools' : 'Hide drawing tools';
+    toggleBtn?.setAttribute('aria-label', label);
+    toggleBtn?.setAttribute('title', label);
+  };
+  let folded = false;
+  try { folded = localStorage.getItem(FOLD_KEY) === '1'; } catch { /* private mode */ }
+  setFolded(folded);
+  const onToggle = () => {
+    folded = !folded;
+    setFolded(folded);
+    try { localStorage.setItem(FOLD_KEY, folded ? '1' : '0'); } catch { /* private mode: lasts for the visit */ }
+  };
+  toggleBtn?.addEventListener('click', onToggle);
   let cooldownUntil = 0;
 
   function size() {
@@ -150,9 +171,9 @@ export function initDrawing(canvas: HTMLCanvasElement, sendBtn: HTMLButtonElemen
 
   const down = (e: PointerEvent) => {
     if ((e.button !== 0 && e.button !== 2) || id !== -1 || !stageOnly(e.target)) return;
-    erasing = e.button === 2 || tool === 'eraser';
-    snapshot();
     if (document.getElementById('stage')?.dataset.state === 'page' && e.pointerType === 'touch') return; // let touch scroll content
+    erasing = e.button === 2 || tool === 'eraser';
+    snapshot(); // only for a real stroke, so a scroll doesn't add an empty undo step
     e.preventDefault();
     id = e.pointerId;
     last = { x: e.clientX, y: e.clientY, t: e.timeStamp, w: 5 };
@@ -191,6 +212,7 @@ export function initDrawing(canvas: HTMLCanvasElement, sendBtn: HTMLButtonElemen
     eraserBtn?.removeEventListener('click', pickEraser);
     undoBtn?.removeEventListener('click', undo);
     resetBtn?.removeEventListener('click', reset);
+    toggleBtn?.removeEventListener('click', onToggle);
     sendBtn.removeEventListener('mouseenter', onEnter);
     sendBtn.removeEventListener('focus', onEnter);
   };

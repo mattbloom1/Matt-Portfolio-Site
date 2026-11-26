@@ -103,7 +103,6 @@ body {
 .tool { background: none; border: 1px solid transparent; color: var(--ink); width: 34px; height: 34px; padding: 0; display: grid; place-items: center; cursor: pointer; opacity: .55; }
 .tool:hover { opacity: 1; }
 .tool.on { opacity: 1; border-color: var(--ink); }
-@media (pointer: coarse) { .foot-tools { display: none; } }
 .send-wrap { position: relative; display: inline-flex; }
 .tool:disabled { cursor: default; opacity: .3; }
 .bubble { text-transform: none; position: absolute; bottom: calc(100% + 12px); left: 50%; transform: translate(-50%, 6px); background: var(--paper); border: 1px solid var(--ink); padding: 7px 12px; white-space: nowrap; font-size: 13px; letter-spacing: .04em; opacity: 0; pointer-events: none; transition: opacity .15s, transform .15s; min-height: 32px; }
@@ -280,7 +279,6 @@ body:has(#stage[data-state='page']) .draw-hint { opacity: 0; pointer-events: non
 
 
 /* mobile pass */
-@media (max-width: 899px) { .foot-tools { display: none; } }
 .foot-right { white-space: nowrap; flex-shrink: 0; }
 @media (max-width: 360px) { .footer { font-size: 10px; padding: 0 10px; } .foot-left { gap: 0 8px; } }
 @media (hover: none) {
@@ -740,4 +738,22 @@ h1, h2 { text-wrap: balance; }
 @media (max-width: 640px) {
   .roll:has(+ .roll) > .poster-gallery, .roll:has(+ .roll) > .roll-gallery { padding-bottom: 24px; }
   .stage[data-state='page'] .roll + .roll { margin-top: 16px; }
+}
+
+/* Drawing tools on phones and touch screens: a panel on the right edge, beside the paper you draw on, that folds down to a tab. Desktop keeps them in the footer. */
+.tools-toggle { display: none; }
+@media (max-width: 899px), (pointer: coarse) {
+  .foot-tools { position: fixed; left: auto; right: 0; top: 50%; transform: translateY(-50%); flex-direction: column; align-items: center; gap: 2px; padding: 4px; background: var(--paper); border: 1px solid var(--ink); border-right: 0; box-shadow: -2px 3px 0 rgba(20,20,20,.12); }
+  .foot-tools .tool { width: 44px; height: 44px; opacity: .7; }
+  .foot-tools .tool.on { opacity: 1; }
+  .foot-tools .tool:disabled { opacity: .3; }
+  .foot-tools .tools-toggle { display: grid; opacity: 1; }
+  .foot-tools:not([data-folded]) .tools-toggle { border-bottom-color: color-mix(in srgb, var(--ink) 25%, transparent); }
+  .tools-toggle .tt-show, .foot-tools[data-folded] .tools-toggle .tt-hide { display: none; }
+  .foot-tools[data-folded] .tools-toggle .tt-show { display: block; }
+  .foot-tools[data-folded] > :not(.tools-toggle) { display: none; }
+  /* the send bubble opens to the left of the panel instead of above it */
+  .foot-tools .send-wrap .bubble { bottom: 50%; left: auto; right: calc(100% + 14px); transform: translate(6px, 50%); }
+  .foot-tools .send-wrap .bubble::after { top: 50%; left: 100%; transform: translate(-5px, -50%) rotate(-45deg); }
+  .foot-tools .send-wrap:hover .bubble, .foot-tools .send-wrap:focus-within .bubble, .foot-tools .send-wrap.show .bubble, .foot-tools .send-wrap .bubble.show { transform: translate(0, 50%); }
 }
