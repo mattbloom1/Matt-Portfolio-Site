@@ -1,6 +1,6 @@
 import { urlFor } from './sanity';
 import variants from './variants.json';
-import { RESUME_TEXT_HTML } from './resume.generated';
+import { RESUME_PAGES, RESUME_TEXT_HTML } from './resume.generated';
 import { SEED_PHOTOGRAPHY, PROFILE_PHOTO, BIO_SHORT, FUN_NOTE, SEED_CRAFTS, SEED_EXPERIENCE, SEED_POSTERS, SEED_PROJECTS } from './seed';
 
 export type SectionId = 'work' | 'posters' | 'experience' | 'about' | 'photography';
@@ -252,7 +252,7 @@ const isOpen = (e: Experience) => !e.endDate || /present|current|now/i.test(e.en
 const byEnd = (a: Experience, b: Experience) => (+isOpen(b) - +isOpen(a)) || (isOpen(a) ? 0 : when(b.endDate) - when(a.endDate)) || when(b.startDate) - when(a.startDate);
 /** Experience is the resume alone: the Doc already lists every job, so the page doesn't repeat them. */
 function experienceHtml() {
-  const resume = `<section class="resume"><div class="resume-head"><p class="meta">Resume</p><span><a href="${RESUME_PDF}">Download PDF</a><a href="${RESUME_DOC}/view" target="_blank" rel="noopener">Open full size</a></span></div><div class="resume-doc"><iframe src="${RESUME_DOC}/preview" title="Resume of Matthew Bloomfield" loading="lazy"></iframe></div><article class="resume-text" aria-label="Resume">${RESUME_TEXT_HTML}</article></section>`;
+  const resume = `<section class="resume"><div class="resume-head"><p class="meta">Resume</p><a class="resume-dl" href="${RESUME_PDF}" aria-label="Download resume PDF" title="Download resume PDF"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 3.5v12"/><path d="M6.5 10.5 12 16l5.5-5.5"/><path d="M4 20.5h16"/></svg></a></div><div class="resume-doc" style="--pages:${RESUME_PAGES}"><iframe src="${RESUME_DOC}/preview" title="Resume of Matthew Bloomfield" loading="lazy"></iframe></div><article class="resume-text" aria-label="Resume">${RESUME_TEXT_HTML}</article></section>`;
   return resume;
 }
 function photographyHtml(c: SiteContent) {
