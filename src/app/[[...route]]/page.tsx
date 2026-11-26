@@ -1,8 +1,9 @@
 import type { Metadata } from 'next';
+import { preload } from 'react-dom';
 import Portfolio from '@/components/Portfolio';
 import { getContent } from '@/lib/getContent';
 import { allRoutes } from '@/lib/routes';
-import { outlineHtml } from '@/lib/content';
+import { heroImages, outlineHtml } from '@/lib/content';
 import { OG_IMAGE } from '@/lib/og';
 
 export const dynamicParams = false;
@@ -25,8 +26,12 @@ export async function generateMetadata({ params }: { params: { route?: string[] 
   };
 }
 
-export default async function Page() {
+export default async function Page({ params }: { params: { route?: string[] } }) {
   const content = await getContent();
+  // The page is drawn by script; start fetching its main image from the static HTML instead of waiting for it.
+  for (const img of heroImages(content, params.route || [])) {
+    preload(img.href, { as: 'image', fetchPriority: 'high', imageSrcSet: img.srcSet, imageSizes: img.sizes });
+  }
   return (
     <>
       <Portfolio content={content} />

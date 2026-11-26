@@ -2,11 +2,27 @@
  * Channel-surfing screen wall for the GVC Brand Motion page.
  * One big screen plays a loop; a bank of small screens plays them all. Click a tile to cut to that channel;
  * until then the big screen flips to the next channel every few seconds.
+ * Clips only load and play while they are on screen, so the wall costs nothing on other pages.
  */
 export function initMotionWall(): () => void {
-  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const stopPlay = (e: Event) => { const t = e.target; if (t instanceof HTMLVideoElement && t.closest('[data-motion]')) t.pause(); };
-  if (reduced) document.addEventListener('play', stopPlay, true); // honour reduced motion: posters only
+  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches; // honour reduced motion: posters only
+  const onScreen = new Set<HTMLVideoElement>();
+  const play = (v: HTMLVideoElement) => { if (!reduced) v.play().catch(() => {}); };
+
+  const seen = new IntersectionObserver((entries) => {
+    for (const { target, isIntersecting } of entries) {
+      const v = target as HTMLVideoElement;
+      if (isIntersecting) { onScreen.add(v); play(v); } else { onScreen.delete(v); v.pause(); }
+    }
+  });
+  const watch = () => { // pages are swapped in whole, so start over with the clips now on the page
+    seen.disconnect(); onScreen.clear();
+    document.querySelectorAll<HTMLVideoElement>('[data-motion] video').forEach((v) => seen.observe(v));
+  };
+  const content = document.getElementById('content');
+  const added = new MutationObserver(watch);
+  if (content) added.observe(content, { childList: true });
+  watch();
 
   let manual = false;
   const wall = () => document.querySelector<HTMLElement>('.detail:not([hidden]) [data-motion]');
@@ -16,7 +32,7 @@ export function initMotionWall(): () => void {
     w.querySelectorAll<HTMLElement>('.tv-tile').forEach((b) => b.setAttribute('aria-pressed', String(b === tile)));
     main.poster = tile.dataset.poster || '';
     main.src = tile.dataset.src || '';
-    if (!reduced) main.play().catch(() => {});
+    if (onScreen.has(main)) play(main);
     (tv.querySelector('.tv-ch') as HTMLElement).textContent = `CH ${String((+(tile.dataset.i || 0)) + 1).padStart(2, '0')}`;
     (tv.querySelector('.tv-name') as HTMLElement).textContent = tile.dataset.title || '';
     tv.classList.remove('cut'); void tv.offsetWidth; tv.classList.add('cut'); // quick static flash
@@ -35,5 +51,5 @@ export function initMotionWall(): () => void {
     const cur = tiles.findIndex((b) => b.getAttribute('aria-pressed') === 'true');
     tune(w, tiles[(cur + 1) % tiles.length]);
   }, 6000);
-  return () => { document.removeEventListener('click', onClick); document.removeEventListener('play', stopPlay, true); clearInterval(timer); };
+  return () => { document.removeEventListener('click', onClick); seen.disconnect(); added.disconnect(); clearInterval(timer); };
 }

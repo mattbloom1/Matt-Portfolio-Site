@@ -106,15 +106,45 @@ export interface SiteContent {
 
 const base = process.env.NEXT_PUBLIC_BASE_PATH || '';
 /** Smaller WebP variants made by scripts/make-variants.mjs (prebuild). Keys are paths without the base path. */
-const VARIANTS = variants as Record<string, { w: number; v: number[] }>;
-/** srcset + sizes for an image that has generated variants; empty when it has none. */
-export function srcsetFor(src: string, sizes: string): string {
-  const key = src.startsWith(base) ? src.slice(base.length) : src;
-  const m = VARIANTS[key];
+const VARIANTS = variants as Record<string, { w: number; h: number; v: number[] }>;
+const variantsOf = (src: string) => VARIANTS[src.startsWith(base) ? src.slice(base.length) : src];
+/** The srcset value for an image that has generated variants; empty when it has none. */
+function srcsetValue(src: string): string {
+  const m = variantsOf(src);
   if (!m || !m.v.length) return '';
-  const set = [...m.v.map((w) => `${esc(encodeURI(src.replace(/\.webp$/, `-${w}.webp`)))} ${w}w`), `${esc(encodeURI(src))} ${m.w}w`];
-  return ` srcset="${set.join(', ')}" sizes="${sizes}"`;
+  return [...m.v.map((w) => `${encodeURI(src.replace(/\.webp$/, `-${w}.webp`))} ${w}w`), `${encodeURI(src)} ${m.w}w`].join(', ');
 }
+/** srcset + sizes attributes for an image that has generated variants; empty when it has none. */
+export function srcsetFor(src: string, sizes: string): string {
+  const set = srcsetValue(src);
+  return set ? ` srcset="${esc(set)}" sizes="${sizes}"` : '';
+}
+/** width/height attributes (so the browser reserves the space) and the matching placeholder ratio. */
+const dimsFor = (src: string) => { const m = variantsOf(src); return m?.h ? ` width="${m.w}" height="${m.h}"` : ''; };
+const ratioFor = (src: string) => { const m = variantsOf(src); return m?.h ? ` style="--ar:${m.w}/${m.h}"` : ''; };
+/** First images on a page load straight away; the rest wait until they're near the screen. */
+const priority = (first: boolean) => (first ? 'fetchpriority="high"' : 'loading="lazy"');
+
+/* Rendered slot widths, so phones fetch a smaller file. They err wide: a slot never gets a file below its size. */
+const SIZES = {
+  stamp: '(max-width: 640px) 45vw, 24vw',
+  card: '(max-width: 640px) 50vw, (max-width: 899px) 33vw, 26vw',
+  poster: '(max-width: 899px) 50vw, 34vw',
+  // project pages: max 1400px wide with 4vw gutters
+  full: '(max-width: 1400px) 92vw, 1300px',
+  // phones crop gallery pairs to zoomed squares, so they need more than half the screen
+  pair: '(max-width: 560px) 90vw, (max-width: 1400px) 46vw, 650px',
+  half: '(max-width: 760px) 92vw, (max-width: 1400px) 46vw, 650px',
+  third: '(max-width: 760px) 46vw, (max-width: 1400px) 31vw, 440px',
+  quarter: '(max-width: 760px) 46vw, (max-width: 1400px) 23vw, 330px',
+};
+const KIT_SIZES = { 1: SIZES.full, 2: SIZES.half, 3: SIZES.third, 4: SIZES.quarter } as const;
+/** A gallery's 2 / 2 / 1 rhythm: every third image, and a lone last one, runs full width. */
+const isSingle = (idx: number, count: number) => idx % 3 === 2 || (idx === count - 1 && idx % 3 === 0);
+
+const stampSrc = (id: SectionId, w?: number) => `${base}/stamps/${id}${w ? `-${w}` : ''}.webp`;
+/** Home stamp artwork: src, srcset and sizes, shared by the stamp buttons and the home page preload. */
+export const stampImage = (id: SectionId) => ({ src: stampSrc(id), srcSet: `${stampSrc(id, 300)} 300w, ${stampSrc(id, 600)} 600w, ${stampSrc(id)} 1000w`, sizes: SIZES.stamp });
 const accents = ['#c4b268', '#c9a0a0', '#8fb3c9', '#7fbf7a', '#a9c0bf'];
 
 /** Matt's supplied content (src/lib/seed.ts); used until Sanity has entries. */
@@ -147,8 +177,8 @@ function motionHtml(p: Project) {
   const u = (v: string) => esc(encodeURI(safeUrl(v)));
   const n = (i: number) => String(i + 1).padStart(2, '0');
   const first = clips[0];
-  const bank = clips.map((c, i) => `<li><button type="button" class="tv-tile" data-i="${i}" data-src="${u(c.src)}" data-poster="${u(c.poster)}" data-title="${esc(c.title)}" aria-label="Tune to channel ${n(i)}, ${esc(c.title)}"${i === 0 ? ' aria-pressed="true"' : ' aria-pressed="false"'}><video src="${u(c.src)}" poster="${u(c.poster)}" muted loop autoplay playsinline preload="metadata" tabindex="-1" aria-hidden="true"></video><span class="tv-no">${n(i)}</span></button></li>`).join('');
-  return `<section class="kit-sec motion" data-motion><div class="kit-head"><p class="meta">Channel surfing</p><p>${esc(p.motion?.note || 'Pick a channel. It flips through the loops on its own until you do.')}</p></div><div class="tv"><video class="tv-main" src="${u(first.src)}" poster="${u(first.poster)}" muted loop autoplay playsinline preload="metadata" aria-label="Now playing"></video><span class="tv-hud"><span class="tv-ch">CH ${n(0)}</span><span class="tv-name">${esc(first.title)}</span></span><span class="tv-snow" aria-hidden="true"></span></div><ul class="tv-bank" aria-label="Channels">${bank}</ul></section>`;
+  const bank = clips.map((c, i) => `<li><button type="button" class="tv-tile" data-i="${i}" data-src="${u(c.src)}" data-poster="${u(c.poster)}" data-title="${esc(c.title)}" aria-label="Tune to channel ${n(i)}, ${esc(c.title)}"${i === 0 ? ' aria-pressed="true"' : ' aria-pressed="false"'}><video src="${u(c.src)}" poster="${u(c.poster)}" muted loop playsinline preload="none" tabindex="-1" aria-hidden="true"></video><span class="tv-no">${n(i)}</span></button></li>`).join('');
+  return `<section class="kit-sec motion" data-motion><div class="kit-head"><p class="meta">Channel surfing</p><p>${esc(p.motion?.note || 'Pick a channel. It flips through the loops on its own until you do.')}</p></div><div class="tv"><video class="tv-main" src="${u(first.src)}" poster="${u(first.poster)}" muted loop playsinline preload="none" aria-label="Now playing"></video><span class="tv-hud"><span class="tv-ch">CH ${n(0)}</span><span class="tv-name">${esc(first.title)}</span></span><span class="tv-snow" aria-hidden="true"></span></div><ul class="tv-bank" aria-label="Channels">${bank}</ul></section>`;
 }
 function kitHtml(p: Project) {
   const b = p.kit?.brand;
@@ -158,7 +188,8 @@ function kitHtml(p: Project) {
     return `<section class="kit-brand"><div class="kit-head"><p class="meta">Brand identity</p>${b.note ? `<p>${esc(b.note)}</p>` : ''}</div><div class="kit-logos">${logos}</div>${sw ? `<ul class="kit-palette" aria-label="Colour palette">${sw}</ul>` : ''}${(b.fonts || []).length ? `<p class="meta kit-fonts">Type: ${(b.fonts || []).map(esc).join(' · ')}</p>` : ''}</section>`;
   })() : '';
   const secs = (p.kit?.sections || []).map((sec) => {
-    const figs = sec.images.filter((i) => safeUrl(i.src)).map((i) => `<figure class="kit-fig"><img src="${esc(encodeURI(safeUrl(i.src)))}" alt="${esc(i.alt)}" loading="lazy" decoding="async"></figure>`).join('');
+    const sizes = (k: number) => (sec.mix && k === 0 ? SIZES.full : sec.mix ? SIZES.half : KIT_SIZES[sec.cols || 2]);
+    const figs = sec.images.filter((i) => safeUrl(i.src)).map((i, k) => `<figure class="kit-fig"><img src="${esc(encodeURI(safeUrl(i.src)))}"${srcsetFor(i.src, sizes(k))}${dimsFor(i.src)} alt="${esc(i.alt)}" loading="lazy" decoding="async"></figure>`).join('');
     return `<section class="kit-sec"><div class="kit-head"><p class="meta">${esc(sec.title)}</p>${sec.note ? `<p>${esc(sec.note)}</p>` : ''}</div><div class="kit-grid ${sec.mix ? 'kit-mix' : `c${sec.cols || 2}`}">${figs}</div></section>`;
   }).join('');
   // only a site's screenshots are a "Website"; floor plans, crafts and hardware get a plain gallery label
@@ -169,9 +200,9 @@ function kitHtml(p: Project) {
 function extrasHtml(p: Project) {
   const x = p.extras;
   if (!x) return '';
-  const figs = (x.figures || []).filter((f) => safeUrl(f.src)).map((f) => `<figure class="xfig"><img src="${esc(encodeURI(safeUrl(f.src)))}" alt="${esc(f.alt)}" loading="lazy" decoding="async">${f.caption ? `<figcaption>${esc(f.caption)}</figcaption>` : ''}</figure>`).join('');
+  const figs = (x.figures || []).filter((f) => safeUrl(f.src)).map((f) => `<figure class="xfig"><img src="${esc(encodeURI(safeUrl(f.src)))}"${srcsetFor(f.src, SIZES.half)}${dimsFor(f.src)} alt="${esc(f.alt)}" loading="lazy" decoding="async">${f.caption ? `<figcaption>${esc(f.caption)}</figcaption>` : ''}</figure>`).join('');
   const stats = (x.stats || []).map((s) => `<div class="xstat"><dt>${esc(s.label)}</dt><dd>${esc(s.value)}</dd></div>`).join('');
-  const notes = (x.notes || []).map((n) => `<div class="xnote"><h3>${esc(n.heading)}</h3><div class="xnote-body">${n.body.split('\n\n').map((t) => `<p>${esc(t)}</p>`).join('')}</div></div>`).join('');
+  const notes = (x.notes || []).map((n) => `<div class="xnote"><h2>${esc(n.heading)}</h2><div class="xnote-body">${n.body.split('\n\n').map((t) => `<p>${esc(t)}</p>`).join('')}</div></div>`).join('');
   return `<div class="detail-extra">${figs ? `<div class="xfigs">${figs}</div>` : ''}${stats ? `<dl class="xstats">${stats}</dl>` : ''}${notes ? `<div class="xnotes">${notes}</div>` : ''}</div>`;
 }
 /** Cards plus full-screen detail pages, shared by Projects and Crafts. */
@@ -185,17 +216,17 @@ function workViews(items: Project[], noun: string, defaultMeta: string) {
   const cardCover = (p: Project) => safeUrl(p.cover || p.heroImage);
   // Layout: everything runs three across; the three developments come first, so they fill the first row.
   const lead = (_p: Project) => '';
-  const photo = (p: Project) => {
+  const photo = (p: Project, i: number) => {
     const src = cardCover(p), wide = safeUrl(p.coverWide);
     if (!src) return '';
     const isWide = !!wide && lead(p).includes('wide');
-    const sizes = isWide ? '(max-width: 899px) 100vw, 78vw' : lead(p) ? '(max-width: 899px) 100vw, 39vw' : '(max-width: 640px) 50vw, (max-width: 899px) 33vw, 26vw';
-    const img = `<img class="card-photo" src="${esc(encodeURI(src))}"${srcsetFor(src, sizes)} alt="" loading="lazy" decoding="async">`;
+    const sizes = isWide ? '(max-width: 899px) 100vw, 78vw' : lead(p) ? '(max-width: 899px) 100vw, 39vw' : SIZES.card;
+    const img = `<img class="card-photo" src="${esc(encodeURI(src))}"${srcsetFor(src, sizes)} alt="" ${priority(i < 3)} decoding="async">`;
     return isWide ? `<picture><source media="(min-width: 900px)" srcset="${esc(encodeURI(wide))}">${img}</picture>` : img;
   };
   const card = (p: Project, i: number) => `
     <button type="button" class="card${cardCover(p) ? '' : ' no-img'}${lead(p)}" data-detail="d-${esc(p.slug)}" data-tag="${esc(tagOf(p))}" data-tags="${esc(allTags(p).join("|"))}">
-      <span class="card-img${cardCover(p) ? ' has-img' : ''}" style="--c:${safeColor(p.accent) || accents[i % accents.length]}">${photo(p)}</span>
+      <span class="card-img${cardCover(p) ? ' has-img' : ''}" style="--c:${safeColor(p.accent) || accents[i % accents.length]}">${photo(p, i)}</span>
       <span class="card-cap"><span class="card-name">${esc(p.title)}</span><span class="card-sub">${esc([p.role, p.year].filter(Boolean).join(' · '))}</span></span>
     </button>`;
   const siblings = (_p: Project) => c.projects;
@@ -205,6 +236,11 @@ function workViews(items: Project[], noun: string, defaultMeta: string) {
     const k = sib.findIndex((q) => q.slug === p.slug);
     const prev = sib[(k - 1 + sib.length) % sib.length], next = sib[(k + 1) % sib.length];
     return `<nav class="detail-steps" aria-label="Other ${noun}s"><button type="button" class="detail-step prev" data-step="d-${esc(prev.slug)}" aria-label="Previous ${noun}: ${esc(prev.title)}"><span class="step-dir">previous</span></button><button type="button" class="detail-step next" data-step="d-${esc(next.slug)}" aria-label="Next ${noun}: ${esc(next.title)}"><span class="step-dir">next</span></button></nav>`;
+  };
+  const galleryHtml = (p: Project) => {
+    const shots = (p.images || []).map((u, k) => ({ u, alt: (p.imageAlts || [])[k] || `${p.title} mockup` })).filter(({ u }) => safeUrl(u));
+    if (!shots.length) return '';
+    return `<div class="detail-gallery">${shots.map(({ u, alt }, k) => `<figure class="gimg"${ratioFor(u)}><img src="${esc(encodeURI(safeUrl(u)))}"${srcsetFor(u, isSingle(k, shots.length) ? SIZES.full : SIZES.pair)}${dimsFor(u)} alt="${esc(alt)}" loading="lazy" decoding="async"></figure>`).join('')}</div>`;
   };
   const detail = (p: Project, i: number) => `
     <div class="detail" id="d-${esc(p.slug)}"${(p.extras?.cursorIcons || []).length ? ` data-icon-cursor="${esc(JSON.stringify(p.extras!.cursorIcons!.filter((u) => safeUrl(u)).map((u) => encodeURI(safeUrl(u)))))}"` : ''} role="dialog" aria-modal="true" aria-label="${esc(p.title)}" hidden>
@@ -223,7 +259,7 @@ function workViews(items: Project[], noun: string, defaultMeta: string) {
         </div>
       </div>
       ${kitHtml(p)}
-      ${(p.images || []).filter((u) => safeUrl(u)).length ? `<div class="detail-gallery">${(p.images || []).map((u, k) => ({ u, k })).filter(({ u }) => safeUrl(u)).map(({ u, k }) => `<figure class="gimg"><img src="${esc(encodeURI(safeUrl(u)))}" alt="${esc((p.imageAlts || [])[k] || `${p.title} mockup`)}" loading="lazy" decoding="async"></figure>`).join('')}</div>` : ''}
+      ${galleryHtml(p)}
       ${extrasHtml(p)}
     </div>`;
   return { card, detail };
@@ -255,16 +291,24 @@ function experienceHtml() {
   const resume = `<section class="resume"><div class="resume-head"><p class="meta">Resume</p><a class="resume-dl" href="${RESUME_PDF}" aria-label="Download resume PDF" title="Download resume PDF"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 3.5v12"/><path d="M6.5 10.5 12 16l5.5-5.5"/><path d="M4 20.5h16"/></svg></a></div><div class="resume-doc" style="--pages:${RESUME_PAGES}"><iframe src="${RESUME_DOC}/preview" title="Resume of Matthew Bloomfield" loading="lazy"></iframe></div><article class="resume-text" aria-label="Resume">${RESUME_TEXT_HTML}</article></section>`;
   return resume;
 }
+/** Film frames ship with 400px and 800px copies (scripts/photography); the full file is used when the slot is wide or the screen is dense. */
+const frameSrcset = (f: { image?: string; w?: number }) => {
+  const full = encodeURI(safeUrl(f.image));
+  return /\/photography\/.+\.webp$/.test(full) ? `${full.replace(/\.webp$/, '-400.webp')} 400w, ${full.replace(/\.webp$/, '-800.webp')} 800w, ${full} ${f.w || 1600}w` : '';
+};
+const FRAME_SIZES = { single: '(max-width: 899px) 100vw, 68vw', pair: '(max-width: 899px) 48vw, 34vw' };
 function photographyHtml(c: SiteContent) {
+  const firstRoll = c.photography.find((s) => (s.frames || []).some((f) => safeUrl(f.image)));
   const series = c.photography.map((s) => {
+    const first = s === firstRoll;
     const frames = (s.frames || []).filter((f) => safeUrl(f.image));
     if (!frames.length) return `<section><h2 class="series">${esc(s.title)}</h2><div class="gallery wide"><figure class="shot"></figure></div></section>`;
     const imgs = frames.map((f, idx) => {
-      // 800px variant for small slots (pairs, phones); the full file is used when the slot is wide or the screen is dense.
       const full = encodeURI(safeUrl(f.image));
-      const single = idx % 3 === 2 || (idx === frames.length - 1 && idx % 3 === 0);
-      const srcset = /\/photography\/.+\.webp$/.test(full) ? ` srcset="${esc(full.replace(/\.webp$/, '-400.webp'))} 400w, ${esc(full.replace(/\.webp$/, '-800.webp'))} 800w, ${esc(full)} ${f.w || 1600}w" sizes="${single ? '(max-width: 899px) 100vw, 68vw' : '(max-width: 899px) 48vw, 34vw'}"` : '';
-      return `<figure class="gimg"><img src="${esc(full)}"${srcset} alt="${esc(f.alt || `${s.title} film roll`)}" tabindex="0" role="button"${f.w && f.h ? ` width="${f.w}" height="${f.h}"` : ''} loading="lazy" decoding="async"></figure>`;
+      const set = frameSrcset(f);
+      const srcset = set ? ` srcset="${esc(set)}" sizes="${isSingle(idx, frames.length) ? FRAME_SIZES.single : FRAME_SIZES.pair}"` : '';
+      const dims = f.w && f.h ? ` width="${f.w}" height="${f.h}"` : '';
+      return `<figure class="gimg"${f.w && f.h ? ` style="--ar:${f.w}/${f.h}"` : ''}><img src="${esc(full)}"${srcset} alt="${esc(f.alt || `${s.title} film roll`)}" tabindex="0" role="button"${dims} ${priority(first && idx < 2)} decoding="async"></figure>`;
     }).join('');
     return `<section class="roll" id="roll-${esc(s.slug)}"><h2 class="series">${esc(s.title)}${s.year ? ` <span class="series-year">${s.year}</span>` : ''}</h2>${s.summary ? `<p>${esc(s.summary)}</p>` : ''}<div class="detail-gallery roll-gallery">${imgs}</div></section>`;
   }).join('');
@@ -278,12 +322,14 @@ function photographyHtml(c: SiteContent) {
   return `${series}${c.placeholder.photography ? todo('Placeholder. Photography content has not been supplied.') : ''}${strip}`;
 }
 function postersHtml(c: SiteContent) {
-  return c.posters.map((set) => `<section class="roll"><h2 class="series">${esc(set.title)}</h2><div class="detail-gallery poster-gallery">${set.items.filter((i) => safeUrl(i.src)).map((i) => `<figure class="gimg"><img src="${esc(encodeURI(safeUrl(i.src)))}" alt="${esc(i.alt)}" width="${i.w}" height="${i.h}" tabindex="0" role="button" loading="lazy" decoding="async"></figure>`).join('')}</div></section>`).join('');
+  return c.posters.map((set, n) => `<section class="roll"><h2 class="series">${esc(set.title)}</h2><div class="detail-gallery poster-gallery">${set.items.filter((i) => safeUrl(i.src)).map((i, k) => `<figure class="gimg" style="--ar:${i.w}/${i.h}"><img src="${esc(encodeURI(safeUrl(i.src)))}"${srcsetFor(i.src, SIZES.poster)} alt="${esc(i.alt)}" width="${i.w}" height="${i.h}" tabindex="0" role="button" ${priority(n === 0 && k < 2)} decoding="async"></figure>`).join('')}</div></section>`).join('');
 }
+const PORTRAIT_SRCSET = `${PROFILE_PHOTO.src.replace(/\.webp$/, '-800.webp')} 800w, ${PROFILE_PHOTO.src} 1600w`;
+const PORTRAIT_SIZES = '(max-width: 760px) 100vw, 45vw';
 function aboutHtml() {
   const links = SITE.links.map((l) => `<li><a href="${l.href}" target="_blank" rel="noopener">${l.label}</a></li>`).join('');
   const paras = (a: string[]) => a.map((t) => `<p>${esc(t)}</p>`).join('');
-  return `<div class="about-top"><img class="portrait" src="${esc(PROFILE_PHOTO.src)}" srcset="${esc(PROFILE_PHOTO.src.replace(/\.webp$/, '-800.webp'))} 800w, ${esc(PROFILE_PHOTO.src)} 1600w" sizes="(max-width: 760px) 100vw, 45vw" alt="${esc(PROFILE_PHOTO.alt)}" width="1600" height="1061" loading="lazy" decoding="async" /><div><p class="lead">${esc(SITE.role)}.</p>
+  return `<div class="about-top"><img class="portrait" src="${esc(PROFILE_PHOTO.src)}" srcset="${esc(PORTRAIT_SRCSET)}" sizes="${PORTRAIT_SIZES}" alt="${esc(PROFILE_PHOTO.alt)}" width="1600" height="1061" fetchpriority="high" decoding="async" /><div><p class="lead">${esc(SITE.role)}.</p>
     ${paras(BIO_SHORT)}</div></div>
     <p class="fun">${esc(FUN_NOTE)}</p>
     <section class="contact"><p class="meta letter-label">Write me a letter</p>
@@ -308,6 +354,32 @@ function aboutHtml() {
 
 /** Drops entries flagged hidden. */
 const visible = (c: SiteContent): SiteContent => ({ ...c, projects: c.projects.filter((p) => !p.hidden), crafts: c.crafts.filter((k) => !k.hidden) });
+
+export interface HeroImage { href: string; srcSet?: string; sizes?: string }
+/** The image a page shows biggest on first paint. The page markup is built by script, so the static HTML
+ *  preloads this to start the download straight away. Must match the markup's src/srcset/sizes exactly. */
+export function heroImages(all: SiteContent, path: string[]): HeroImage[] {
+  const c = visible(all);
+  const withSet = (src: string, sizes: string): HeroImage => { const href = encodeURI(src), srcSet = srcsetValue(src); return srcSet ? { href, srcSet, sizes } : { href }; };
+  const [section, slug] = path;
+  if (!section) return buildSections(c).map((s) => { const st = stampImage(s.id); return { href: st.src, srcSet: st.srcSet, sizes: st.sizes }; });
+  if (section === 'work') {
+    const items = workItems(c);
+    if (slug) { const hero = safeUrl(items.find((p) => p.slug === slug)?.heroImage); return hero ? [{ href: encodeURI(hero) }] : []; }
+    const first = items.map((p) => safeUrl(p.cover || p.heroImage)).find(Boolean);
+    return first ? [withSet(first, SIZES.card)] : [];
+  }
+  if (section === 'posters') { const first = c.posters[0]?.items.find((i) => safeUrl(i.src)); return first ? [withSet(first.src, SIZES.poster)] : []; }
+  if (section === 'photography') {
+    const roll = c.photography.find((s) => (s.frames || []).some((f) => safeUrl(f.image)));
+    const frames = (roll?.frames || []).filter((f) => safeUrl(f.image));
+    if (!frames.length) return [];
+    const set = frameSrcset(frames[0]);
+    return [set ? { href: encodeURI(safeUrl(frames[0].image)), srcSet: set, sizes: isSingle(0, frames.length) ? FRAME_SIZES.single : FRAME_SIZES.pair } : { href: encodeURI(safeUrl(frames[0].image)) }];
+  }
+  if (section === 'about') return [{ href: PROFILE_PHOTO.src, srcSet: PORTRAIT_SRCSET, sizes: PORTRAIT_SIZES }];
+  return [];
+}
 
 /** Plain, text-only outline of the whole site, rendered into the static HTML (inside <noscript>) for crawlers, link readers and no-JS visitors. */
 export function outlineHtml(all: SiteContent): string {

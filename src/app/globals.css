@@ -302,7 +302,7 @@ body:has(#stage[data-state='page']) .draw-hint { opacity: 0; pointer-events: non
 .xstat dt { font: 500 14px var(--mono); letter-spacing: .14em; text-transform: lowercase; opacity: .65; }
 .xnotes .meta { margin: 0 0 8px; }
 .xnote { display: grid; grid-template-columns: var(--detail-cols); gap: var(--detail-gap); padding: 22px 0; border-top: 1px solid color-mix(in srgb, var(--ink) 18%, transparent); }
-.xnote h3 { font: 500 clamp(22px, 2.4vw, 30px)/1.15 var(--serif); margin: 0; }
+.xnote h2 { font: 500 clamp(22px, 2.4vw, 30px)/1.15 var(--serif); margin: 0; }
 .xnote p { font: 400 18px/1.5 var(--serif); margin: 0; max-width: 62ch; }
 .xnote-body p + p { margin-top: 0.9em; } /* paragraphs stay together in the text column */
 @media (max-width: 760px) { .xfigs { grid-template-columns: minmax(0, 1fr); } .xnote p { font-size: 17px; } }
@@ -322,7 +322,7 @@ body:has(#stage[data-state='page']) .draw-hint { opacity: 0; pointer-events: non
    Background images sit above a shimmer gradient layer, so the shimmer is simply covered once the image paints. */
 :root { --sk-base: #dedad1; --sk-hi: #ebe8e1; --sk-grad: linear-gradient(100deg, transparent 20%, var(--sk-hi) 50%, transparent 80%); }
 .card .card-img.has-img, .detail-img.has-img, .shot.has-img { background-color: var(--sk-base); background-repeat: no-repeat; animation: sk-shimmer 1.6s ease-in-out infinite; }
-.detail-gallery .gimg:not(.ld) { background-color: var(--sk-base); position: relative; overflow: hidden; aspect-ratio: 3 / 2; }
+.detail-gallery .gimg:not(.ld) { background-color: var(--sk-base); position: relative; overflow: hidden; aspect-ratio: var(--ar, 3 / 2); }
 .detail-gallery .gimg:not(.ld)::before { content: ''; position: absolute; inset: 0; background: var(--sk-grad); background-size: 200% 100%; animation: sk-shimmer-1 1.6s ease-in-out infinite; }
 .detail-gallery .gimg:not(.ld) img { position: absolute; inset: 0; height: 100%; opacity: 0; }
 .detail-gallery .gimg img { transition: opacity .35s ease; }
@@ -333,17 +333,17 @@ body:has(#stage[data-state='page']) .draw-hint { opacity: 0; pointer-events: non
 
 /* Posters: portraits in two columns all the way down, never cropped (the shared galleries' every-third-image-full-width rhythm is switched off here) */
 .poster-gallery { padding: 8px 0 clamp(48px, 7vw, 96px); max-width: none; align-items: start; }
-.poster-gallery .gimg:not(.ld) { aspect-ratio: 4 / 5; }
+.poster-gallery .gimg:not(.ld) { aspect-ratio: var(--ar, 4 / 5); }
 .detail-gallery.poster-gallery .gimg:nth-child(3n), .detail-gallery.poster-gallery .gimg:last-child:nth-child(3n + 1) { grid-column: auto; display: block; }
 .detail-gallery.poster-gallery .gimg:nth-child(3n) img, .detail-gallery.poster-gallery .gimg:last-child:nth-child(3n + 1) img { width: 100%; max-height: none; }
 @media (max-width: 560px) {
-  .poster-gallery .gimg:not(:nth-child(3n)):not(:last-child:nth-child(3n + 1)) { aspect-ratio: auto; overflow: visible; }
+  .poster-gallery .gimg:not(:nth-child(3n)):not(:last-child:nth-child(3n + 1)) { aspect-ratio: var(--ar, auto); overflow: visible; }
   .poster-gallery .gimg:not(:nth-child(3n)):not(:last-child:nth-child(3n + 1)) img { height: auto; object-fit: fill; transform: none; }
 }
 /* Photography: one film roll per month, same 2 / 2 / 1 rhythm as project galleries */
 .roll-gallery { padding: 8px 0 clamp(48px, 7vw, 96px); max-width: none; }
 .roll { max-width: max(900px, min(1400px, calc(1.2 * (100vh - 240px) + 150px))); margin-inline: auto; }
-.roll-gallery .gimg:not(.ld) { aspect-ratio: 3 / 2; }
+.roll-gallery .gimg:not(.ld) { aspect-ratio: var(--ar, 3 / 2); }
 .series-year { font: 500 17px var(--mono); letter-spacing: .12em; margin-left: 8px; opacity: .6; vertical-align: middle; }
 .roll-gallery { align-items: start; }
 
@@ -498,7 +498,7 @@ html, body, .panel, .footer { transition: background-color .5s ease, color .5s e
 .card-img.ld .card-photo { opacity: 1; }
 @media (prefers-reduced-motion: reduce) { .card .card-img.has-img::before { animation: none; } .card-photo { transition: none; } }
 /* Photography: rolls far off screen are skipped until near, so 270 photos are not decoded at once. */
-.roll { content-visibility: auto; contain-intrinsic-size: auto 5200px; }
+.roll:has(> .roll-gallery) { content-visibility: auto; contain-intrinsic-size: auto 5200px; }
 /* About links get a 44px touch target on small screens. */
 @media (max-width: 899px) { .links a { display: inline-block; padding-block: 13px; } }
 
@@ -720,7 +720,7 @@ ul.links a::after { content: ''; position: absolute; inset: -4px -2px; }
 .tool:disabled, .letter-send:disabled { cursor: not-allowed; filter: grayscale(1); }
 .filter:active, .detail-step:active, .detail-close:active, .tool:not(:disabled):active, .letter-send:not(:disabled):active, .lb-nav:active { transform: translateY(1px); }
 @media (pointer: coarse) { .filter { min-height: 44px; } }
-h1, h2 { text-wrap: balance; }
+h1, .series { text-wrap: balance; }
 
 /* Channel-surfing screen wall (GVC Brand Motion) */
 .motion .tv { position: relative; aspect-ratio: 16 / 9; background: #07131d; overflow: hidden; border-radius: 6px; box-shadow: 0 0 0 10px #151515, 0 0 0 11px #333, 0 18px 40px rgba(0,0,0,.28); margin: 14px 10px 26px; }
