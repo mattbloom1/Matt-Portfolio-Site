@@ -451,7 +451,8 @@ html.lb-open, html.lb-open body { overflow: clip; }
 :root[data-theme='night'] .icon-cursor, :root[data-theme='night'] .icon-stamp { filter: invert(1); } /* black icon strokes flip to white */
 :root[data-theme='night'] .icon-stamp { mix-blend-mode: screen; }
 html, body, .panel, .footer { transition: background-color .5s ease, color .5s ease; }
-.theme-toggle { display: inline-grid; place-items: center; width: 28px; height: 28px; padding: 0; background: none; border: 1px solid currentColor; border-radius: 50%; color: inherit; cursor: pointer; opacity: .75; }
+.theme-toggle { position: relative; display: inline-grid; place-items: center; width: 28px; height: 28px; padding: 0; background: none; border: 1px solid currentColor; border-radius: 50%; color: inherit; cursor: pointer; opacity: .75; }
+.theme-toggle::after { content: ''; position: absolute; inset: -9px; border-radius: 50%; } /* invisible: takes the tap target from 28px to 44px */
 .theme-toggle:hover, .theme-toggle:focus-visible { opacity: 1; }
 @media (min-width: 900px) { :root[data-theme='night'] .stage[data-state='page'] .stamps[data-mode='mini'] .stamp .tag, :root[data-theme='night'] .stage[data-state='page'] .stamp .tag { color: #ece9e2; -webkit-text-fill-color: #ece9e2; } }
 
