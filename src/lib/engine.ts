@@ -315,12 +315,13 @@ function swapBackground(id: SectionId) {
 /* ---------- content ---------- */
 /** An image's skeleton clears on its load event, but WebKit has been seen to skip that event for the first visible cards
  *  (whose files the page's first HTML already fetched). So clear what is already complete when it is inserted, and for
- *  the eager images still loading, also wait on decode(), which settles whether or not the event fires. */
+ *  the rest also wait on decode(), which settles once the image arrives (or fails) whether or not the event fires.
+ *  decode() doesn't start a lazy image's download; it just waits for it. */
 function markLoaded(img: HTMLImageElement) { img.closest('.gimg, .card-img')?.classList.add('ld'); }
 function clearLoadedSkeletons() {
   contentEl.querySelectorAll<HTMLImageElement>('.gimg img, .card-img img').forEach((img) => {
     if (img.complete) markLoaded(img);
-    else if (img.loading !== 'lazy') img.decode().then(() => markLoaded(img), () => markLoaded(img));
+    else img.decode().then(() => markLoaded(img), () => markLoaded(img));
   });
 }
 function renderContent(id: SectionId) {
