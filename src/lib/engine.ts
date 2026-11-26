@@ -18,7 +18,6 @@ const homeBtn = $<HTMLButtonElement>('home');
 const contentEl = $('content');
 const bgEl = $('bg');
 const bleedLayer = $('bleed-layer');
-const dispEl = document.getElementById('bleed-disp') as unknown as SVGElement;
 
 type State = 'nav' | 'page';
 let state: State = 'nav';

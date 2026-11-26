@@ -251,7 +251,6 @@ export const SEED_PROJECTS: Project[] = [
     summary: 'The Edge at Pineapple Grove is a seven-townhome project in two four-story buildings in Delray Beach, designed by Netta Architects and sold by the Gasdaska Verdiglione Conlon Team at Douglas Elliman. Its branding, brochures, stationery, website and social have not been produced yet. So far my work is the branded unit and floor plans, from January 2026, and a 3D model of the site that I rebuilt in Cinema 4D from the architect’s model.',
     heroImage: asset('/projects/the-edge-delray/kit/floorplan-book-mockup.webp'),
     cover: asset('/websites/covers/the-edge-delray.webp'),
-    coverWide: asset('/websites/covers/the-edge-delray-wide.webp'),
     kit: {
       credits: [
         { label: 'Location', value: '246 NE 6th Ave, Delray Beach, FL' },

@@ -1,4 +1,3 @@
-import { urlFor } from './sanity';
 import variants from './variants.json';
 import { RESUME_PAGES, RESUME_TEXT_HTML } from './resume.generated';
 import { SEED_PHOTOGRAPHY, PROFILE_PHOTO, BIO_SHORT, FUN_NOTE, SEED_CRAFTS, SEED_EXPERIENCE, SEED_POSTERS, SEED_PROJECTS } from './seed';
@@ -41,7 +40,7 @@ export const STACK_GROUPS = ['Framework', 'Styling', 'Data', 'Hosting', 'Integra
 export type StackGroup = typeof STACK_GROUPS[number];
 export interface Project {
   title: string; slug: string; summary?: string; featured?: boolean; year?: number;
-  disciplines?: string[]; /** Extra filter chips this project also appears under (the first discipline or `tag` stays its main one). */ alsoTags?: string[]; role?: string; heroImage?: string; /** Card cover; falls back to heroImage */ cover?: string; /** Landscape cover for the full-width lead tile on the Work grid (desktop). */ coverWide?: string; images?: string[]; imageAlts?: string[]; accent?: string;
+  disciplines?: string[]; /** Extra filter chips this project also appears under (the first discipline or `tag` stays its main one). */ alsoTags?: string[]; role?: string; heroImage?: string; /** Card cover; falls back to heroImage */ cover?: string; images?: string[]; imageAlts?: string[]; accent?: string;
   videoUrl?: string; href?: string; linkLabel?: string;
   /** Kept in the data but not shown anywhere until it has content. */
   hidden?: boolean;
@@ -161,7 +160,6 @@ const esc = (s = '') => s.replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;'
 /** Allow only http(s)/relative URLs and plain CSS colours from CMS-sourced values. */
 const safeUrl = (u = '') => (/^(https?:\/\/|\/|\.\/)/.test(u) ? u : '');
 const safeColor = (v = '') => (/^#[0-9a-f]{3,8}$/i.test(v) ? v : '');
-const todo = (t: string) => `<p class="todo">${t}</p>`;
 const dates = (e: Experience) => [e.startDate, e.endDate].filter(Boolean).join(' – ');
 
 function stackHtml(p: Project) {
@@ -207,31 +205,24 @@ function extrasHtml(p: Project) {
 }
 /** Cards plus full-screen detail pages, shared by Projects and Crafts. */
 function workViews(items: Project[], noun: string, defaultMeta: string) {
-  const c = { projects: items };
   const bg = (p: Project, i: number) => `--c:${safeColor(p.accent) || accents[i % accents.length]};${safeUrl(p.heroImage) ? `background-image:url('${encodeURI(safeUrl(p.heroImage))}'),var(--sk-grad);background-size:cover,200% 100%;background-position:center,0 0` : ''}`;
   const links = (p: Project) => [
     safeUrl(p.videoUrl) ? `<a href="${esc(safeUrl(p.videoUrl))}" target="_blank" rel="noopener">Watch</a>` : '',
     safeUrl(p.href) ? `<a href="${esc(safeUrl(p.href))}" target="_blank" rel="noopener">${esc(p.linkLabel || 'Visit')}</a>` : '',
   ].filter(Boolean).join(' · ');
   const cardCover = (p: Project) => safeUrl(p.cover || p.heroImage);
-  // Layout: everything runs three across; the three developments come first, so they fill the first row.
-  const lead = (_p: Project) => '';
+  // Everything runs three across; the three developments come first, so they fill the first row.
   const photo = (p: Project, i: number) => {
-    const src = cardCover(p), wide = safeUrl(p.coverWide);
-    if (!src) return '';
-    const isWide = !!wide && lead(p).includes('wide');
-    const sizes = isWide ? '(max-width: 899px) 100vw, 78vw' : lead(p) ? '(max-width: 899px) 100vw, 39vw' : SIZES.card;
-    const img = `<img class="card-photo" src="${esc(encodeURI(src))}"${srcsetFor(src, sizes)} alt="" ${priority(i < 3)} decoding="async">`;
-    return isWide ? `<picture><source media="(min-width: 900px)" srcset="${esc(encodeURI(wide))}">${img}</picture>` : img;
+    const src = cardCover(p);
+    return src ? `<img class="card-photo" src="${esc(encodeURI(src))}"${srcsetFor(src, SIZES.card)} alt="" ${priority(i < 3)} decoding="async">` : '';
   };
   const card = (p: Project, i: number) => `
-    <button type="button" class="card${cardCover(p) ? '' : ' no-img'}${lead(p)}" data-detail="d-${esc(p.slug)}" data-tag="${esc(tagOf(p))}" data-tags="${esc(allTags(p).join("|"))}">
+    <button type="button" class="card${cardCover(p) ? '' : ' no-img'}" data-detail="d-${esc(p.slug)}" data-tag="${esc(tagOf(p))}" data-tags="${esc(allTags(p).join("|"))}">
       <span class="card-img${cardCover(p) ? ' has-img' : ''}" style="--c:${safeColor(p.accent) || accents[i % accents.length]}">${photo(p, i)}</span>
       <span class="card-cap"><span class="card-name">${esc(p.title)}</span><span class="card-sub">${esc([p.role, p.year].filter(Boolean).join(' · '))}</span></span>
     </button>`;
-  const siblings = (_p: Project) => c.projects;
   const stepper = (p: Project) => {
-    const sib = siblings(p);
+    const sib = items;
     if (sib.length < 2) return '';
     const k = sib.findIndex((q) => q.slug === p.slug);
     const prev = sib[(k - 1 + sib.length) % sib.length], next = sib[(k + 1) % sib.length];
@@ -252,7 +243,7 @@ function workViews(items: Project[], noun: string, defaultMeta: string) {
           <p class="meta">${esc((p.disciplines || [])[0] || defaultMeta)}</p>
           <h1 tabindex="-1">${esc(p.title)}</h1>
           <p class="meta">${esc([p.role, p.year].filter(Boolean).join(' · '))}</p>
-          ${p.summary ? `<p class="detail-sum">${esc(p.summary)}</p>` : `<p class="todo">The story, images and details for this ${noun} are still to come.</p>`}
+          ${p.summary ? `<p class="detail-sum">${esc(p.summary)}</p>` : ''}
           ${p.kit?.credits?.length ? `<dl class="kit-credits">${p.kit.credits.map((c) => `<div><dt>${esc(c.label)}</dt><dd>${esc(c.value)}</dd></div>`).join('')}</dl>` : ''}
           ${stackHtml(p)}
           ${links(p) ? `<p class="meta detail-links">${links(p)}</p>` : ''}
@@ -278,7 +269,7 @@ function workHtml(c: SiteContent) {
   const { card, detail } = workViews(items, 'project', 'Project');
   const tags = TAG_ORDER.filter((t) => items.some((p) => allTags(p).includes(t))).concat([...new Set(items.flatMap(allTags))].filter((t) => !TAG_ORDER.includes(t)));
   const chips = tags.length > 1 ? `<div class="filters" role="group" aria-label="Filter work by topic">${['All', ...tags].map((t, i) => `<button type="button" class="filter" data-filter="${i ? esc(t) : ''}" aria-pressed="${i ? 'false' : 'true'}">${esc(t)}</button>`).join('')}</div>` : '';
-  return `${chips}<section><div class="cards">${items.map(card).join('')}</div></section>${items.map(detail).join('')}${todo('More work is on the way.')}`;
+  return `${chips}<section><div class="cards">${items.map(card).join('')}</div></section>${items.map(detail).join('')}`;
 }
 const MONTHS = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'];
 /** "August 2025" -> a sortable number; missing or unreadable dates give -1. */
@@ -288,8 +279,7 @@ const isOpen = (e: Experience) => !e.endDate || /present|current|now/i.test(e.en
 const byEnd = (a: Experience, b: Experience) => (+isOpen(b) - +isOpen(a)) || (isOpen(a) ? 0 : when(b.endDate) - when(a.endDate)) || when(b.startDate) - when(a.startDate);
 /** Experience is the resume alone: the Doc already lists every job, so the page doesn't repeat them. */
 function experienceHtml() {
-  const resume = `<section class="resume"><div class="resume-head"><p class="meta">Resume</p><a class="resume-dl" href="${RESUME_PDF}" aria-label="Download resume PDF" title="Download resume PDF"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 3.5v12"/><path d="M6.5 10.5 12 16l5.5-5.5"/><path d="M4 20.5h16"/></svg></a></div><div class="resume-doc" style="--pages:${RESUME_PAGES}"><iframe src="${RESUME_DOC}/preview" title="Resume of Matthew Bloomfield" loading="lazy"></iframe></div><article class="resume-text" aria-label="Resume">${RESUME_TEXT_HTML}</article></section>`;
-  return resume;
+  return `<section class="resume"><div class="resume-head"><p class="meta">Resume</p><a class="resume-dl" href="${RESUME_PDF}" aria-label="Download resume PDF" title="Download resume PDF"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 3.5v12"/><path d="M6.5 10.5 12 16l5.5-5.5"/><path d="M4 20.5h16"/></svg></a></div><div class="resume-doc" style="--pages:${RESUME_PAGES}"><iframe src="${RESUME_DOC}/preview" title="Resume of Matthew Bloomfield" loading="lazy"></iframe></div><article class="resume-text" aria-label="Resume">${RESUME_TEXT_HTML}</article></section>`;
 }
 /** Film frames ship with 400px and 800px copies (scripts/photography); the full file is used when the slot is wide or the screen is dense. */
 const frameSrcset = (f: { image?: string; w?: number }) => {
@@ -319,7 +309,7 @@ function photographyHtml(c: SiteContent) {
     const thumb = encodeURI(safeUrl((s.frames || [])[0].image)).replace(/\/[^/]+\.webp$/, '/thumb.webp');
     return `<li><a class="fs-frame" href="#roll-${esc(s.slug)}" data-roll="roll-${esc(s.slug)}"><span class="fs-no">${frameNo(i)}</span><span class="fs-img"><img src="${esc(thumb)}" alt="" width="120" height="80" loading="lazy" decoding="async"></span><span class="fs-lbl">${esc(s.title.slice(0, 3))}${s.year ? ` ’${String(s.year).slice(2)}` : ''}</span><span class="sr-only">, ${esc(s.title)}${s.year ? ' ' + s.year : ''}</span></a></li>`;
   }).join('')}</ol><div class="fs-holes fs-holes-b" aria-hidden="true"></div></nav>` : '';
-  return `${series}${c.placeholder.photography ? todo('Placeholder. Photography content has not been supplied.') : ''}${strip}`;
+  return `${series}${strip}`;
 }
 function postersHtml(c: SiteContent) {
   return c.posters.map((set, n) => `<section class="roll"><h2 class="series">${esc(set.title)}</h2><div class="detail-gallery poster-gallery">${set.items.filter((i) => safeUrl(i.src)).map((i, k) => `<figure class="gimg" style="--ar:${i.w}/${i.h}"><img src="${esc(encodeURI(safeUrl(i.src)))}"${srcsetFor(i.src, SIZES.poster)} alt="${esc(i.alt)}" width="${i.w}" height="${i.h}" tabindex="0" role="button" ${priority(n === 0 && k < 2)} decoding="async"></figure>`).join('')}</div></section>`).join('');
@@ -404,4 +394,3 @@ export function buildSections(all: SiteContent): Section[] {
   ];
 }
 
-export { urlFor };
