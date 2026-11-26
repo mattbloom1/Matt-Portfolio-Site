@@ -279,8 +279,8 @@ function placeMini(id: SectionId, slot: number) {
     const pad = Math.min(44, Math.max(24, stage.clientWidth * 0.03));
     const label = hoverLabels ? 22 : 30;
     const top = 48;
-    const no = contentEl.querySelector<HTMLElement>('.panel-head .no');
-    const bottom = no && no.offsetParent ? Math.max(90, stage.getBoundingClientRect().bottom - no.getBoundingClientRect().top + 20) : 210;
+    const title = contentEl.querySelector<HTMLElement>('.panel-head h1');
+    const bottom = title && title.offsetParent ? Math.max(90, stage.getBoundingClientRect().bottom - title.getBoundingClientRect().top + 20) : 210;
     const r = byId(id).ratio, avail = Math.max(60, H - top - bottom), gap = 14;
     let best = { cols: 1, w: 0 };
     for (let cols = 1; cols <= 3; cols++) {
@@ -318,7 +318,7 @@ function swapBackground(id: SectionId) {
 function renderContent(id: SectionId) {
   const s = byId(id);
   contentEl.hidden = false;
-  contentEl.innerHTML = `<div class="panel"><header class="panel-head"><div class="no">${s.no}</div><h1 tabindex="-1">${s.label}</h1></header><div class="panel-body">${s.html}</div></div>`;
+  contentEl.innerHTML = `<div class="panel"><header class="panel-head"><h1 tabindex="-1">${s.label}</h1></header><div class="panel-body">${s.html}</div></div>`;
   contentEl.scrollTop = 0;
   document.title = `${s.label} · ${SITE.name}`;
   stopFilmStrip();
