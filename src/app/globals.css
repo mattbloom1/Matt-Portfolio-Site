@@ -77,35 +77,11 @@ body {
 .meta { font: 500 16px var(--mono); letter-spacing: .14em; text-transform: lowercase; margin: 0; }
 .todo { font: 500 16px var(--mono); letter-spacing: .08em; opacity: .65; border-top: 1px dashed var(--ink); padding-top: 12px; margin-top: 28px; }
 .cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 20px; }
-.timeline h2 { font: 500 24px/1.2 var(--serif); margin: 4px 0 2px; }
 .card-img, .shot { aspect-ratio: 4 / 5; background: color-mix(in srgb, var(--c, var(--ochre)) 85%, white); }
 .card:nth-child(2) .card-img, .shot:nth-child(2) { --c: var(--rose); }
 .card:nth-child(3) .card-img, .shot:nth-child(3) { --c: var(--sky); }
 .card:nth-child(4) .card-img, .shot:nth-child(4) { --c: var(--green); }
 .shot:nth-child(5) { --c: var(--sage); }
-.timeline { list-style: none; margin: 0; padding: 0 0 0 20px; border-left: 1px solid var(--ink); }
-.timeline li { padding: 0 0 26px 20px; position: relative; }
-.timeline li::before { content: ''; position: absolute; left: -26px; top: 6px; width: 11px; height: 11px; background: var(--paper); border: 1px solid var(--ink); border-radius: 50%; }
-.job summary { list-style: none; cursor: pointer; position: relative; padding-right: 44px; min-height: 44px; }
-.job summary::-webkit-details-marker { display: none; }
-.job-toggle { position: absolute; right: 0; top: 2px; width: 28px; height: 28px; border: 1px solid var(--ink); border-radius: 50%; transition: background .25s, transform .35s; }
-.job-toggle::before, .job-toggle::after { content: ''; position: absolute; left: 50%; top: 50%; width: 12px; height: 1px; background: var(--ink); transform: translate(-50%, -50%); transition: transform .35s; }
-.job-toggle::after { transform: translate(-50%, -50%) rotate(90deg); }
-.job summary:hover .job-toggle, .job summary:focus-visible .job-toggle { background: var(--ochre); }
-.job summary:focus-visible { outline: 1px dashed var(--ink); outline-offset: 4px; }
-.job[open] .job-toggle { transform: rotate(180deg); }
-.job[open] .job-toggle::after { transform: translate(-50%, -50%) rotate(0deg); }
-.job p { margin: 10px 0 0; max-width: 60ch; animation: jobIn .35s ease; }
-@keyframes jobIn { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: none; } }
-@media (prefers-reduced-motion: reduce) { .job-toggle, .job-toggle::before, .job-toggle::after { transition: none; } .job p { animation: none; } }
-/* phones: job titles read as list entries, and the timeline gives the text more of the width */
-@media (max-width: 640px) {
-  .timeline { padding-left: 12px; }
-  .timeline li { padding: 0 0 22px 16px; }
-  .timeline li::before { left: -18px; top: 5px; }
-  .timeline h2 { font-size: 17px; line-height: 1.3; margin-top: 2px; }
-  .job p { font-size: 15px; }
-}
 .gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 16px; }
 .gallery.wide { grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); }
 .gallery.wide .shot { aspect-ratio: 3 / 2; }
@@ -226,7 +202,6 @@ body:has(#stage[data-state='page']) .draw-hint { opacity: 0; pointer-events: non
 .stage[data-state='page'] .cards { grid-template-columns: repeat(auto-fill, minmax(min(100%, 240px), 1fr)); gap: 28px; }
 .stage[data-state='page'] .gallery { grid-template-columns: repeat(auto-fill, minmax(min(100%, 260px), 1fr)); gap: 20px; }
 .stage[data-state='page'] .gallery.wide { grid-template-columns: repeat(auto-fill, minmax(min(100%, 380px), 1fr)); }
-.stage[data-state='page'] .timeline { max-width: 920px; }
 .stage[data-state='page'] .about-top { max-width: 1180px; }
 
 /* wide screens: dark title column on the left holds the other stamps, content fills the rest */
@@ -506,7 +481,6 @@ html, body, .panel, .footer { transition: background-color .5s ease, color .5s e
 .stack dt { font-size: 12px; letter-spacing: .1em; }
 .series-year { font-size: 14px; }
 .fs-no, .fs-lbl { font-size: 11px; }
-@media (max-width: 640px) { .timeline .meta { font-size: 12px; } }
 /* Project detail: prev/next live in a solid bar below the scroller, so they never sit on top of the text or the "built with" list. */
 .detail-steps { padding: 9px clamp(16px, 3vw, 40px) calc(9px + env(safe-area-inset-bottom, 0px)); background: var(--paper); border-top: 1px solid color-mix(in srgb, var(--ink) 25%, transparent); pointer-events: auto; }
 .detail-step { min-height: 42px; padding: 8px 20px; }
