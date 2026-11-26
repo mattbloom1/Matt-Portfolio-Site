@@ -741,10 +741,10 @@ h1, h2 { text-wrap: balance; }
   .stage[data-state='page'] .roll + .roll { margin-top: 16px; }
 }
 
-/* Drawing tools on phones and touch screens: a panel on the right edge, beside the paper you draw on, that folds down to a tab. Desktop keeps them in the footer. */
+/* Drawing tools on phones and touch screens: a panel on the right edge, just above the footer, that folds down to a pencil tab (folded until opened). Desktop keeps them in the footer. */
 .tools-toggle { display: none; }
 @media (max-width: 899px), (pointer: coarse) {
-  .foot-tools { position: fixed; left: auto; right: 0; top: 50%; transform: translateY(-50%); flex-direction: column; align-items: center; gap: 2px; padding: 4px; background: var(--paper); border: 1px solid var(--ink); border-right: 0; box-shadow: -2px 3px 0 rgba(20,20,20,.12); }
+  .foot-tools { position: fixed; left: auto; right: 0; top: auto; bottom: calc(var(--footer-h) + 12px); transform: none; flex-direction: column; align-items: center; gap: 2px; padding: 4px; background: var(--paper); border: 1px solid var(--ink); border-right: 0; box-shadow: -2px 3px 0 rgba(20,20,20,.12); }
   .foot-tools .tool { width: 44px; height: 44px; opacity: .7; }
   .foot-tools .tool.on { opacity: 1; }
   .foot-tools .tool:disabled { opacity: .3; }

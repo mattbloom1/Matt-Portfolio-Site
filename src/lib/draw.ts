@@ -32,8 +32,9 @@ export function initDrawing(canvas: HTMLCanvasElement, sendBtn: HTMLButtonElemen
     toggleBtn?.setAttribute('aria-label', label);
     toggleBtn?.setAttribute('title', label);
   };
-  let folded = false;
-  try { folded = localStorage.getItem(FOLD_KEY) === '1'; } catch { /* private mode */ }
+  // Folded to a small tab until someone opens it, so on a phone the stamps aren't covered; their choice is remembered.
+  let folded = true;
+  try { folded = localStorage.getItem(FOLD_KEY) !== '0'; } catch { /* private mode */ }
   setFolded(folded);
   const onToggle = () => {
     folded = !folded;

@@ -51,11 +51,11 @@ export default function Portfolio({ content }: { content: SiteContent }) {
           <span>Matthew Bloomfield</span>
           <a href="mailto:matthewb3333@gmail.com" id="email">matthewb3333@gmail.com</a>
         </div>
-        <div className="foot-tools" id="foot-tools" role="group" aria-label="Drawing tools">
+        <div className="foot-tools" id="foot-tools" role="group" aria-label="Drawing tools" data-folded="">
           {/* Phones and touch screens only: folds the tools panel down to a small tab on the right edge */}
-          <button type="button" className="tool tools-toggle" id="tools-toggle" aria-expanded="true" aria-label="Hide drawing tools" title="Hide drawing tools">
+          <button type="button" className="tool tools-toggle" id="tools-toggle" aria-expanded="false" aria-label="Show drawing tools" title="Show drawing tools">
             <svg className="tt-hide" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinejoin="round" strokeLinecap="round"><path d="M9 5l7 7-7 7"/></svg>
-            <svg className="tt-show" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinejoin="round" strokeLinecap="round"><path d="M15 5l-7 7 7 7"/></svg>
+            <svg className="tt-show" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinejoin="round"><path d="M4 20l1-4L16.5 4.5a1.5 1.5 0 012 0l1 1a1.5 1.5 0 010 2L8 19z"/><path d="M14.5 6.5l3 3"/></svg>
           </button>
           {/* Placeholder icons: swap for Matt's pencil/eraser images (public/tools/) */}
           <button type="button" className="tool on" id="tool-pencil" aria-label="Pencil" aria-pressed="true" title="Pencil">
