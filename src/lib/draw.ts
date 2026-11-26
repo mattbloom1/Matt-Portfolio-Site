@@ -21,7 +21,7 @@ export function initDrawing(canvas: HTMLCanvasElement, sendBtn: HTMLButtonElemen
   eraserBtn?.addEventListener('click', pickEraser);
   setTool('pencil');
 
-  // Phones and touch screens show the tools as a panel on the right edge that folds down to a tab; the choice is remembered.
+  // Phones and touch screens show the tools as a panel on the right edge that folds down to a pencil tab.
   const toolsPanel = document.getElementById('foot-tools');
   const toggleBtn = document.getElementById('tools-toggle');
   const FOLD_KEY = 'drawToolsFolded';
