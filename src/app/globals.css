@@ -103,7 +103,6 @@ body {
 .tool { background: none; border: 1px solid transparent; color: var(--ink); width: 34px; height: 34px; padding: 0; display: grid; place-items: center; cursor: pointer; opacity: .55; }
 .tool:hover { opacity: 1; }
 .tool.on { opacity: 1; border-color: var(--ink); }
-@media (pointer: coarse) { .foot-tools { display: none; } }
 .send-wrap { position: relative; display: inline-flex; }
 .tool:disabled { cursor: default; opacity: .3; }
 .bubble { text-transform: none; position: absolute; bottom: calc(100% + 12px); left: 50%; transform: translate(-50%, 6px); background: var(--paper); border: 1px solid var(--ink); padding: 7px 12px; white-space: nowrap; font-size: 13px; letter-spacing: .04em; opacity: 0; pointer-events: none; transition: opacity .15s, transform .15s; min-height: 32px; }
@@ -280,7 +279,6 @@ body:has(#stage[data-state='page']) .draw-hint { opacity: 0; pointer-events: non
 
 
 /* mobile pass */
-@media (max-width: 899px) { .foot-tools { display: none; } }
 .foot-right { white-space: nowrap; flex-shrink: 0; }
 @media (max-width: 360px) { .footer { font-size: 10px; padding: 0 10px; } .foot-left { gap: 0 8px; } }
 @media (hover: none) {
@@ -568,7 +566,8 @@ html, body, .panel, .footer { transition: background-color .5s ease, color .5s e
 .letter-send:focus-visible, .letter-again:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; box-shadow: none; }
 .sheet .letter-send:focus-visible { outline-color: #15171c; }
 .sheet input:-webkit-autofill, .sheet textarea:-webkit-autofill { -webkit-text-fill-color: #15171c; box-shadow: 0 0 0 40px #f3f0e9 inset; }
-.hp { position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0; }
+/* honeypot: kept inside the card rather than parked 9999px off to the left, because once the card flips after sending, that offset is mirrored to 9999px on the right and the page could be dragged sideways */
+.hp { position: absolute; left: 0; top: 0; width: 1px; height: 1px; opacity: 0; overflow: hidden; clip-path: inset(50%); pointer-events: none; }
 .letter-send, .letter-again { font: 500 18px var(--mono); letter-spacing: .12em; text-transform: lowercase; background: var(--ink); color: var(--paper); border: 0; padding: 0 22px; min-height: 44px; cursor: pointer; }
 .letter-send:disabled { opacity: .5; cursor: default; }
 .letter-status { min-height: 1.5em; margin: 10px 0 0; font-style: italic; }
@@ -740,4 +739,22 @@ h1, h2 { text-wrap: balance; }
 @media (max-width: 640px) {
   .roll:has(+ .roll) > .poster-gallery, .roll:has(+ .roll) > .roll-gallery { padding-bottom: 24px; }
   .stage[data-state='page'] .roll + .roll { margin-top: 16px; }
+}
+
+/* Drawing tools on phones and touch screens: a panel on the right edge, just above the footer, that folds down to a pencil tab (folded until opened). Desktop keeps them in the footer. */
+.tools-toggle { display: none; }
+@media (max-width: 899px), (pointer: coarse) {
+  .foot-tools { position: fixed; left: auto; right: 0; top: auto; bottom: calc(var(--footer-h) + 12px); transform: none; flex-direction: column; align-items: center; gap: 2px; padding: 4px; background: var(--paper); border: 1px solid var(--ink); border-right: 0; box-shadow: -2px 3px 0 rgba(20,20,20,.12); }
+  .foot-tools .tool { width: 44px; height: 44px; opacity: .7; }
+  .foot-tools .tool.on { opacity: 1; }
+  .foot-tools .tool:disabled { opacity: .3; }
+  .foot-tools .tools-toggle { display: grid; opacity: 1; }
+  .foot-tools:not([data-folded]) .tools-toggle { border-bottom-color: color-mix(in srgb, var(--ink) 25%, transparent); }
+  .tools-toggle .tt-show, .foot-tools[data-folded] .tools-toggle .tt-hide { display: none; }
+  .foot-tools[data-folded] .tools-toggle .tt-show { display: block; }
+  .foot-tools[data-folded] > :not(.tools-toggle) { display: none; }
+  /* the send bubble opens to the left of the panel instead of above it */
+  .foot-tools .send-wrap .bubble { bottom: 50%; left: auto; right: calc(100% + 14px); transform: translate(6px, 50%); }
+  .foot-tools .send-wrap .bubble::after { top: 50%; left: 100%; transform: translate(-5px, -50%) rotate(-45deg); }
+  .foot-tools .send-wrap:hover .bubble, .foot-tools .send-wrap:focus-within .bubble, .foot-tools .send-wrap.show .bubble, .foot-tools .send-wrap .bubble.show { transform: translate(0, 50%); }
 }
