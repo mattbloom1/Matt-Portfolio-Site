@@ -58,8 +58,8 @@ function tweakCss(v: Record<string, string | number>): string {
   out.push(`.meta,.no,.card-sub,.skip,.group,.more summary,.shot figcaption,.stamp .tag,.detail-close,.todo{letter-spacing:${n('labelTrack')}em!important;text-transform:${v.labelCase}!important}`);
   out.push(`.grain{display:${v.grainOn === 'off' ? 'none' : 'block'};opacity:${n('grainOpacity')};mix-blend-mode:${v.grainBlend};background-size:${220 * n('grainSize')}px;filter:contrast(${n('grainContrast')}) brightness(${n('grainBright')})}`);
   out.push(`.bg{filter:blur(${n('bgBlur')}px) saturate(${n('bgSat')})!important}`);
-  out.push(`.home,.detail-close,.skip,.card,.timeline{border-radius:${n('radius')}px}`);
-  out.push(`.group,.panel h1,.timeline{border-width:${n('border')}px}`);
+  out.push(`.home,.detail-close,.skip,.card{border-radius:${n('radius')}px}`);
+  out.push(`.group,.panel h1{border-width:${n('border')}px}`);
   const m = n('motion');
   out.push(m === 1 ? '' : m === 0 ? '*{transition-duration:0s!important;animation-duration:0s!important}' : `*{transition-duration:${0.25 / m}s!important}`);
   return out.join('\n');

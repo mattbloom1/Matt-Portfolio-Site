@@ -1,7 +1,7 @@
 import { urlFor } from './sanity';
 import variants from './variants.json';
 import { RESUME_TEXT_HTML } from './resume.generated';
-import { SEED_PHOTOGRAPHY, PROFILE_PHOTO, BIO_SHORT, EDUCATION, FUN_NOTE, SEED_CRAFTS, SEED_EXPERIENCE, SEED_POSTERS, SEED_PROJECTS } from './seed';
+import { SEED_PHOTOGRAPHY, PROFILE_PHOTO, BIO_SHORT, FUN_NOTE, SEED_CRAFTS, SEED_EXPERIENCE, SEED_POSTERS, SEED_PROJECTS } from './seed';
 
 export type SectionId = 'work' | 'posters' | 'experience' | 'about' | 'photography';
 
@@ -250,16 +250,10 @@ const when = (d = '') => { const m = d.match(/([a-z]{3})[a-z]*\.?\s+(\d{4})/i); 
 const isOpen = (e: Experience) => !e.endDate || /present|current|now/i.test(e.endDate);
 /** Open roles first, then by end date (newest first); ties go to the later start. */
 const byEnd = (a: Experience, b: Experience) => (+isOpen(b) - +isOpen(a)) || (isOpen(a) ? 0 : when(b.endDate) - when(a.endDate)) || when(b.startDate) - when(a.startDate);
-function experienceHtml(c: SiteContent) {
-  const items = [...c.experience].sort(byEnd).map((e) => {
-    const head = `<span class="meta">${esc(dates(e))}</span><h2>${esc(e.role)}, ${esc(e.organization)}</h2>`;
-    return e.description
-      ? `<li><details class="job"><summary>${head}<span class="job-toggle" aria-hidden="true"></span></summary><p>${esc(e.description)}</p></details></li>`
-      : `<li>${head}</li>`;
-  }).join('');
-  const edu = `<p class="meta">Education</p><p><strong>${esc(EDUCATION.school)}</strong>, ${esc(EDUCATION.year)}<br>${esc(EDUCATION.detail)}</p>`;
+/** Experience is the resume alone: the Doc already lists every job, so the page doesn't repeat them. */
+function experienceHtml() {
   const resume = `<section class="resume"><div class="resume-head"><p class="meta">Resume</p><span><a href="${RESUME_PDF}">Download PDF</a><a href="${RESUME_DOC}/view" target="_blank" rel="noopener">Open full size</a></span></div><div class="resume-doc"><iframe src="${RESUME_DOC}/preview" title="Resume of Matthew Bloomfield" loading="lazy"></iframe></div><article class="resume-text" aria-label="Resume">${RESUME_TEXT_HTML}</article></section>`;
-  return `<ol class="timeline">${items}</ol>${edu}${resume}${c.placeholder.experience ? todo('Placeholder timeline. Experience content has not been supplied.') : ''}`;
+  return resume;
 }
 function photographyHtml(c: SiteContent) {
   const series = c.photography.map((s) => {
@@ -332,7 +326,7 @@ export function buildSections(all: SiteContent): Section[] {
   return [
     L('work', '01', 'Work', 'Work', 'a vintage computer', workHtml(c)),
     L('posters', '02', 'Posters', 'Posters', 'two printed posters', postersHtml(c)),
-    L('experience', '03', 'Experience', 'Experience', 'a vintage suitcase', experienceHtml(c)),
+    L('experience', '03', 'Experience', 'Experience', 'a vintage suitcase', experienceHtml()),
     L('photography', '04', 'Photography', 'Photography', 'a Minolta X-700 film camera', photographyHtml(c)),
     L('about', '05', 'About', 'About', 'a halftone portrait of Matt', aboutHtml()),
   ];
