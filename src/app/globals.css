@@ -566,7 +566,8 @@ html, body, .panel, .footer { transition: background-color .5s ease, color .5s e
 .letter-send:focus-visible, .letter-again:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; box-shadow: none; }
 .sheet .letter-send:focus-visible { outline-color: #15171c; }
 .sheet input:-webkit-autofill, .sheet textarea:-webkit-autofill { -webkit-text-fill-color: #15171c; box-shadow: 0 0 0 40px #f3f0e9 inset; }
-.hp { position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0; }
+/* honeypot: kept inside the card rather than parked 9999px off to the left, because once the card flips after sending, that offset is mirrored to 9999px on the right and the page could be dragged sideways */
+.hp { position: absolute; left: 0; top: 0; width: 1px; height: 1px; opacity: 0; overflow: hidden; clip-path: inset(50%); pointer-events: none; }
 .letter-send, .letter-again { font: 500 18px var(--mono); letter-spacing: .12em; text-transform: lowercase; background: var(--ink); color: var(--paper); border: 0; padding: 0 22px; min-height: 44px; cursor: pointer; }
 .letter-send:disabled { opacity: .5; cursor: default; }
 .letter-status { min-height: 1.5em; margin: 10px 0 0; font-style: italic; }
