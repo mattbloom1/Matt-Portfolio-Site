@@ -97,9 +97,14 @@ function render(bs) {
     } else if (!seenSection) {
       html.push(`<p class="r-sub">${inline(b.runs)}</p>`);
     } else if (/\S(?:\u00a0|\s){2,}\S|\t/.test(b.text.trim())) {
-      // "Organisation      Dates": the Doc lines the dates up with a run of spaces or a tab
+      // "Organisation      Dates" (bold), "Role      Location" (italic) or "Degree      Location" (plain):
+      // the Doc lines the right-hand part up with a run of spaces or a tab
       const t = b.text.trim(); const at = [...t.matchAll(/(?:\u00a0|\s){2,}|\t/g)].pop();
-      html.push(`<p class="r-entry"><strong>${esc(tidy(t.slice(0, at.index)).trim())}</strong> <span class="r-date">${esc(tidy(t.slice(at.index)).trim())}</span></p>`);
+      const left = esc(tidy(t.slice(0, at.index)).trim()); const right = esc(tidy(t.slice(at.index)).trim());
+      const lead = b.runs.find((r) => r.text.trim()) || {};
+      if (lead.bold) html.push(`<p class="r-entry"><strong>${left}</strong> <span class="r-date">${right}</span></p>`);
+      else if (lead.italic) html.push(`<p class="r-role">${left} <span class="r-loc">${right}</span></p>`);
+      else html.push(`<p>${left} <span class="r-loc">${right}</span></p>`);
     } else if (b.runs.every((r) => r.italic || !r.text.trim())) {
       html.push(`<p class="r-role">${esc(tidy(b.text).trim())}</p>`);
     } else if (b.runs.every((r) => r.bold || !r.text.trim())) {

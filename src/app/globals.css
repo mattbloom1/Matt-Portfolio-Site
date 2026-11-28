@@ -551,6 +551,7 @@ html, body, .panel, .footer { transition: background-color .5s ease, color .5s e
   .resume-text .r-entry strong, .resume-text .r-head { font-weight: 600; }
   .resume-text .r-date { display: block; margin-top: 1px; font: 500 13px var(--mono); letter-spacing: .06em; }
   .resume-text .r-role { margin: 1px 0 0; font-style: italic; }
+  .resume-text .r-loc { display: block; margin-top: 1px; font: 500 13px var(--mono); font-style: normal; letter-spacing: .06em; } /* the location sits under the role, as the date sits under the title */
   .resume-text .r-head { margin-top: 14px; }
   .resume-text ul { margin: 6px 0 0; padding-left: 18px; }
   .resume-text li { margin: 4px 0 0; }
